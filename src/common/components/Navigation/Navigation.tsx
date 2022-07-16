@@ -13,6 +13,7 @@ import {
   SpeakerphoneIcon,
   CogIcon,
   LogoutIcon,
+  KeyIcon,
 } from "@heroicons/react/outline";
 // const navigation = [
 //   { name: "Pricing", href: "/pricing", icon: CreditCardIcon },
@@ -61,6 +62,12 @@ export default function Navigation(props) {
       href: "/resources",
       icon: LinkIcon,
       current: props.active.includes("resources"),
+    },
+    {
+      name: "Tokens",
+      href: "/tokens",
+      icon: KeyIcon,
+      current: props.active.includes("tokens"),
     },
     {
       name: "Settings",

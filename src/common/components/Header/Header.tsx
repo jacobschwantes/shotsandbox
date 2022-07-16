@@ -24,7 +24,7 @@ function classNames(...classes) {
 
 export default function Header() {
   return (
-    <Disclosure as="nav" className="bg-white shadow-sm z-10">
+    <Disclosure as="nav" className="bg-white shadow-sm z-30">
       {({ open }) => (
         <>
           <div className=" px-2 sm:px-6 lg:px-6 ">
@@ -37,7 +37,7 @@ export default function Header() {
                   </span>
                 </Link>
                 <div className="hidden sm:block">
-                  <div className="flex space-x-4">
+                  <div className="flex space-x-4 z-20">
                     <Notifications/>
                   </div>
                 </div>
