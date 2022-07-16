@@ -161,7 +161,7 @@ const Editor: NextPage = () => {
           "flex-1 flex items-center justify-center  grid-effect-light overflow-hidden bg-gray-50"
         )}
       >
-        <div className="relative w-[1280px] h-[720px]">
+        <div className="relative max-w-[1280px] max-h-[720px] w-full h-full">
           <div
             ref={ref}
             className={clsx(
@@ -171,7 +171,7 @@ const Editor: NextPage = () => {
           >
             <div
               className={clsx(
-                `w-[1280px] h-[720px] grid grid-cols-2 grid-rows-2 gap-5  relative `
+                ` grid grid-cols-2 grid-rows-2 gap-5  relative `
               )}
             >
               <div className="absolute w-full h-full bg-gradient-to-t from-[var(--gradient-stop-1)] to-[var(--gradient-stop-2)]"></div>
@@ -350,28 +350,31 @@ const Editor: NextPage = () => {
               </Disclosure.Button>
               <Disclosure.Panel className="px-4 pt-4 pb-2 text-sm text-gray-500 grid grid-cols-2 gap-4 rounded-full">
                 {presets.map((item) => (
-                    <div className="space-y-2">
-                        <h1 className="text-black font-medium">{item.name}</h1>
-                    
-                  <div
-                    className={clsx(
-                      `w-full grid grid-cols-2 grid-rows-2 gap-5 relative overflow-hidden `
-                    )}
-                  >
-                    <div className="absolute w-full h-full bg-gradient-to-t from-[var(--gradient-stop-1)] to-[var(--gradient-stop-2)]"></div>
-                    {images.map((url, index) => (
-                      <div
-                        key={index}
-                        className={"rounded flex flex-col items-center shadow-2xl flex-grow overflow-hidden first:template3 last:template3 template4  "}
-                      >
-                        {showToolbar && <Toolbar type="light" />}
-                        <img
-                          className=" bg-transparent object-fill flex-1 rounded-b-xl  "
-                          src={url}
-                        />
-                      </div>
-                    ))}
-                  </div></div>
+                  <div className="space-y-2">
+                    <h1 className="text-black font-medium">{item.name}</h1>
+
+                    <div
+                      className={clsx(
+                        `w-full grid grid-cols-2 grid-rows-2 gap-5 relative overflow-hidden `
+                      )}
+                    >
+                      <div className="absolute w-full h-full bg-gradient-to-t from-[var(--gradient-stop-1)] to-[var(--gradient-stop-2)]"></div>
+                      {images.map((url, index) => (
+                        <div
+                          key={index}
+                          className={
+                            "rounded flex flex-col items-center shadow-2xl flex-grow overflow-hidden first:template3 last:template3 template4  "
+                          }
+                        >
+                          {showToolbar && <Toolbar type="light" />}
+                          <img
+                            className=" bg-transparent object-fill flex-1 rounded-b-xl  "
+                            src={url}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 ))}
               </Disclosure.Panel>
             </>
