@@ -3,7 +3,12 @@ import { Spinner } from "@components/index";
 import { Dispatch, SetStateAction, useState, useEffect } from "react";
 import { EyeIcon, EyeOffIcon, UserIcon } from "@heroicons/react/solid";
 import Router from "next/router";
-import { getAuth, signInWithEmailAndPassword, signOut, createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  signOut,
+  createUserWithEmailAndPassword,
+} from "firebase/auth";
 import firebaseApp from "./firebase/clientApp";
 const auth = getAuth(firebaseApp);
 type Tab = {
@@ -23,7 +28,11 @@ const Login: NextPage = () => {
   const [login, setLogin] = useState(true);
   return (
     <div className="bg-black h-screen flex justify-center items-center w-screen">
-      {login ? <LoginCard setLogin={setLogin} /> : <SignUpCard setLogin={setLogin} />}
+      {login ? (
+        <LoginCard setLogin={setLogin} />
+      ) : (
+        <SignUpCard setLogin={setLogin} />
+      )}
     </div>
   );
 };
@@ -228,11 +237,9 @@ interface SignUpPageProps {
   setEmailValidated: Dispatch<SetStateAction<boolean>>;
   email: string;
 }
-const SignUpPage: NextComponentType<
-  NextPageContext,
-  {},
-  SignUpPageProps
-> = ({setLogin}) => {
+const SignUpPage: NextComponentType<NextPageContext, {}, SignUpPageProps> = ({
+  setLogin,
+}) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [emailError, setEmailError] = useState("");
@@ -240,17 +247,20 @@ const SignUpPage: NextComponentType<
   const [showPassword, setShowPassword] = useState(false);
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
-  const submitSignUp = () => {
-    
-    setTimeout(() => {
-      // createUserWithEmailAndPassword(auth, email, password)
-      // .then(userCredential => {
-      //       firestore.collection('users').doc(userCredential.user.uid).set({
-      //         name, lastName
-      //       })
-      setLoading(false)
-    }, 1000);
-  };
+  const submitSignUp = async () => {
+    await createUserWithEmailAndPassword(auth, email, password).then(
+      async (userCredential) => {
+        const token = await userCredential.user.getIdToken();
+        console.log(token)
+        const res = await fetch("/api/user/create", {
+
+          headers: { Authorization: `Bearer ${token}` },
+      })
+        .then((res) => console.log(res))
+        .catch((e) => console.log("api/user/create error, ", e));
+    }).catch(e => setError(e.message));
+        setLoading(false);
+      }
   return (
     <>
       <form
@@ -258,7 +268,7 @@ const SignUpPage: NextComponentType<
         onSubmit={(e) => {
           e.preventDefault();
           if (passwordError || emailError) {
-            setLoading(false)
+            setLoading(false);
           } else {
             setLoading(true);
             submitSignUp();
@@ -278,7 +288,7 @@ const SignUpPage: NextComponentType<
               setEmail(e.target.value);
             }}
             onBlur={() => {
-              if (!validateEmail(email) && email !== '') {
+              if (!validateEmail(email) && email !== "") {
                 setEmailError("Please enter a valid email address");
               }
             }}
@@ -304,7 +314,7 @@ const SignUpPage: NextComponentType<
                 setPassword(e.target.value);
               }}
               onBlur={() => {
-                if (!validatePassword(password) && password !== '') {
+                if (!validatePassword(password) && password !== "") {
                   setPasswordError("Please enter a valid password");
                 }
               }}
@@ -331,7 +341,9 @@ const SignUpPage: NextComponentType<
             </button>
           </div>
           <p className="text-red-500 font-medium text-sm">{passwordError}</p>
+          <p className="text-red-500 font-medium text-sm">{error}</p>
         </div>
+        
         <button
           type="submit"
           className="bg-blue-500 hover:bg-blue-400 w-full border border-blue-900 p-4 rounded-lg font-medium tracking-wide text-gray-900 flex items-center justify-center"
@@ -355,11 +367,9 @@ const SignUpPage: NextComponentType<
 
 export default Login;
 
-const SignUpCard: NextComponentType<
-  NextPageContext,
-  {},
-  LoginCardProps
-> = ({setLogin}) => {
+const SignUpCard: NextComponentType<NextPageContext, {}, LoginCardProps> = ({
+  setLogin,
+}) => {
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
 
@@ -369,7 +379,7 @@ const SignUpCard: NextComponentType<
         screenshotify
       </h1>
       <SignUpPage
-      setLogin={setLogin}
+        setLogin={setLogin}
         setEmail={setEmail}
         email={email}
         password={password}
