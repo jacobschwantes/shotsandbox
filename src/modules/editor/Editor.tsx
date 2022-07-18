@@ -22,6 +22,7 @@ const presets = [
   {
     gradientStop1: "#a8b043",
     gradientStop2: "#6501f8",
+    perspective: "125",
     layout: 4,
     name: "preset80",
     rotateX: "16",
@@ -33,6 +34,7 @@ const presets = [
   {
     gradientStop1: "#6e6fdc",
     gradientStop2: "#18dc0a",
+    perspective: "125",
     layout: 4,
     name: "preset44",
     rotateX: "-33",
@@ -109,6 +111,7 @@ const Editor: NextPage = () => {
   const getPreset = (name: string) => {
     return {
       name,
+      perspective,
       layout,
       showToolbar,
       rotateX,
@@ -153,6 +156,15 @@ const Editor: NextPage = () => {
     gradientStop1,
     gradientStop2,
   ]);
+  const loadPreset = ({perspective, rotateX, rotateY, rotateZ, zoom, gradientStop1, gradientStop2}) => {
+    setPerspective(perspective);
+    setRotateX(rotateX);
+    setRotateY(rotateY);
+    setRotateZ(rotateZ);
+    setZoom(zoom);
+    setGradientStop1(gradientStop1);
+    setGradientStop2(gradientStop2);
+  }
 
   return (
     <div className="flex-1 flex justify-between">
@@ -170,20 +182,21 @@ const Editor: NextPage = () => {
             )}
           >
             <div
-              className={clsx(
-                ` grid grid-cols-2 grid-rows-2 gap-5  relative `
-              )}
+              className={clsx(` grid grid-cols-2 grid-rows-2 gap-5  relative `)}
             >
-              <div className="absolute w-full h-full bg-gradient-to-t from-[var(--gradient-stop-1)] to-[var(--gradient-stop-2)]"></div>
+              <div className="absolute w-full h-full bg-gradient-to-t from-[var(--gradient-stop-1)] to-[var(--gradient-stop-2)] "></div>
               {images.map((url, index) => (
                 <div
                   key={index}
-                  className="rounded-xl flex flex-col items-center shadow-2xl flex-grow overflow-hidden first:template3 last:template3 template4 "
+                  className="rounded-xl flex flex-col items-center shadow-2xl overflow-hidden first:template3 last:template3 template4  "
                 >
                   {showToolbar && <Toolbar type="light" />}
-                  <img
-                    className=" bg-transparent object-fill flex-1 rounded-b-xl  "
-                    src={url}
+
+                  <Image
+                    width={2560}
+                    height={1440}
+                    objectFit="cover"
+                    src={`/${url}`}
                   />
                 </div>
               ))}
@@ -194,7 +207,7 @@ const Editor: NextPage = () => {
       </div>
 
       <div className=" z-20 w-full max-w-sm p-5 space-y-3">
-        <Disclosure>
+        <Disclosure defaultOpen>
           {({ open }) => (
             <>
               <Disclosure.Button className="flex w-full justify-between rounded-lg bg-blue-100 px-4 py-2 text-left text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring focus-visible:ring-blue-500 focus-visible:ring-opacity-75">
@@ -352,28 +365,12 @@ const Editor: NextPage = () => {
                 {presets.map((item) => (
                   <div className="space-y-2">
                     <h1 className="text-black font-medium">{item.name}</h1>
-
-                    <div
-                      className={clsx(
-                        `w-full grid grid-cols-2 grid-rows-2 gap-5 relative overflow-hidden `
-                      )}
-                    >
-                      <div className="absolute w-full h-full bg-gradient-to-t from-[var(--gradient-stop-1)] to-[var(--gradient-stop-2)]"></div>
-                      {images.map((url, index) => (
-                        <div
-                          key={index}
-                          className={
-                            "rounded flex flex-col items-center shadow-2xl flex-grow overflow-hidden first:template3 last:template3 template4  "
-                          }
-                        >
-                          {showToolbar && <Toolbar type="light" />}
-                          <img
-                            className=" bg-transparent object-fill flex-1 rounded-b-xl  "
-                            src={url}
-                          />
-                        </div>
-                      ))}
-                    </div>
+                    <button onClick={() => loadPreset(item)}>
+                      <img
+                        className="rounded shadow-lg border-2 border-blue-500"
+                        src={`${item.name}.png`}
+                      />
+                    </button>
                   </div>
                 ))}
               </Disclosure.Panel>
