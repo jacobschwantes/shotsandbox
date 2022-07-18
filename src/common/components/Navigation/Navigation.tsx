@@ -14,6 +14,8 @@ import {
   CogIcon,
   LogoutIcon,
   KeyIcon,
+  ChartBarIcon,
+  PencilIcon,
 } from "@heroicons/react/outline";
 // const navigation = [
 //   { name: "Pricing", href: "/pricing", icon: CreditCardIcon },
@@ -34,40 +36,22 @@ export default function Navigation(props) {
   const router = useRouter()
   const generalNavigation = [
     {
-      name: "Dashboard",
+      name: "Editor",
       href: "/",
-      icon: ChipIcon,
+      icon: PencilIcon,
       current: router.asPath === "/",
     },
     {
       name: "Projects",
       href: "/dashboard",
-      icon: FolderIcon,
+      icon: ChartBarIcon,
       current: router.asPath.includes("dashboard"),
-    },
-    {
-      name: "Notes",
-      href: "/notes",
-      icon: ClipboardListIcon,
-      current:router.asPath.includes("notes"),
-    },
-    {
-      name: "News",
-      href: "/news",
-      icon: NewspaperIcon,
-      current: router.asPath.includes("news"),
-    },
-    {
-      name: "Resources",
-      href: "/resources",
-      icon: LinkIcon,
-      current: props.active.includes("resources"),
     },
     {
       name: "Tokens",
       href: "/tokens",
       icon: KeyIcon,
-      current: props.active.includes("tokens"),
+      current: router.asPath.includes("tokens"),
     },
     {
       name: "Settings",
