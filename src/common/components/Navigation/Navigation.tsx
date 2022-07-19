@@ -17,6 +17,7 @@ import {
   ChartBarIcon,
   PencilIcon,
   AdjustmentsIcon,
+  ArchiveIcon,
 } from "@heroicons/react/outline";
 // const navigation = [
 //   { name: "Pricing", href: "/pricing", icon: CreditCardIcon },
@@ -53,6 +54,12 @@ export default function Navigation(props) {
       href: "/tokens",
       icon: KeyIcon,
       current: router.asPath.includes("tokens"),
+    },
+    {
+      name: "History",
+      href: "/history",
+      icon: ArchiveIcon,
+      current: router.asPath.includes("history"),
     },
     {
       name: "Settings",
