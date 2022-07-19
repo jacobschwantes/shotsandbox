@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import { Fragment, useEffect, useMemo } from "react";
 import { Transition } from "@headlessui/react";
 import { Menu } from "@headlessui/react";
 import {
@@ -7,7 +7,10 @@ import {
   MailIcon,
   CalendarIcon,
 } from "@heroicons/react/outline";
+import { createToast } from "vercel-toast";
+import "vercel-toast/dist/vercel-toast.css";
 import { CheckIcon } from "@heroicons/react/solid";
+import { collection, query, where, onSnapshot, doc } from "firebase/firestore";
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
@@ -51,8 +54,36 @@ const read = [
     timestamp: 1643689162,
   },
 ];
+import { db, firebaseApp } from "@modules/auth/firebase/clientApp";
+import { getAuth } from "firebase/auth";
+const auth = getAuth(firebaseApp);
+const start = Date.now();
+
 export default function Notifications(props) {
   const isLoading = false;
+  const mref = useMemo(() => query(collection(db, "users", auth.currentUser?.uid, "notifications"), where("timestamp", ">", start)), []);
+  useEffect(() => {
+    const unsubscribe = onSnapshot(mref, (snapshot) => {
+      snapshot.docChanges().forEach((change) => {
+        let data = change.doc.data();
+        if (change.type === "added") {
+          if (data.timestamp > start) {
+            createToast(`${data.message}`, {
+              timeout: 10000,
+              type: "dark",
+              action: {
+                text: "Dismiss",
+                callback(toast) {
+                  toast.destroy();
+                },
+              },
+            });
+          }
+        }
+      });
+    });
+    return () => unsubscribe();
+  }, []);
 
   return (
     <Menu as="div" className=" inline-block  text-left xs:relative ">
