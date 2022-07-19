@@ -1,5 +1,4 @@
 import { auth } from '@utils/firebase-admin';
-import { parseCookies } from 'nookies';
 import { NextApiRequest, NextApiResponse } from 'next';
 export function withAuth(handler: any) {
     return async (req: NextApiRequest, res: NextApiResponse) => {
