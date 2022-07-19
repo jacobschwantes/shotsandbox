@@ -8,7 +8,6 @@ type Data = {
 const generateKey = () => {
   const rand = crypto.randomBytes(20);
   const unique_id = rand.toString("hex");
-  console.log(unique_id);
   return unique_id;
 };
 
@@ -16,8 +15,14 @@ async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
   const key = generateKey();
   const userRef = firestore.collection("API_KEYS").doc(key);
   const doc = await userRef.get();
+  const tokensRef = firestore.collection("API_KEYS");
+  const snapshot = await tokensRef.where("userid", "==", req.uid).get();
+
   if (!doc.exists) {
     // TODO create user doc with uid as document id
+    if (snapshot.size < 5) {
+
+    
     try {
       const data = {
         quota: 200,
@@ -34,6 +39,10 @@ async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
     } catch (e: any) {
       res.status(500).json({ message: e });
     }
+} else {
+  res.status(500).send('token creation failed. 5 token limit reached.');
+}
+
   } else {
     res.status(400).json({ message: "key already exists" });
   }
