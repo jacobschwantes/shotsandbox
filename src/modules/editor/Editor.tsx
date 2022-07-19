@@ -13,7 +13,7 @@ import firebase from "@modules/auth/firebase/clientApp";
 // Import the useAuthStateHook
 import { useAuthState } from "react-firebase-hooks/auth";
 import { signOut, getAuth } from "firebase/auth";
-import firebaseApp from "@modules/auth/firebase/clientApp";
+import {firebaseApp} from "@modules/auth/firebase/clientApp";
 import Toolbar from "./components/Toolbar";
 import { Disclosure } from "@headlessui/react";
 import { ChevronUpIcon } from "@heroicons/react/solid";
@@ -58,7 +58,6 @@ const getColor = () => {
   fac
     .getColorAsync(images[index], { ignoredColor: [255, 0, 100, 255, 5] })
     .then((color) => {
-      console.log("Average color", color);
       return color.hex;
     })
     .catch((e) => {
@@ -92,7 +91,6 @@ const Editor: NextPage = () => {
   }
   const getImage = useCallback(() => {
     if (ref.current === null) {
-      console.log("is null");
       return;
     }
 

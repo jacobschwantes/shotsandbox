@@ -9,7 +9,7 @@ import {
   signOut,
   createUserWithEmailAndPassword,
 } from "firebase/auth";
-import firebaseApp from "./firebase/clientApp";
+import {firebaseApp} from "./firebase/clientApp";
 const auth = getAuth(firebaseApp);
 type Tab = {
   heading: string;
@@ -251,12 +251,11 @@ const SignUpPage: NextComponentType<NextPageContext, {}, SignUpPageProps> = ({
     await createUserWithEmailAndPassword(auth, email, password).then(
       async (userCredential) => {
         const token = await userCredential.user.getIdToken();
-        console.log(token)
+    
         const res = await fetch("/api/user/create", {
 
           headers: { Authorization: `Bearer ${token}` },
       })
-        .then((res) => console.log(res))
         .catch((e) => console.log("api/user/create error, ", e));
     }).catch(e => setError(e.message));
         setLoading(false);
