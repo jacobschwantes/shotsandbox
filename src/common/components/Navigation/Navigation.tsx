@@ -16,6 +16,7 @@ import {
   KeyIcon,
   ChartBarIcon,
   PencilIcon,
+  AdjustmentsIcon,
 } from "@heroicons/react/outline";
 // const navigation = [
 //   { name: "Pricing", href: "/pricing", icon: CreditCardIcon },
@@ -25,7 +26,7 @@ import {
 // ];
 import Link from "next/link";
 import { signOut, getAuth } from "firebase/auth";
-import firebaseApp from "@modules/auth/firebase/clientApp";
+import {firebaseApp} from "@modules/auth/firebase/clientApp";
 import { useRouter } from "next/router";
 const auth = getAuth(firebaseApp);
 function classNames(...classes) {
@@ -36,16 +37,16 @@ export default function Navigation(props) {
   const router = useRouter()
   const generalNavigation = [
     {
-      name: "Editor",
+      name: "Dashboard",
       href: "/",
-      icon: PencilIcon,
+      icon: ChartBarIcon,
       current: router.asPath === "/",
     },
     {
       name: "Projects",
-      href: "/dashboard",
-      icon: ChartBarIcon,
-      current: router.asPath.includes("dashboard"),
+      href: "/editor",
+      icon: AdjustmentsIcon,
+      current: router.asPath.includes("editor"),
     },
     {
       name: "Tokens",
@@ -71,8 +72,8 @@ export default function Navigation(props) {
   return (
     <nav className=" flex flex-col justify-between p-3 shadow-sm z-10 ">
       <div className="flex-col  space-y-4 ">
-        {generalNavigation.map((item) => (
-          <Link href={item.href}>
+        {generalNavigation.map((item, index) => (
+          <Link key={index} href={item.href}>
             <a
               key={item.name}
               className={classNames(
