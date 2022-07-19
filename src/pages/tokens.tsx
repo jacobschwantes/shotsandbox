@@ -1,75 +1,41 @@
 import { NextPage } from "next";
-import { collection, query, where, getDocs } from "firebase/firestore";
 import { createToast } from "vercel-toast";
 import "vercel-toast/dist/vercel-toast.css";
-
 import {
   EyeIcon,
   EyeOffIcon,
   DuplicateIcon,
   CheckIcon,
   TrashIcon,
+  RefreshIcon,
 } from "@heroicons/react/outline";
-import {
-  getAuth,
-  signInWithEmailAndPassword,
-  signOut,
-  createUserWithEmailAndPassword,
-} from "firebase/auth";
-import { useAsync } from "react-async-hook";
-import useSWR from "swr";
-import firebaseApp from "@modules/auth/firebase/clientApp";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { fetcherWithAuthHeader } from "@utils/swr/hooks";
-import { useContext, useEffect } from "react";
-import AuthContext from "@modules/auth/AuthContext";
-import { useState } from "react";
-const auth = getAuth(firebaseApp);
+import { useEffect, useMemo, useState } from "react";
+import clsx from "clsx";
+import Spinner from "@components/Spinner";
+import { useTokens } from "@utils/swr/hooks";
+import { useSWRConfig } from "swr";
 
-const Tokens: NextPage = () => {
-  const [showKeys, setShowKeys] = useState(true);
+const Tokens: NextPage = (props) => {
+  const { mutate } = useSWRConfig();
+  const [showKeys, setShowKeys] = useState(false);
   const [copiedId, setCopiedId] = useState("");
-  const [tokens, setTokens] = useState([]);
+  const [spin, setSpin] = useState(false);
+  const [creatingToken, setCreatingToken] = useState(false);
+  const { tokens, isLoading, isError, update } = useTokens(props.idToken);
   useEffect(
     () => {
-      let timer1 = setTimeout(() => setCopiedId(""), 2000);
-
-      // this will clear Timeout
-      // when component unmount like in willComponentUnmount
-      // and show will not change to true
+      let timer1 = setTimeout(() => setCopiedId(""), 10000);
       return () => {
         clearTimeout(timer1);
       };
     },
-    // useEffect will run only one time with empty []
-    // if you pass a value to array,
-    // like this - [data]
-    // than clearTimeout will run every time
-    // this value changes (useEffect re-run)
     [copiedId]
   );
-  const fetchTokens = async () => {
-    console.log("running");
-    const token = await auth.currentUser?.getIdToken();
-    const result = await fetch("/api/user/tokens", {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("data has been fetched");
-        setTokens(data.keys);
-        return data;
-      })
-      .catch((e) => console.log("error, ", e));
 
-    return result;
-  };
   const deleteToken = async (key) => {
-    console.log("running token delete");
-    const token = await auth.currentUser?.getIdToken();
     const result = await fetch("/api/user/tokens/delete", {
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${props.idToken}`,
         "Content-Type": "application/json",
       },
       method: "POST",
@@ -77,12 +43,11 @@ const Tokens: NextPage = () => {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log("token has been deleted");
-        setTokens((current) =>
-          current.filter((token) => {
-            return token.key !== key;
-          })
-        );
+        const newData = tokens.keys.filter((token) => {
+          return token.key !== key;
+        });
+
+        update({ ...{keys: newData} });
         createToast("token has been deleted", {
           timeout: 10000,
           type: "dark",
@@ -99,17 +64,15 @@ const Tokens: NextPage = () => {
     return result;
   };
   const createToken = async () => {
-    console.log("running token create");
-    const token = await auth.currentUser?.getIdToken();
+    setCreatingToken(true);
     const result = await fetch("/api/user/tokens/create", {
-      headers: { Authorization: `Bearer ${token}` },
+      headers: { Authorization: `Bearer ${props.idToken}` },
     })
-      .then((res) => res.json())
+      .then(async (res) => {if (res.ok) return res.json(); else throw new Error(await res.text())})
       .then((data) => {
-        console.log("token has been created");
         createToast("token has been created", {
           timeout: 10000,
-          type: "dark",
+          type: "success",
           action: {
             text: "Dismiss",
             callback(toast) {
@@ -117,22 +80,24 @@ const Tokens: NextPage = () => {
             },
           },
         });
-        setTokens((current) => [...current, data.key]);
+        let newKey = data.key;
+        update({ ...tokens, newKey });
         return data;
       })
-      .catch((e) => console.log("error, ", e));
+      .catch((e) =>  createToast(`${e.message}`, {
+        timeout: 10000,
+        type: "error",
+        action: {
+          text: "Dismiss",
+          callback(toast) {
+            toast.destroy();
+          },
+        },
+      }) );
+      setCreatingToken(false)
     return result;
   };
 
-  const asyncHero = useAsync(async () => {
-    if (false) {
-      console.log("was loading");
-      return [];
-    } else {
-      console.log("we is fetching");
-      return fetchTokens();
-    }
-  }, []);
 
   return (
     <div className="flex flex-col items-start flex-1 p-5 space-y-4">
@@ -140,7 +105,24 @@ const Tokens: NextPage = () => {
         <h3 className="text-lg leading-6 font-medium text-gray-900">
           API Keys
         </h3>
-        <div className="mt-3 flex sm:mt-0 sm:ml-4">
+        <div className="mt-3 flex sm:mt-0 sm:ml-4 space-x-3">
+          <button
+            disabled={spin}
+            type="button"
+            onAnimationEnd={() => setSpin(false)}
+            onClick={() => {
+              setSpin(true);
+              mutate(["/api/user/tokens", props.idToken]);
+            }}
+            className="inline-flex items-center p-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 "
+          >
+            <RefreshIcon
+              className={clsx(
+                "h-6 text-gray-400 ",
+                spin && "animate-spin-slow"
+              )}
+            />
+          </button>
           <button
             type="button"
             onClick={() => setShowKeys(!showKeys)}
@@ -153,16 +135,18 @@ const Tokens: NextPage = () => {
             )}
           </button>
           <button
+          disabled={creatingToken}
             onClick={() => createToken()}
             type="button"
-            className="ml-3 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
           >
-            Create Token
+             Create Token
           </button>
         </div>
       </div>
 
-      {asyncHero.loading && (
+      {isLoading && (
+        // <Spinner color="blue" />
         <div className="flex flex-col space-y-3 ">
           {Array.from(Array(5).keys()).map(() => {
             return (
@@ -177,13 +161,13 @@ const Tokens: NextPage = () => {
           })}
         </div>
       )}
-      {asyncHero.error && <div>Error: {asyncHero.error.message}</div>}
-      {asyncHero.result && (
+      {isError && <div>Error: {isError.message}</div>}
+      {tokens && (
         <div className="flex flex-col  max-w-md w-full space-y-2  ">
           <h1></h1>
-          {tokens.map((item, index) => {
+          {tokens.keys.map((item, index) => {
             return (
-              <div className="space-y-1">
+              <div key={index} className="space-y-1">
                 <p className="font-medium">{item.name}</p>
 
                 <div className="flex space-x-2">
