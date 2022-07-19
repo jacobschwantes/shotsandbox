@@ -50,9 +50,9 @@ const statusStyles = {
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
-export default function Table({ logs }) {
+export default function Table({ logs, dispatchModal }) {
   return (
-    <div className="rounded-2xl bg-gray-50  border shadow-lg shadow-gray-100  border-gray-200">
+    <div className="rounded-2xl bg-white  border shadow-lg shadow-gray-100  border-gray-200">
       <table className="   divide-y divide-gray-200 ">
         <thead>
           <tr>
@@ -67,26 +67,18 @@ export default function Table({ logs }) {
               Date
             </th>
             <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider rounded-2xl">
-              Error
-            </th>
-            <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               Result
             </th>
           </tr>
         </thead>
         <tbody className="bg-white divide-y divide-gray-200     ">
           {logs.map((transaction, index) => (
-            <tr key={index} className="bg-white ">
+            <tr key={index} className="bg-white rounded-2xl ">
               <td className="max-w-0 w-full px-6 py-4 whitespace-nowrap text-sm text-gray-900 rounded-2xl">
                 <div className="flex ">
-                  <a
-                    href={transaction.url}
-                    className="group inline-flex space-x-2 truncate text-sm "
-                  >
-                    <p className="text-gray-500 truncate group-hover:text-gray-900 ">
-                      {transaction.url}
-                    </p>
-                  </a>
+                  <p className="text-gray-500 truncate group-hover:text-gray-900 ">
+                    {transaction.url}
+                  </p>
                 </div>
               </td>
               <td className=" px-6 py-4 whitespace-nowrap text-sm text-gray-500  ">
@@ -101,24 +93,35 @@ export default function Table({ logs }) {
               </td>
               <td className="px-6 py-4 text-left whitespace-nowrap text-sm text-gray-500 rounded-2xl">
                 <time>
-                  {new Date(transaction.timestamp).toLocaleDateString()}
+                  {new Date(transaction.timestamp).toLocaleString()}
                 </time>
               </td>
-              <td className="px-6 py-4 text-left whitespace-normal text-sm text-gray-500 rounded-2xl truncate">
-                {transaction.error}
-              </td>
-              <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500 ">
-                {transaction.href &&
-                <Link
-                  passHref
-                  target="_blank"
-                  href={transaction.href}
-                  rel="noreferrer"
-                >
-                  <a target="_blank" rel="noreferrer" className="text-blue-500 flex items-center justify-center">
-                    <ExternalLinkIcon className="h-5"/>
-                  </a>
-                </Link>}
+              <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500 rounded-2xl ">
+                {transaction.status === "success" ? (
+                  <Link
+                    passHref
+                    target="_blank"
+                    href={transaction.href}
+                    rel="noreferrer"
+                  >
+                    <a
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-blue-500 flex items-center justify-center"
+                    >
+                      <ExternalLinkIcon className="h-5" />
+                    </a>
+                  </Link>
+                ) : (
+                  <button
+                    onClick={() =>
+                      dispatchModal({ message: transaction.error })
+                    }
+                    className="text-blue-500 font-medium"
+                  >
+                    View logs
+                  </button>
+                )}
               </td>
             </tr>
           ))}

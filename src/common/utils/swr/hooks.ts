@@ -22,8 +22,8 @@ export const useUsage = (token: string) => {
     isError: error,
   };
 };
-export const useLogs = (token: string) => {
-  const { data, error} = useSWR(['/api/user/logs', token], fetcher);
+export const useLogs = (token: string, params: string) => {
+  const { data, error} = useSWR([`/api/user/logs${params}`, token], fetcher);
 
   return {
     logs: data,
