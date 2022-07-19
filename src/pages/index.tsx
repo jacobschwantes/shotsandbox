@@ -1,50 +1,19 @@
 import { NextPage } from "next";
-import { getAuth } from "firebase/auth";
-import firebaseApp from "@modules/auth/firebase/clientApp";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/solid";
 import { Card, LineChart, Spinner } from "@components/index";
-import { useAsync } from "react-async-hook";
 import { useState } from "react";
-import { RefreshIcon } from "@heroicons/react/outline";
+import { EmojiSadIcon, RefreshIcon } from "@heroicons/react/outline";
 import clsx from "clsx";
 import { useUsage, useLogs } from "@utils/swr/hooks";
 import { useSWRConfig } from "swr";
 import { Table } from "@components/index";
 const Dashboard: NextPage = (props) => {
   const { mutate } = useSWRConfig();
-  const auth = getAuth(firebaseApp);
   const [spin, setSpin] = useState(false);
   const { usage, isLoading, isError } = useUsage(props.idToken);
-  const {logs, isLoadingLogs, isErrorLogs} = useLogs(props.idToken);
-  const [search, setSearch] = useState("");
-  const [open, setOpen] = useState(false);
   const batchSize = 5; // items per chunk
   const [active, setActive] = useState(1);
-  const failedCount = logs?.logs.filter((obj) => {
-    if (obj.status === 'failed') {
-      return true;
-    }
-    })
-  // let searchedTasks = logs.filter((item) => {
-  //   let lowercase = item.name.toLowerCase();
-  //   return lowercase.includes(search.toLocaleLowerCase());
-  // });
-  // const asyncHero = useAsync(async () => {
-  //   if (false) {
-  //     return [];
-  //   } else {
-  //     return processFetch();
-  //   }
-  // }, []);
-  // const processFetch = async () => {
-  //   const authToken = await auth.currentUser?.getIdToken();
-  //   const res = await fetch("/api/user/usage", {
-  //     headers: { Authorization: `Bearer ${authToken}` },
-  //   })
-  //     .then((res) => res.json())
-  //     .then((data) => setUsage(data.data))
-  //     .catch((e) => console.log("error, ", e));
-  // };
+
   return (
     <div className="flex-1 p-5 space-y-4">
       <div className="pb-5 border-b border-gray-200 sm:flex sm:items-center sm:justify-between w-full">
@@ -59,7 +28,6 @@ const Dashboard: NextPage = (props) => {
             onClick={() => {
               setSpin(true);
               mutate(["/api/user/usage", props.idToken]);
-              mutate(["/api/user/logs", props.idToken]);
               // asyncHero.execute();
             }}
             className="inline-flex items-center p-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 "
@@ -80,6 +48,7 @@ const Dashboard: NextPage = (props) => {
           </button> */}
         </div>
       </div>
+      <Stats/>
       <div className="grid grid-cols-3 gap-4  ">
         <Card
           title="Requests"
@@ -100,110 +69,82 @@ const Dashboard: NextPage = (props) => {
         <Card
           title="Failed requests"
           type="count"
-          count={logs?.logs.filter((obj) => {
-            if (obj.status === 'failed') {
-              return true;
-            }
-            }).length}
+          count={0}
           isLoading={isLoading}
           isError={isError}
           change={5.2}
         />
       </div>
       <LineChart/>
-      {isLoadingLogs && <Spinner color="blue"/>}
-      {isErrorLogs && <p className="text-red-400 font-medium">logs error: {isErrorLogs}</p>}
-      {logs?.logs && <Table logs={logs.logs}  />}
-      {logs?.logs &&
-      <Pagination
-        pages={Math.ceil(logs.logs.length / batchSize)}
-        setActive={setActive}
-        active={active}
-        size={25}
-        batchSize={5}
-      />}
     </div>
   );
 };
 
-const Pagination = (props) => {
+
+
+/* This example requires Tailwind CSS v2.0+ */
+import { ArrowSmDownIcon, ArrowSmUpIcon } from '@heroicons/react/solid'
+import { CursorClickIcon, MailOpenIcon, UsersIcon, PaperAirplaneIcon } from '@heroicons/react/outline'
+
+const stats = [
+  { id: 1, name: 'Requests', stat: '71,897', icon: PaperAirplaneIcon, change: '122', changeType: 'increase' },
+  { id: 2, name: 'Avg. Open Rate', stat: '58.16%', icon: MailOpenIcon, change: '5.4%', changeType: 'increase' },
+  { id: 3, name: 'Failed Requests', stat: '24.57%', icon: EmojiSadIcon, change: '3.2%', changeType: 'decrease' },
+]
+
+function classNames(...classes) {
+  return classes.filter(Boolean).join(' ')
+}
+
+function Stats() {
   return (
-    <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
-      <div className="flex flex-1 justify-between sm:hidden">
-        <button
-          disabled={props.active === 1}
-          onClick={() => props.setActive(props.active - 1)}
-          className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-        >
-          Previous
-        </button>
-        <button
-          disabled={props.active === props.pages}
-          onClick={() => props.setActive(props.active + 1)}
-          className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-        >
-          Next
-        </button>
-      </div>
-      <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
-        <div>
-          <p className="text-sm text-gray-700">
-            Showing{" "}
-            <span className="font-medium">
-              {1 + (props.active - 1) * props.batchSize}
-            </span>{" "}
-            to{" "}
-            <span className="font-medium">
-              {props.active * props.batchSize > props.size
-                ? props.size
-                : props.active * props.batchSize}
-            </span>{" "}
-            of <span className="font-medium">{props.size}</span> results
-          </p>
-        </div>
-        <div>
-          <nav
-            className="relative z-0 inline-flex -space-x-px rounded-md shadow-sm"
-            aria-label="Pagination"
-          >
-            <button
-              disabled={props.active === 1}
-              onClick={() => props.setActive(props.active - 1)}
-              className="relative inline-flex items-center rounded-l-md border border-gray-300 bg-white px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50"
-            >
-              <span className="sr-only">Previous</span>
-              <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
-            </button>
-            {/* Current: "z-10 bg-blue-50 border-blue-500 text-blue-600", Default: "bg-white border-gray-300 text-gray-500 hover:bg-gray-50" */}
-            {Array.from(Array(props.pages)).map((item, ind) => {
-              return (
-                <button
-                  className={
-                    props.active === ind + 1
-                      ? " relative z-10 inline-flex items-center border border-blue-500 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-600"
-                      : "relative inline-flex items-center border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50"
-                  }
-                  id={ind}
-                  onClick={() => props.setActive(++ind)}
-                >
-                  {ind + 1}
-                </button>
-              );
-            })}
+    <div>
+      <h3 className="text-lg leading-6 font-medium text-gray-900">Last 30 days</h3>
 
-            <button
-              disabled={props.active === props.pages}
-              onClick={() => props.setActive(props.active + 1)}
-              className="relative inline-flex items-center rounded-r-md border border-gray-300 bg-white px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50"
-            >
-              <span className="sr-only">Next</span>
-              <ChevronRightIcon className="h-5 w-5" aria-hidden="true" />
-            </button>
-          </nav>
-        </div>
-      </div>
+      <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {stats.map((item) => (
+          <div
+            key={item.id}
+            className="relative bg-white pt-5 px-4 pb-12 sm:pt-6 sm:px-6 shadow rounded-lg overflow-hidden"
+          >
+            <dt>
+              <div className="absolute bg-blue-500 rounded-md p-3">
+                <item.icon className="h-6 w-6 text-white" aria-hidden="true" />
+              </div>
+              <p className="ml-16 text-sm font-medium text-gray-500 truncate">{item.name}</p>
+            </dt>
+            <dd className="ml-16 pb-6 flex items-baseline sm:pb-7">
+              <p className="text-2xl font-semibold text-gray-900">{item.stat}</p>
+              <p
+                className={classNames(
+                  item.changeType === 'increase' ? 'text-green-600' : 'text-red-600',
+                  'ml-2 flex items-baseline text-sm font-semibold'
+                )}
+              >
+                {item.changeType === 'increase' ? (
+                  <ArrowSmUpIcon className="self-center flex-shrink-0 h-5 w-5 text-green-500" aria-hidden="true" />
+                ) : (
+                  <ArrowSmDownIcon className="self-center flex-shrink-0 h-5 w-5 text-red-500" aria-hidden="true" />
+                )}
+
+                <span className="sr-only">{item.changeType === 'increase' ? 'Increased' : 'Decreased'} by</span>
+                {item.change}
+              </p>
+              <div className="absolute bottom-0 inset-x-0 bg-gray-50 px-4 py-4 sm:px-6">
+                <div className="text-sm">
+                  <a href="#" className="font-medium text-blue-600 hover:text-blue-500">
+                    {' '}
+                    View all<span className="sr-only"> {item.name} stats</span>
+                  </a>
+                </div>
+              </div>
+            </dd>
+          </div>
+        ))}
+      </dl>
     </div>
-  );
-};
+  )
+}
+
 
 export default Dashboard;
