@@ -7,7 +7,17 @@ module.exports = {
   ],
   darkMode: 'class',
   theme: {
-    extend: {},
+    extend: {
+      animation: {
+        'spin-slow': 'spin-left 1s ease-in-out',
+      },
+      keyframes: {
+        'spin-left': {
+          '0%': { transform: 'rotate(0deg)' },
+          '100%': { transform: 'rotate(-720deg)' },
+        }
+      }
+    },
   },
-  plugins: [],
+  plugins: [require('@tailwindcss/forms'),],
 }
