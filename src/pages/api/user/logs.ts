@@ -38,7 +38,6 @@ async function getCount(docRef) {
 }
 async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
   const { limit, page } = req.query;
-  console.log(limit, page)
   const userRef = firestore.collection("users").doc(req.uid);
   const logCount = await getCount(userRef);
   const startAt = logCount - (parseInt(page) - 1) * parseInt(limit);
