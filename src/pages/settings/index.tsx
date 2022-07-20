@@ -1,7 +1,7 @@
 import { NextPage } from "next";
 import { addDoc, collection } from "firebase/firestore";
 import { db, firebaseApp } from "@modules/auth/firebase/clientApp";
-import { getAuth } from "firebase/auth";
+import { getAuth, sendEmailVerification, verifyBeforeUpdateEmail } from "firebase/auth";
 import { useState } from "react";
 import { Fragment } from 'react'
 import { Disclosure, Menu, RadioGroup, Switch, Transition } from '@headlessui/react'
@@ -29,6 +29,9 @@ const Settings: NextPage = () => {
       }
     );
   };
+  const dispatchEmailVerify = () => {
+    sendEmailVerification(auth.currentUser)
+  }
 
   return (
     <div className="flex-1  p-5 ">
@@ -78,6 +81,9 @@ const Settings: NextPage = () => {
         </div>
       </div> */}
      <SettingsLayout>
+      <button onClick={dispatchEmailVerify}>
+        verify email
+      </button>
       <Example/>
      </SettingsLayout>
 

@@ -6,11 +6,12 @@ export function withAuth(handler: any) {
       if (!authHeader) return res.status(401).end("Not authenticated");
       const token = authHeader.split(' ')[1];
   
-      const { uid, email } = await auth.verifyIdToken(token);
+      const { uid, email, email_verified } = await auth.verifyIdToken(token);
+      
       if (!uid || !email) {
         return res.status(401).end("Not a valid user");
       }
   
-      return handler({ ...req, uid, email }, res);
+      return handler({ ...req, uid, email, email_verified }, res);
     };
   }
