@@ -1,6 +1,7 @@
 import { NextPage } from "next";
-import { createToast } from "vercel-toast";
-import "vercel-toast/dist/vercel-toast.css";
+import { toast } from "react-toastify";
+
+
 import {
   EyeIcon,
   EyeOffIcon,
@@ -9,6 +10,7 @@ import {
   TrashIcon,
   RefreshIcon,
 } from "@heroicons/react/outline";
+
 import { useEffect, useMemo, useState } from "react";
 import clsx from "clsx";
 import Spinner from "@components/Spinner";
@@ -22,18 +24,15 @@ const Tokens: NextPage = (props) => {
   const [spin, setSpin] = useState(false);
   const [creatingToken, setCreatingToken] = useState(false);
   const { tokens, isLoading, isError, update } = useTokens(props.idToken);
-  useEffect(
-    () => {
-      let timer1 = setTimeout(() => setCopiedId(""), 10000);
-      return () => {
-        clearTimeout(timer1);
-      };
-    },
-    [copiedId]
-  );
+  useEffect(() => {
+    let timer1 = setTimeout(() => setCopiedId(""), 10000);
+    return () => {
+      clearTimeout(timer1);
+    };
+  }, [copiedId]);
 
-  const deleteToken = async (key) => {
-    const result = await fetch("/api/user/tokens/delete", {
+  const deleteToken = async (key: string) => {
+    await fetch("/api/user/tokens/delete", {
       headers: {
         Authorization: `Bearer ${props.idToken}`,
         "Content-Type": "application/json",
@@ -47,57 +46,67 @@ const Tokens: NextPage = (props) => {
           return token.key !== key;
         });
 
-        update({ ...{keys: newData} });
-        createToast("token has been deleted", {
-          timeout: 10000,
-          type: "dark",
-          action: {
-            text: "Dismiss",
-            callback(toast) {
-              toast.destroy();
-            },
-          },
+        update({ ...{ keys: newData } });
+        toast("🦄 token deleted", {
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
         });
-        return data;
       })
       .catch((e) => console.log("error, ", e));
-    return result;
   };
   const createToken = async () => {
     setCreatingToken(true);
     const result = await fetch("/api/user/tokens/create", {
       headers: { Authorization: `Bearer ${props.idToken}` },
     })
-      .then(async (res) => {if (res.ok) return res.json(); else throw new Error(await res.text())})
+      .then(async (res) => {
+        if (res.ok) return res.json();
+        else throw await res.json();
+      })
       .then((data) => {
-        createToast("token has been created", {
-          timeout: 10000,
-          type: "success",
-          action: {
-            text: "Dismiss",
-            callback(toast) {
-              toast.destroy();
-            },
-          },
-        });
+        toast(
+          <div className="">
+            <h1 className="font-medium">Success!</h1>
+            <p className="text-sm font-extralight">{data.message}</p>{" "}
+          </div>,
+          {
+            type: "success",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          }
+        );
         let newKey = data.key;
         update({ ...tokens, newKey });
         return data;
       })
-      .catch((e) =>  createToast(`${e.message}`, {
-        timeout: 10000,
-        type: "error",
-        action: {
-          text: "Dismiss",
-          callback(toast) {
-            toast.destroy();
-          },
-        },
-      }) );
-      setCreatingToken(false)
+      .catch((e) =>
+        toast(
+          <div className="">
+            <h1 className=" text-sm">{e.error}</h1>
+            <p className="text-xs font-extralight">{e.message}</p>{" "}
+          </div>,
+          {
+            type: "error",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+          }
+        )
+      );
+    setCreatingToken(false);
     return result;
   };
-
 
   return (
     <div className="flex flex-col items-start space-y-4 p-5">
@@ -135,12 +144,12 @@ const Tokens: NextPage = (props) => {
             )}
           </button>
           <button
-          disabled={creatingToken}
+            disabled={creatingToken}
             onClick={() => createToken()}
             type="button"
             className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
           >
-             Create Token
+            Create Token
           </button>
         </div>
       </div>
@@ -188,15 +197,15 @@ const Tokens: NextPage = (props) => {
                         type="button"
                         onClick={() => {
                           navigator.clipboard.writeText(item.key);
-                          createToast(`${item.name} copied to clipboard`, {
-                            timeout: 10000,
-                            type: "dark",
-                            action: {
-                              text: "Dismiss",
-                              callback(toast) {
-                                toast.destroy();
-                              },
-                            },
+                          toast(`${item.name} copied to clipboard`, {
+                          
+                            autoClose: 5000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            type: "info"
                           });
                           setCopiedId(index);
                         }}

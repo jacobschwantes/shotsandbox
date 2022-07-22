@@ -7,14 +7,16 @@ import {
   MailIcon,
   CalendarIcon,
 } from "@heroicons/react/outline";
-import { createToast } from "vercel-toast";
-import "vercel-toast/dist/vercel-toast.css";
+import {  toast } from 'react-toastify';
+
+import 'react-toastify/dist/ReactToastify.css';
+
 import { CheckIcon } from "@heroicons/react/solid";
 import { collection, query, where, onSnapshot, doc } from "firebase/firestore";
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
-function findTime(time) {
+function findTime(time: number) {
   let now = Date.now();
   let difference = now / 1000 - time;
   if (difference < 3600) {
@@ -68,16 +70,15 @@ export default function Notifications(props) {
         let data = change.doc.data();
         if (change.type === "added") {
           if (data.timestamp > start) {
-            createToast(`${data.message}`, {
-              timeout: 10000,
-              type: "dark",
-              action: {
-                text: "Dismiss",
-                callback(toast) {
-                  toast.destroy();
-                },
-              },
-            });
+            toast(data.message, {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              });
           }
         }
       });

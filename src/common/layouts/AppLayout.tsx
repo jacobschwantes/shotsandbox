@@ -1,5 +1,8 @@
 import { NextPage } from "next";
 import Link from "next/link";
+import { ToastContainer } from "react-toastify";
+
+import "react-toastify/dist/ReactToastify.css";
 import { Header, Navigation } from "@components/index";
 import {
   BookOpenIcon,
@@ -19,6 +22,19 @@ const navigation = [
 const AppLayout: NextPage = ({ children }) => {
   return (
     <div className="h-screen w-screen overflow-hidden flex flex-col">
+      <ToastContainer
+        position="bottom-right"
+        className="text-sm"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        theme="colored"
+        pauseOnHover
+      />
       <Header />
       <div className="flex flex-1 h-full">
         {/* <div className="  bg-white h-screen px-4 py-2 ">
@@ -31,7 +47,7 @@ const AppLayout: NextPage = ({ children }) => {
           ))}
         </div> */}
         <Navigation active="projects" wideNav={false} />
-        <div className="overflow-y-auto flex-1 h-full pb-14">{children}</div>
+        <div className="overflow-y-auto flex-1 h-full ">{children}</div>
         <div className=" bg-white"></div>
       </div>
     </div>
