@@ -38,7 +38,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
           res
             .status(200)
             .json({
-              message: "key created",
+              message: `${data.name} created`,
               key: {
                 quota: 200,
                 userid: req.uid,
@@ -51,7 +51,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
           res.status(500).json({ message: e });
         }
       } else {
-        res.status(500).send("token creation failed. 5 token limit reached.");
+        res.status(500).json({error: 'Token creation failed', message: "5 token limit reached"});
       }
     } else {
       res.status(400).json({ message: "key already exists" });
