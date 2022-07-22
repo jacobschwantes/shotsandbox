@@ -100,7 +100,7 @@ const Tokens: NextPage = (props) => {
 
 
   return (
-    <div className="flex flex-col items-start flex-1 p-5 space-y-4">
+    <div className="flex flex-col items-start space-y-4 p-5">
       <div className="pb-5 border-b border-gray-200 sm:flex sm:items-center sm:justify-between w-full">
         <h3 className="text-lg leading-6 font-medium text-gray-900">
           API Keys

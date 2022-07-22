@@ -1,6 +1,6 @@
 import { NextPage } from "next";
 import Link from "next/link";
-import {Header, Navigation} from "@components/index"
+import { Header, Navigation } from "@components/index";
 import {
   BookOpenIcon,
   ChipIcon,
@@ -8,7 +8,7 @@ import {
   DownloadIcon,
   MenuIcon,
   XIcon,
-  CogIcon
+  CogIcon,
 } from "@heroicons/react/outline";
 const navigation = [
   { name: "Pricing", href: "/pricing", icon: CreditCardIcon },
@@ -20,7 +20,7 @@ const AppLayout: NextPage = ({ children }) => {
   return (
     <div className="h-screen w-screen overflow-hidden flex flex-col">
       <Header />
-      <div className="flex flex-1">
+      <div className="flex flex-1 h-full">
         {/* <div className="  bg-white h-screen px-4 py-2 ">
           {navigation.map((item) => (
             <Link key={item.name} href={item.href}>
@@ -30,8 +30,8 @@ const AppLayout: NextPage = ({ children }) => {
             </Link>
           ))}
         </div> */}
-        <Navigation active="projects" wideNav={false}  />
-        {children}
+        <Navigation active="projects" wideNav={false} />
+        <div className="overflow-y-auto flex-1 h-full pb-14">{children}</div>
         <div className=" bg-white"></div>
       </div>
     </div>
