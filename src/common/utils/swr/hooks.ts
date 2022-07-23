@@ -3,8 +3,8 @@ import useSWR, { mutate } from "swr";
 const fetcher = (url, token) =>
   fetch(url, { headers: { Authorization: "Bearer " + token } }).then(res => res.json());
 
-export const useTokens = (token: string) => {
-  const { data, error, mutate } = useSWR(['/api/user/tokens', token], fetcher);
+export const useTokens = (token: string | null) => {
+  const { data, error, mutate } = useSWR(() => token ? ['/api/user/tokens', token] : null, fetcher);
 
   return {
     update: mutate,
@@ -13,8 +13,8 @@ export const useTokens = (token: string) => {
     isError: error,
   };
 };
-export const useUsage = (token: string) => {
-  const { data, error} = useSWR(['/api/user/usage', token], fetcher);
+export const useUsage = (token: string | null) => {
+  const { data, error} = useSWR(() => token ? ['/api/user/usage', token] : null, fetcher);
 
   return {
     usage: data,
@@ -22,8 +22,8 @@ export const useUsage = (token: string) => {
     isError: error,
   };
 };
-export const useLogs = (token: string, params: string) => {
-  const { data, error} = useSWR([`/api/user/logs${params}`, token], fetcher);
+export const useLogs = (token: string | null, params: string) => {
+  const { data, error} = useSWR(() => token ? [`/api/user/logs${params}`, token] : null, fetcher);
 
   return {
     logs: data,

@@ -25,7 +25,7 @@ const Tokens: NextPage = (props) => {
   const [creatingToken, setCreatingToken] = useState(false);
   const { tokens, isLoading, isError, update } = useTokens(props.idToken);
   useEffect(() => {
-    let timer1 = setTimeout(() => setCopiedId(""), 10000);
+    let timer1 = setTimeout(() => setCopiedId(""), 6000);
     return () => {
       clearTimeout(timer1);
     };
