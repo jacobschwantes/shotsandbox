@@ -9,11 +9,11 @@ import { FastAverageColor } from "fast-average-color";
 import { HexColorPicker, HexColorInput } from "react-colorful";
 import { Popover, Transition } from "@headlessui/react";
 import { Fragment } from "react";
-import firebase from "@modules/auth/firebase/clientApp";
+
 // Import the useAuthStateHook
 import { useAuthState } from "react-firebase-hooks/auth";
 import { signOut, getAuth } from "firebase/auth";
-import {firebaseApp} from "@modules/auth/firebase/clientApp";
+import { firebaseApp } from "@modules/auth/firebase/clientApp";
 import Toolbar from "./components/Toolbar";
 import { Disclosure } from "@headlessui/react";
 import { ChevronUpIcon } from "@heroicons/react/solid";
@@ -75,17 +75,26 @@ const Editor: NextPage = () => {
   const [perspective, setPerspective] = useState("125");
   const [dark, setDark] = useState(false);
   const [showToolbar, setShowToolbar] = useState(false);
-  const [rotateX, setRotateX] = useState(randomizeValue);
-  const [rotateY, setRotateY] = useState(randomizeValue);
-  const [rotateZ, setRotateZ] = useState(randomizeValue);
+  const [rotateX, setRotateX] = useState("0");
+  const [rotateY, setRotateY] = useState("0");
+  const [rotateZ, setRotateZ] = useState("0");
+
+  const [rotateContainerX, setRotateContainerX] = useState("51");
+  const [rotateContainerY, setRotateContainerY] = useState("0");
+  const [rotateContainerZ, setRotateContainerZ] = useState("43");
+  const [gridGap, setGridGap] = useState("0");
+  const [containerZoom, setContainerZoom] = useState("1");
   const [zoom, setZoom] = useState("1");
   const [gradientStop1, setGradientStop1] = useState(generateColorHex);
   const [gradientStop2, setGradientStop2] = useState(generateColorHex);
+  const [gapX, setGapX] = useState("0");
+  const [gapY, setGapY] = useState("0");
+  const [gapZ, setGapZ] = useState("0");
   const [bgColor, setBgColor] = useState(getColor);
   const [layout, setLayout] = useState(4);
   const [preset, setPreset] = useState({});
   const ref = useRef<HTMLDivElement>(null);
-  let root = null;
+  let root: HTMLElement | null = null;
   if (typeof window !== "undefined") {
     root = document.documentElement;
   }
@@ -94,7 +103,7 @@ const Editor: NextPage = () => {
       return;
     }
 
-    toJpeg(ref.current, { cacheBust: true })
+    toJpeg(ref.current, { cacheBust: true, width: 2560, height: 1440 })
       .then((dataUrl) => {
         const link = document.createElement("a");
         link.download = "my-image-name.png";
@@ -127,13 +136,24 @@ const Editor: NextPage = () => {
   };
 
   useEffect(() => {
-    root.style.setProperty("--perspective-var", perspective + "rem");
-    root.style.setProperty("--rotateX-var", rotateX + "deg");
-    root.style.setProperty("--rotateY-var", rotateY + "deg");
-    root.style.setProperty("--zoom-var", zoom);
-    root.style.setProperty("--rotateZ-var", rotateZ + "deg");
-    root.style.setProperty("--gradient-stop-1", gradientStop1);
-    root.style.setProperty("--gradient-stop-2", gradientStop2);
+    if (root) {
+      root.style.setProperty("--perspective-var", perspective + "rem");
+      root.style.setProperty("--rotateX-var", rotateX + "deg");
+      root.style.setProperty("--rotateY-var", rotateY + "deg");
+      root.style.setProperty("--zoom-var", zoom);
+      root.style.setProperty("--rotateZ-var", rotateZ + "deg");
+      root.style.setProperty("--gradient-stop-1", gradientStop1);
+      root.style.setProperty("--gradient-stop-2", gradientStop2);
+      root.style.setProperty("--gap-x", gapX + "rem");
+      root.style.setProperty("--gap-y", gapY + "rem");
+      root.style.setProperty("--gap-z", gapZ + "rem");
+      root.style.setProperty("--blur", gapZ);
+      root.style.setProperty("--container-rotate-x", rotateContainerX + "deg");
+      root.style.setProperty("--container-rotate-y", rotateContainerY + "deg");
+      root.style.setProperty("--container-rotate-z", rotateContainerZ + "deg");
+      root.style.setProperty("--container-zoom", containerZoom);
+      root.style.setProperty("--grid-gap", gridGap + "px");
+    }
   }, [
     perspective,
     rotateX,
@@ -142,6 +162,14 @@ const Editor: NextPage = () => {
     zoom,
     gradientStop1,
     gradientStop2,
+    gapX,
+    gapY,
+    gapZ,
+    containerZoom,
+    rotateContainerX,
+    rotateContainerY,
+    rotateContainerZ,
+    gridGap,
   ]);
   useEffect(() => {
     setPreset(getPreset(""));
@@ -154,15 +182,23 @@ const Editor: NextPage = () => {
     gradientStop1,
     gradientStop2,
   ]);
-  const loadPreset = ({perspective, rotateX, rotateY, rotateZ, zoom, gradientStop1, gradientStop2}) => {
-    setPerspective(perspective);
-    setRotateX(rotateX);
-    setRotateY(rotateY);
-    setRotateZ(rotateZ);
-    setZoom(zoom);
-    setGradientStop1(gradientStop1);
-    setGradientStop2(gradientStop2);
-  }
+  // const loadPreset = ({
+  //   perspective,
+  //   rotateX,
+  //   rotateY,
+  //   rotateZ,
+  //   zoom,
+  //   gradientStop1,
+  //   gradientStop2,
+  // }) => {
+  //   setPerspective(perspective);
+  //   setRotateX(rotateX);
+  //   setRotateY(rotateY);
+  //   setRotateZ(rotateZ);
+  //   setZoom(zoom);
+  //   setGradientStop1(gradientStop1);
+  //   setGradientStop2(gradientStop2);
+  // };
 
   return (
     <div className="flex-1 flex justify-between h-full">
@@ -175,29 +211,37 @@ const Editor: NextPage = () => {
           <div
             ref={ref}
             className={clsx(
-              "overflow-hidden z-10 absolute",
+              "overflow-hidden z-10 absolute ",
               dark ? "bg-black" : "bg-white"
             )}
           >
+            <div className=" w-full h-full absolute bg-gradient-to-t from-[var(--gradient-stop-1)] to-[var(--gradient-stop-2)]   "></div>
             <div
-              className={clsx(` grid grid-cols-2 grid-rows-2 gap-5  relative `)}
+              className={clsx(
+                " relative aspect-video container template7  ",
+                layout < 3
+                  ? " flex items-center  "
+                  : "grid-cols-2 grid   "
+              )}
             >
-              <div className="absolute w-full h-full bg-gradient-to-t from-[var(--gradient-stop-1)] to-[var(--gradient-stop-2)] "></div>
-              {images.map((url, index) => (
-                <div
-                  key={index}
-                  className="rounded-xl flex flex-col items-center shadow-2xl overflow-hidden first:template3 last:template3 template4  "
-                >
-                  {showToolbar && <Toolbar type="light" />}
+              {images.map(
+                (url, index) =>
+                  layout >= index + 1 && (
+                    <div
+                      key={index}
+                      className="rounded-xl shadow-2xl overflow-hidden aspect-video relative   "
+                    >
+                      {showToolbar && <Toolbar type="dark" />}
 
-                  <Image
-                    width={2560}
-                    height={1440}
-                    objectFit="cover"
-                    src={`/${url}`}
-                  />
-                </div>
-              ))}
+                      <Image
+                        width={2560}
+                        height={1440}
+                        objectFit="cover"
+                        src={`/${url}`}
+                      />
+                    </div>
+                  )
+              )}
             </div>
           </div>
           {/* <div className="absolute w-[1280px] h-[720px] bg-blue-600 blur-3xl z-0 scale-105"></div> */}
@@ -217,7 +261,84 @@ const Editor: NextPage = () => {
                 />
               </Disclosure.Button>
               <Disclosure.Panel className="px-4 pt-4 pb-2 space-y-4 text-sm text-gray-500">
-                <div className="">
+                <h1 className="font-medium border-b-2 pb-1 text-base">
+                  Container
+                </h1>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="relative pt-1">
+                    <label htmlFor="customRange1" className=" font-medium">
+                      rotateY
+                    </label>
+                    <input
+                      min={-180}
+                      max={180}
+                      onChange={(e) => setRotateContainerY(e.target.value)}
+                      value={rotateContainerY}
+                      type="range"
+                      className="  appearance-none w-full h-1 p-0 focus:outline-none focus:ring-0 focus:shadow-none bg-blue-500 rounded-full slider"
+                      id="customRange1"
+                    />
+                  </div>
+                  <div className="relative pt-1">
+                    <label htmlFor="customRange1" className=" font-medium">
+                      Grid gap
+                    </label>
+                    <input
+                      min={0}
+                      max={180}
+                      onChange={(e) => setGridGap(e.target.value)}
+                      value={gridGap}
+                      type="range"
+                      className="  appearance-none w-full h-1 p-0 focus:outline-none focus:ring-0 focus:shadow-none bg-blue-500 rounded-full slider "
+                      id="customRange1"
+                    />
+                  </div>
+                  <div className="relative pt-1">
+                    <label htmlFor="customRange1" className=" font-medium">
+                      rotateX
+                    </label>
+                    <input
+                      onChange={(e) => setRotateContainerX(e.target.value)}
+                      value={rotateContainerX}
+                      min={-180}
+                      max={180}
+                      type="range"
+                      className="  appearance-none w-full h-1 p-0 focus:outline-none focus:ring-0 focus:shadow-none bg-blue-500 rounded-full slider "
+                      id="customRange1"
+                    />
+                  </div>
+                  <div className="relative pt-1">
+                    <label htmlFor="customRange1" className=" font-medium">
+                      zoom
+                    </label>
+                    <input
+                      onChange={(e) => setContainerZoom(e.target.value)}
+                      value={containerZoom}
+                      step={0.1}
+                      min={0.1}
+                      max={5}
+                      type="range"
+                      className="  appearance-none w-full h-1 p-0 focus:outline-none focus:ring-0 focus:shadow-none bg-blue-500 rounded-full slider "
+                      id="customRange1"
+                    />
+                  </div>
+                  <div className="relative pt-1">
+                    <label htmlFor="customRange1" className=" font-medium">
+                     rotateZ
+                    </label>
+                    <input
+                      onChange={(e) => setRotateContainerZ(e.target.value)}
+                      value={rotateContainerZ}
+                      min={-180}
+                      max={180}
+                      type="range"
+                      className="appearance-none w-full h-1 p-0 focus:outline-none focus:ring-0 focus:shadow-none bg-blue-500 rounded-full slider"
+                      id="customRange1"
+                    />
+                  </div>
+                </div>
+                <h1 className="font-medium border-b-2 pb-1 text-base">Image</h1>
+                <div className="grid grid-cols-2 gap-3">
                   <div className="relative pt-1">
                     <label htmlFor="customRange1" className=" font-medium">
                       perspective
@@ -289,14 +410,53 @@ const Editor: NextPage = () => {
                       id="customRange1"
                     />
                   </div>
+                  <div className="relative pt-1">
+                    <label htmlFor="customRange1" className=" font-medium">
+                      gap-x
+                    </label>
+                    <input
+                      onChange={(e) => setGapX(e.target.value)}
+                      value={gapX}
+                      min={-50}
+                      max={50}
+                      type="range"
+                      className="appearance-none w-full h-1 p-0 focus:outline-none focus:ring-0 focus:shadow-none bg-blue-500 rounded-full slider"
+                      id="customRange1"
+                    />
+                  </div>
+                  <div className="relative pt-1">
+                    <label htmlFor="customRange1" className=" font-medium">
+                      gap-y
+                    </label>
+                    <input
+                      onChange={(e) => setGapY(e.target.value)}
+                      value={gapY}
+                      min={-50}
+                      max={50}
+                      type="range"
+                      className="appearance-none w-full h-1 p-0 focus:outline-none focus:ring-0 focus:shadow-none bg-blue-500 rounded-full slider"
+                      id="customRange1"
+                    />
+                  </div>
+                  <div className="relative pt-1">
+                    <label htmlFor="customRange1" className=" font-medium">
+                      gap-z
+                    </label>
+                    <input
+                      onChange={(e) => setGapZ(e.target.value)}
+                      value={gapZ}
+                      step={0.05}
+                      min={-1}
+                      max={0}
+                      type="range"
+                      className="appearance-none w-full h-1 p-0 focus:outline-none focus:ring-0 focus:shadow-none bg-blue-500 rounded-full slider"
+                      id="customRange1"
+                    />
+                  </div>
                 </div>
-                <div className="grid gap-2 grid-cols-2">
-                  <button
-                    onClick={() => setDark(!dark)}
-                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 "
-                  >
-                    switch dark
-                  </button>
+
+                <div className="grid gap-3 grid-cols-2">
+               
                   <button
                     onClick={() => setShowToolbar(!showToolbar)}
                     className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 "
@@ -309,28 +469,7 @@ const Editor: NextPage = () => {
                   >
                     download
                   </button>
-                  <button
-                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 "
-                    onClick={randomizeXYZ}
-                  >
-                    randomize
-                  </button>
-                  <button
-                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700"
-                    onClick={getColor}
-                  >
-                    getcolor
-                  </button>
-                  <button
-                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700"
-                    onClick={() =>
-                      console.log(
-                        getPreset(`preset${Math.floor(Math.random() * 100)}`)
-                      )
-                    }
-                  >
-                    getPreset
-                  </button>
+            
                   <div className="flex">
                     <ColorPicker
                       cssVariable="gradient1"
@@ -342,6 +481,27 @@ const Editor: NextPage = () => {
                       color={gradientStop2}
                       setColor={setGradientStop2}
                     />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor="location"
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      layout
+                    </label>
+                    <select
+                      value={layout}
+                      onChange={(e) => setLayout(parseInt(e.target.value))}
+                      id="location"
+                      name="location"
+                      className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
+                      defaultValue="Canada"
+                    >
+                      <option>1</option>
+                      <option>2</option>
+                      <option>3</option>
+                      <option>4</option>
+                    </select>
                   </div>
                 </div>
               </Disclosure.Panel>
@@ -363,7 +523,7 @@ const Editor: NextPage = () => {
                 {presets.map((item) => (
                   <div className="space-y-2">
                     <h1 className="text-black font-medium">{item.name}</h1>
-                    <button onClick={() => loadPreset(item)}>
+                    <button>
                       <img
                         className="rounded shadow-lg border-2 border-blue-500"
                         src={`${item.name}.png`}

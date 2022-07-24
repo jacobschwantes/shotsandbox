@@ -17,6 +17,50 @@
   transform: perspective(var(--perspective-var)) rotateX(var(--rotateX-var)) rotateY(var(--rotateY-var)) rotateZ(var(--rotateZ-var)) scale(var(--zoom-var));
 }
 }
+.container {
+  gap: var(--grid-gap);
+transform: rotateX(var(--container-rotate-x)) rotateY(var(--container-rotate-y)) rotateZ(var(--container-rotate-z)) scale(var(--container-zoom));
+}
+
+.template5 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 0;
+    margin-right: calc(var(--gap-x) * var(--tw-space-x-reverse));
+    margin-left: calc(var(--gap-x) * calc(1 - var(--tw-space-x-reverse)));
+}
+.template6 div:nth-child(odd) { 
+  transform-style: preserve-3d;
+  transform: translate3d(var(--gap-x), var(--gap-y), var(--gap-z)) perspective(var(--perspective-var)) rotateX(var(--rotateX-var)) rotateY(var(--rotateY-var)) rotateZ(var(--rotateZ-var));
+  
+}
+.template6 div:nth-child(even) {
+  transform-style: preserve-3d;
+  transform:  rotateX(calc(var(--rotateX-var) * -1) ) rotateY(calc(var(--rotateY-var) * -1)) rotateZ(calc(var(--rotateZ-var) * -1));
+  
+}
+.template7 div:nth-child(odd) {
+  transform:
+  rotateX(var(--rotateX-var))
+  rotateZ(var(--rotateZ-var))
+  scale(var(--zoom-var))
+   translate3d(calc(-1 * var(--gap-x)), calc(-1 * var(--gap-y)), calc(-1 * var(--gap-z)));
+  transform-style: preserve-3d;
+  box-shadow:
+    1px 1px 0 1px #f9f9fb,
+    -1px 0 28px 0 rgba(34, 33, 81, 0.01),
+     calc(var(--gap-z) * -5.4) calc(var(--gap-z) * -5.4) 28px calc(var(--gap-z) * -.625) rgba(34, 33, 81, calc(.5 - ( (var(--blur) - 1) * -0.25 )));
+}
+.template7 div:nth-child(even) {
+  transform:
+  rotateX(var(--rotateX-var))
+  rotateZ(var(--rotateZ-var))
+  scale(var(--zoom-var))
+   translate3d(calc(-1 * var(--gap-x)), calc(-1 * var(--gap-y)), calc(-1 * var(--gap-z)));
+  transform-style: preserve-3d;
+  box-shadow:
+    1px 1px 0 1px #f9f9fb,
+    -1px 0 28px 0 rgba(34, 33, 81, 0.01),
+     calc(var(--gap-z) * -5.4) calc(var(--gap-z) * -5.4) 28px calc(var(--gap-z) * -.625) rgba(34, 33, 81, calc(.5 - ( (var(--blur) - 1) * -0.25 )));
+}
 
 .grid-effect-dark{
   background-size:40px 40px;
@@ -54,20 +98,5 @@
   background: #04AA6D; /* Green background */
   cursor: pointer; /* Cursor on hover */
 }
-@layer base {
-:root {
---perspective-var: 0;
-    --rotateX-var: 0;
-    --rotateY-var: 0;
-    --rotateZ-var: 0;
-    --zoom-var: 0;
-    --bg-color: blue;
-    --gradient-stop-1: #fff;
-    --gradient-stop-2: #000;
-}
-}
 
-:root {
-    
-}
 
