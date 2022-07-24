@@ -63,7 +63,7 @@ export default function Navigation(props) {
     },
     {
       name: "Settings",
-      href: "/settings",
+      href: "/settings/account",
       icon: CogIcon,
       current: router.asPath.includes("settings"),
     },
