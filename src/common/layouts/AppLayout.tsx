@@ -23,9 +23,9 @@ const AppLayout: NextPage<AppLayoutProps> = ({ children }) => {
         pauseOnHover
       />
       <Header />
-      <div className="flex flex-1 h-full">
+      <div className="flex flex-1 overflow-auto ">
         <Navigation active="projects" wideNav={false} />
-        <div className="overflow-y-auto flex-1 h-full ">{children}</div>
+        <div className="overflow-y-auto flex-1 ">{children}</div>
         <div className=" bg-white"></div>
       </div>
     </div>

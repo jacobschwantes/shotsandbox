@@ -77,7 +77,7 @@ export default function Navigation(props) {
     },
   ];
   return (
-    <nav className=" flex flex-col justify-between p-3 shadow-sm z-10 ">
+    <nav className=" flex flex-col justify-between p-3 shadow-sm z-10 h-full ">
       <div className="flex-col  space-y-4 ">
         {generalNavigation.map((item, index) => (
           <Link key={index} href={item.href}>

@@ -201,7 +201,7 @@ const Editor: NextPage = () => {
   // };
 
   return (
-    <div className="flex-1 flex justify-between h-full">
+    <div className="flex justify-between ">
       <div
         className={clsx(
           "flex-1 flex items-center justify-center  grid-effect-light overflow-hidden bg-gray-50"

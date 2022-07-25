@@ -15,7 +15,7 @@ const Dashboard: NextPage = (props) => {
   const [active, setActive] = useState(1);
 
   return (
-    <div className="space-y-4 p-5 pb-20">
+    <div className="space-y-4 p-5 ">
       <div className="pb-5 border-b border-gray-200 sm:flex sm:items-center sm:justify-between w-full">
         <h3 className="text-lg leading-6 font-medium text-gray-900">
           Dashboard
