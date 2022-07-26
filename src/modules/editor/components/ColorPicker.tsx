@@ -1,8 +1,25 @@
 import { NextComponentType, NextPageContext } from "next";
-import { Popover, Transition } from "@headlessui/react";
-import { HexColorPicker } from "react-colorful";
+import Popover from "./Popover";
+import { Transition } from "@headlessui/react";
+import { HexColorPicker, HexColorInput } from "react-colorful";
 import { Fragment } from "react";
 import clsx from "clsx";
+import React, { cloneElement, useState } from "react";
+import {
+  Placement,
+  offset,
+  flip,
+  shift,
+  autoUpdate,
+  useFloating,
+  useInteractions,
+  useRole,
+  useDismiss,
+  useId,
+  useClick,
+  FloatingFocusManager,
+  FloatingPortal,
+} from "@floating-ui/react-dom-interactions";
 interface ColorPickerProps {
   color: string;
   setColor: React.Dispatch<React.SetStateAction<string>>;
@@ -13,11 +30,15 @@ const ColorPicker: NextComponentType<NextPageContext, {}, ColorPickerProps> = ({
   color,
   setColor,
   cssVariable,
-}) => (
-  <Popover className="relative">
-    {({ open }) => (
-      <>
-        <Popover.Button
+}) => {
+  return (
+    <div className="flex items-center space-x-2">
+      <Popover
+        render={({ close, labelId, descriptionId }) => (
+          <HexColorPicker color={color} onChange={setColor} />
+        )}
+      >
+        <button
           className={clsx(
             "rounded-full p-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 border-gray-100 border-2 ",
             cssVariable === "gradient1"
@@ -26,26 +47,11 @@ const ColorPicker: NextComponentType<NextPageContext, {}, ColorPickerProps> = ({
               ? "bg-[color:var(--gradient-stop-2)]"
               : "bg-[color:var(--bg-color)]"
           )}
-        ></Popover.Button>
-        <Transition
-          as={Fragment}
-          enter="transition ease-out duration-200"
-          enterFrom="opacity-0 translate-y-1"
-          enterTo="opacity-100 translate-y-0"
-          leave="transition ease-in duration-150"
-          leaveFrom="opacity-100 translate-y-0"
-          leaveTo="opacity-0 translate-y-1"
-        >
-          <Popover.Panel className="absolute  z-10 mt-3 right-0">
-            <div>
-              <HexColorPicker color={color} onChange={setColor} />
-              {/* <HexColorInput color={bgColor} onChange={setBgColor} /> */}
-            </div>
-          </Popover.Panel>
-        </Transition>
-      </>
-    )}
-  </Popover>
-);
+        />
+      </Popover>
+      <HexColorInput className="form-input shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md" color={color} onChange={setColor} />
+    </div>
+  );
+};
 
 export default ColorPicker;
