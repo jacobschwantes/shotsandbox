@@ -201,13 +201,13 @@ const Editor: NextPage = () => {
   // };
 
   return (
-    <div className="flex justify-between ">
+    <div className="flex justify-between h-full ">
       <div
         className={clsx(
-          "flex-1 flex items-center justify-center  grid-effect-light overflow-hidden bg-gray-50"
+          "flex-1 flex items-center justify-center  grid-effect-light bg-gray-50 h-full overflow-hidden z-0  "
         )}
       >
-        <div className="relative max-w-[1280px] max-h-[720px] w-full h-full">
+        <div className="relative  flex-1 flex items-center justify-center">
           <div
             ref={ref}
             className={clsx(
@@ -248,7 +248,7 @@ const Editor: NextPage = () => {
         </div>
       </div>
 
-      <div className=" z-20 w-full max-w-sm p-5 space-y-3">
+      <div className=" w-full max-w-sm p-5 space-y-3 overflow-y-auto overflow-x-hidden ">
         <Disclosure defaultOpen>
           {({ open }) => (
             <>
@@ -260,7 +260,7 @@ const Editor: NextPage = () => {
                   } h-5 w-5 text-blue-500`}
                 />
               </Disclosure.Button>
-              <Disclosure.Panel className="px-4 pt-4 pb-2 space-y-4 text-sm text-gray-500">
+              <Disclosure.Panel className="px-4 pt-4 pb-2 space-y-4 text-sm text-gray-500 ">
                 <h1 className="font-medium border-b-2 pb-1 text-base">
                   Container
                 </h1>
@@ -455,7 +455,7 @@ const Editor: NextPage = () => {
                   </div>
                 </div>
 
-                <div className="grid gap-3 grid-cols-2">
+                <div className="grid gap-3 grid-cols-2 z-30">
                
                   <button
                     onClick={() => setShowToolbar(!showToolbar)}
@@ -470,7 +470,7 @@ const Editor: NextPage = () => {
                     download
                   </button>
             
-                  <div className="flex">
+                  
                     <ColorPicker
                       cssVariable="gradient1"
                       color={gradientStop1}
@@ -481,7 +481,7 @@ const Editor: NextPage = () => {
                       color={gradientStop2}
                       setColor={setGradientStop2}
                     />
-                  </div>
+               
                   <div>
                     <label
                       htmlFor="location"

@@ -4,11 +4,11 @@ import "react-toastify/dist/ReactToastify.css";
 import { Header, Navigation } from "@components/index";
 import { ReactNode } from "react";
 interface AppLayoutProps {
-  children: ReactNode
+  children: ReactNode;
 }
 const AppLayout: NextPage<AppLayoutProps> = ({ children }) => {
   return (
-    <div className="h-screen w-screen overflow-hidden flex flex-col">
+    <div className="h-screen w-screen flex overflow-hidden">
       <ToastContainer
         position="bottom-right"
         className="text-sm"
@@ -22,12 +22,13 @@ const AppLayout: NextPage<AppLayoutProps> = ({ children }) => {
         theme="colored"
         pauseOnHover
       />
-      <Header />
-      <div className="flex flex-1 overflow-auto ">
-        <Navigation active="projects" wideNav={false} />
-        <div className="overflow-y-auto flex-1 ">{children}</div>
-        <div className=" bg-white"></div>
+      <div className="absolute w-full">
+        <Header />
       </div>
+      <div className=" pt-20">
+        <Navigation active="projects" wideNav={false} />
+      </div>
+      <div className="flex-1 h-full pt-16">{children}</div>
     </div>
   );
 };
