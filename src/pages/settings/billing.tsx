@@ -40,7 +40,7 @@ const Billing: NextPage = () => {
   const [annualBillingEnabled, setAnnualBillingEnabled] = useState(true);
 
   return (
-    <div className="flex-1  p-5">
+    <div className="flex-1 overflow-y-auto h-full p-5">
       <SettingsLayout>
         <main className=" pb-10 lg:py-12  max-w-7xl">
           <div className="lg:grid lg:grid-cols-12 lg:gap-x-5">

@@ -24,15 +24,15 @@ function classNames(...classes) {
 
 export default function Header() {
   return (
-    <Disclosure as="nav" className="bg-white shadow-sm z-30">
+    <Disclosure as="nav" className="bg-white shadow-sm z-30 dark:bg-black dark:border-b dark:border-zinc-900">
       {({ open }) => (
         <>
           <div className=" px-2 sm:px-6 lg:px-6 ">
             <div className="flex items-center justify-between h-16">
               <div className="flex items-center justify-between flex-1">
                 <Link href="/">
-                  <span className="hidden lg:flex  items-center justify-center space-x-2 ">
-                    <img className=" h-7 mt-1.5 " src="logo.svg" alt="logo" />
+                  <span className="hidden lg:flex  items-center justify-center space-x-2 dark:text-white ">
+                    <img className=" h-7 mt-1.5 dark:bg-zinc-200 rounded-md p-0.5 " src="logo.svg" alt="logo" />
                     <h1 className="text-2xl">screenshotify</h1>
                   </span>
                 </Link>

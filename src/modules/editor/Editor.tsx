@@ -204,7 +204,7 @@ const Editor: NextPage = () => {
     <div className="flex justify-between h-full ">
       <div
         className={clsx(
-          "flex-1 flex items-center justify-center  grid-effect-light bg-gray-50 h-full overflow-hidden z-0  "
+          "flex-1 flex items-center justify-center  dark:bg-black light:grid-effect-light bg-gray-50 dark:grid-effect-dark h-full overflow-hidden z-0  "
         )}
       >
         <div className="relative  flex-1 flex items-center justify-center">
@@ -248,7 +248,7 @@ const Editor: NextPage = () => {
         </div>
       </div>
 
-      <div className=" w-full max-w-sm p-5 space-y-3 overflow-y-auto overflow-x-hidden ">
+      <div className=" w-full max-w-xs p-5 space-y-3 overflow-y-auto overflow-x-hidden ">
         <Disclosure defaultOpen>
           {({ open }) => (
             <>
@@ -260,11 +260,11 @@ const Editor: NextPage = () => {
                   } h-5 w-5 text-blue-500`}
                 />
               </Disclosure.Button>
-              <Disclosure.Panel className="px-4 pt-4 pb-2 space-y-4 text-sm text-gray-500 ">
+              <Disclosure.Panel className=" pt-4 pb-2 space-y-4 text-sm text-gray-500 ">
                 <h1 className="font-medium border-b-2 pb-1 text-base">
                   Container
                 </h1>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="">
                   <div className="relative pt-1">
                     <label htmlFor="customRange1" className=" font-medium">
                       rotateY
@@ -494,7 +494,7 @@ const Editor: NextPage = () => {
                       onChange={(e) => setLayout(parseInt(e.target.value))}
                       id="location"
                       name="location"
-                      className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
+                      className="form-select mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
                       defaultValue="Canada"
                     >
                       <option>1</option>

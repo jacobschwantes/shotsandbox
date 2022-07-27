@@ -39,7 +39,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     return <Auth />;
   } else {
     return (
-      <div className="flex h-screen w-screen items-center justify-center  ">
+      <div className="flex h-screen w-screen items-center justify-center dark:bg-black  ">
         <img src="/loading.svg"></img>
       </div>
     );

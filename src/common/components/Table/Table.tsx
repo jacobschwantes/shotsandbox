@@ -52,28 +52,28 @@ function classNames(...classes) {
 }
 export default function Table({ logs, dispatchModal }) {
   return (
-    <div className="rounded-2xl bg-white  border shadow-lg shadow-gray-100  border-gray-200">
-      <table className="   divide-y divide-gray-200 ">
+    <div className="rounded-2xl bg-white dark:bg-black border shadow-lg dark:shadow-none shadow-gray-100  border-gray-200 dark:border-zinc-900">
+      <table className="   divide-y divide-gray-200 dark:divide-zinc-900 ">
         <thead>
           <tr>
-            <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider rounded-2xl">
+            <th className="px-6 py-3 bg-gray-50 dark:bg-black text-left text-xs font-medium text-gray-500 uppercase tracking-wider rounded-2xl">
               URL
             </th>
 
-            <th className="hidden px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider md:block">
+            <th className="hidden px-6 py-3 bg-gray-50 dark:bg-black text-left text-xs font-medium text-gray-500 uppercase tracking-wider md:block">
               Status
             </th>
-            <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider rounded-2xl">
+            <th className="px-6 py-3 bg-gray-50 dark:bg-black text-left text-xs font-medium text-gray-500 uppercase tracking-wider rounded-2xl">
               Date
             </th>
-            <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider rounded-2xl">
+            <th className="px-6 py-3 bg-gray-50 dark:bg-black text-left text-xs font-medium text-gray-500 uppercase tracking-wider rounded-2xl">
               Result
             </th>
           </tr>
         </thead>
-        <tbody className="bg-white divide-y divide-gray-200     ">
+        <tbody className="bg-white dark:bg-black divide-y divide-gray-200 dark:divide-zinc-900     ">
           {logs.map((transaction, index) => (
-            <tr key={index} className="bg-white rounded-2xl ">
+            <tr key={index} className="bg-white dark:bg-black rounded-2xl ">
               <td className="max-w-0 w-full px-6 py-4 whitespace-nowrap text-sm text-gray-900 rounded-2xl">
                 <div className="flex ">
                   <p className="text-gray-500 truncate group-hover:text-gray-900 ">

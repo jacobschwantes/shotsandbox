@@ -109,9 +109,9 @@ const Tokens: NextPage = (props) => {
   };
 
   return (
-    <div className="flex flex-col items-start space-y-4 p-5">
-      <div className="pb-5 border-b border-gray-200 sm:flex sm:items-center sm:justify-between w-full">
-        <h3 className="text-lg leading-6 font-medium text-gray-900">
+    <div className="flex flex-col items-start  p-5">
+      <div className="pb-5 dark:pb-0 border-b border-gray-200 dark:border-zinc-700 dark:border-none sm:flex sm:items-center sm:justify-between w-full">
+        <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-zinc-100">
           API Keys
         </h3>
         <div className="mt-3 flex sm:mt-0 sm:ml-4 space-x-3">
@@ -123,11 +123,11 @@ const Tokens: NextPage = (props) => {
               setSpin(true);
               mutate(["/api/user/tokens", props.idToken]);
             }}
-            className="inline-flex items-center p-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 "
+            className="inline-flex items-center p-2 border border-gray-300 dark:border-zinc-800 dark:bg-black rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 dark:hover:bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:ring-offset-zinc-800 "
           >
             <RefreshIcon
               className={clsx(
-                "h-6 text-gray-400 ",
+                "h-6 text-gray-400 dark:text-zinc-300 ",
                 spin && "animate-spin-slow"
               )}
             />
@@ -135,19 +135,19 @@ const Tokens: NextPage = (props) => {
           <button
             type="button"
             onClick={() => setShowKeys(!showKeys)}
-            className="inline-flex items-center p-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            className="inline-flex items-center p-2 border border-gray-300 dark:border-zinc-800 dark:bg-black rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 dark:hover:bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:ring-offset-zinc-800"
           >
             {showKeys ? (
-              <EyeIcon className="h-6 text-gray-400" />
+              <EyeIcon className="h-6 text-gray-400 dark:text-zinc-300" />
             ) : (
-              <EyeOffIcon className="h-6 text-gray-400" />
+              <EyeOffIcon className="h-6 text-gray-400 dark:text-zinc-300" />
             )}
           </button>
           <button
             disabled={creatingToken}
             onClick={() => createToken()}
             type="button"
-            className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:ring-offset-black"
           >
             Create Token
           </button>
@@ -177,7 +177,7 @@ const Tokens: NextPage = (props) => {
           {tokens.keys.map((item, index) => {
             return (
               <div key={index} className="space-y-1">
-                <p className="font-medium">{item.name}</p>
+                <p className="font-medium dark:text-zinc-200">{item.name}</p>
 
                 <div className="flex space-x-2">
                   <div className="w-full relative">
@@ -189,7 +189,7 @@ const Tokens: NextPage = (props) => {
                       spellCheck={false}
                       type={showKeys ? "text" : "password"}
                       className={
-                        "pr-10 pl-4 py-4 w-full font-medium rounded-lg focus:outline-none bg-black text-gray-400 border-gray-800 border-2 hover:border-blue-500  transition-colors"
+                        "form-input pr-10 pl-4 py-4 w-full font-medium rounded-lg focus:outline-none bg-black text-gray-400 border-zinc-900 border-2 hover:border-blue-500  transition-colors"
                       }
                     ></input>
                     <div className="cursor-pointer absolute inset-y-0 right-0 pr-4 flex items-center">
@@ -213,13 +213,13 @@ const Tokens: NextPage = (props) => {
                         {copiedId === index ? (
                           <CheckIcon className="h-6 text-blue-500" />
                         ) : (
-                          <DuplicateIcon className="h-6 text-gray-400 hover:text-blue-500 transition-colors" />
+                          <DuplicateIcon className="h-6 text-gray-400 dark:text-zinc-300 hover:text-blue-500 transition-colors" />
                         )}
                       </button>
                     </div>
                   </div>
                   <button onClick={() => deleteToken(item.key)}>
-                    <TrashIcon className="h-6 text-gray-400" />
+                    <TrashIcon className="h-6 text-gray-400 dark:text-zinc-300" />
                   </button>
                 </div>
               </div>

@@ -101,7 +101,7 @@ const PasswordPage: NextComponentType<
             spellCheck={false}
             type={showPassword ? "text" : "password"}
             className={
-              "pr-10 pl-4 py-4 w-full font-medium rounded-lg focus:outline-none bg-black text-gray-400 border-gray-800 border " +
+              "form-input pr-10 pl-4 py-4 w-full font-medium rounded-lg focus:outline-none bg-black text-gray-400 border-gray-800 border " +
               (error ? "border-red-500" : "focus:border-blue-500")
             }
           ></input>
@@ -171,7 +171,7 @@ const EmailPage: NextComponentType<NextPageContext, {}, EmailPageProps> = ({
             name="email"
             id="email"
             className={
-              "p-4 font-medium rounded-lg focus:outline-none bg-black text-gray-400 border-gray-800 border " +
+              "form-input p-4 font-medium rounded-lg focus:outline-none bg-black text-gray-400 border-gray-800 border " +
               (error ? "border-red-500" : "focus:border-blue-500")
             }
           ></input>
@@ -295,7 +295,7 @@ const SignUpPage: NextComponentType<NextPageContext, {}, SignUpPageProps> = ({
             name="email"
             id="email"
             className={
-              "p-4 font-medium rounded-lg focus:outline-none bg-black text-gray-400 border-gray-800 border " +
+              "form-input p-4 font-medium rounded-lg focus:outline-none bg-black text-gray-400 border-gray-800 border " +
               (emailError ? "border-red-500" : "focus:border-blue-500")
             }
           ></input>
@@ -323,7 +323,7 @@ const SignUpPage: NextComponentType<NextPageContext, {}, SignUpPageProps> = ({
               spellCheck={false}
               type={showPassword ? "text" : "password"}
               className={
-                "pr-10 pl-4 py-4 w-full font-medium rounded-lg focus:outline-none bg-black text-gray-400 border-gray-800 border " +
+                "form-input pr-10 pl-4 py-4 w-full font-medium rounded-lg focus:outline-none bg-black text-gray-400 border-gray-800 border " +
                 (error ? "border-red-500" : "focus:border-blue-500")
               }
             ></input>

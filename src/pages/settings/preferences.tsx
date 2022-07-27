@@ -18,7 +18,7 @@ const Account: NextPage = () => {
   //     );
   //   };
   return (
-    <div className="flex-1  p-5 ">
+    <div className="flex-1  p-5 h-full overflow-y-auto ">
       <SettingsLayout>
         <main className=" pb-10 lg:py-12  max-w-7xl">
           <div className="lg:grid lg:grid-cols-12 lg:gap-x-5">
@@ -54,7 +54,7 @@ const Account: NextPage = () => {
                             name="first-name"
                             id="first-name"
                             autoComplete="cc-given-name"
-                            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-900 focus:border-gray-900 sm:text-sm"
+                            className="form-input mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-900 focus:border-gray-900 sm:text-sm"
                           />
                         </div>
 
@@ -70,7 +70,7 @@ const Account: NextPage = () => {
                             name="last-name"
                             id="last-name"
                             autoComplete="cc-family-name"
-                            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-900 focus:border-gray-900 sm:text-sm"
+                            className="form-input mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-900 focus:border-gray-900 sm:text-sm"
                           />
                         </div>
 
@@ -86,7 +86,7 @@ const Account: NextPage = () => {
                             name="email-address"
                             id="email-address"
                             autoComplete="email"
-                            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-900 focus:border-gray-900 sm:text-sm"
+                            className="form-input mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-900 focus:border-gray-900 sm:text-sm"
                           />
                         </div>
 
@@ -102,7 +102,7 @@ const Account: NextPage = () => {
                             name="expiration-date"
                             id="expiration-date"
                             autoComplete="cc-exp"
-                            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-900 focus:border-gray-900 sm:text-sm"
+                            className="form-input mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-900 focus:border-gray-900 sm:text-sm"
                             placeholder="MM / YY"
                           />
                         </div>
@@ -123,7 +123,7 @@ const Account: NextPage = () => {
                             name="security-code"
                             id="security-code"
                             autoComplete="cc-csc"
-                            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-900 focus:border-gray-900 sm:text-sm"
+                            className="form-input mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-900 focus:border-gray-900 sm:text-sm"
                           />
                         </div>
 

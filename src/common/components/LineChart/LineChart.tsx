@@ -100,7 +100,7 @@ export default class LineChart extends React.Component {
           style: {
             fontSize: "20px",
             fontWeight: 600,
-            color: props.dark ? '#f3f4f6': '#111827' ,
+            color: props.dark ? '#f4f4f5': '#111827' ,
         
           },
         },
@@ -132,8 +132,8 @@ export default class LineChart extends React.Component {
         },
         
         grid: {
-          strokeDashArray: 3,
-          borderColor: props.dark ? '#374151': '#e5e7eb' ,
+          strokeDashArray: 4,
+          borderColor: props.dark ? '#27272a': '#e5e7eb' ,
         },
         yaxis: {
           labels: {
@@ -181,7 +181,7 @@ export default class LineChart extends React.Component {
 
   render() {
     return (
-      <div className="rounded-2xl  p-5 border shadow-lg shadow-gray-100 dark:shadow-gray-900 dark:border-gray-900  border-gray-100 dark:bg-gray-800">
+      <div className="rounded-2xl  p-5 border  dark:border-zinc-900  border-gray-100 dark:bg-black">
         <Chart
           options={this.state.options}
           series={this.state.series}

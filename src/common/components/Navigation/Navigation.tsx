@@ -27,7 +27,7 @@ import {
 // ];
 import Link from "next/link";
 import { signOut, getAuth } from "firebase/auth";
-import {firebaseApp} from "@modules/auth/firebase/clientApp";
+import { firebaseApp } from "@modules/auth/firebase/clientApp";
 import { useRouter } from "next/router";
 const auth = getAuth(firebaseApp);
 function classNames(...classes) {
@@ -35,7 +35,7 @@ function classNames(...classes) {
 }
 
 export default function Navigation(props) {
-  const router = useRouter()
+  const router = useRouter();
   const generalNavigation = [
     {
       name: "Dashboard",
@@ -77,7 +77,7 @@ export default function Navigation(props) {
     },
   ];
   return (
-    <nav className=" flex flex-col justify-between p-3 shadow-sm z-10 h-full ">
+    <nav className=" flex flex-col justify-between p-3 z-10 h-full  ">
       <div className="flex-col  space-y-4 ">
         {generalNavigation.map((item, index) => (
           <Link key={index} href={item.href}>
@@ -85,9 +85,9 @@ export default function Navigation(props) {
               key={item.name}
               className={classNames(
                 item.current
-                  ? "bg-blue-200 text-blue-600   "
-                  : "text-gray-500  ",
-                " flex items-center  p-3 rounded-lg border border-transparent text-center   transition-all     hover:bg-gray-100  "
+                  ? "bg-blue-200 text-blue-600 dark:bg-blue-900 dark:text-blue-600   "
+                  : "text-gray-300  ",
+                " flex items-center  p-3 rounded-lg border border-transparent text-center transition-all  hover:bg-gray-100 dark:hover:bg-zinc-900 dark:bg-opacity-50 "
               )}
             >
               <item.icon
@@ -113,7 +113,7 @@ export default function Navigation(props) {
             signOut(auth);
           }}
           className={classNames(
-            " flex items-center  p-3 rounded-lg border border-transparent text-center  text-gray-400 transition-all     hover:bg-gray-100  "
+            " flex items-center  p-3 rounded-lg border border-transparent text-center  text-gray-300 transition-all hover:bg-gray-100 dark:hover:bg-zinc-900 dark:bg-opacity-50 "
           )}
         >
           <LogoutIcon

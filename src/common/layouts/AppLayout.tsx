@@ -8,7 +8,7 @@ interface AppLayoutProps {
 }
 const AppLayout: NextPage<AppLayoutProps> = ({ children }) => {
   return (
-    <div className="h-screen w-screen flex overflow-hidden">
+    <div className="h-screen w-screen flex overflow-hidden dark:bg-black">
       <ToastContainer
         position="bottom-right"
         className="text-sm"
@@ -22,10 +22,10 @@ const AppLayout: NextPage<AppLayoutProps> = ({ children }) => {
         theme="colored"
         pauseOnHover
       />
-      <div className="absolute w-full">
+      <div className="absolute w-full z-40">
         <Header />
       </div>
-      <div className=" pt-20">
+      <div className=" pt-20 dark:bg-black dark:border-zinc-900 dark:border-r ">
         <Navigation active="projects" wideNav={false} />
       </div>
       <div className="flex-1 h-full pt-16">{children}</div>

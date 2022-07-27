@@ -37,10 +37,12 @@ const SettingsLayout: NextPage<SettingsLayoutProps> = ({ children }) => {
 
   return (
     <div className="space-y-4 ">
-      <div className="pb-5 border-b border-gray-200 sm:flex sm:items-center sm:justify-between w-full">
-        <h3 className="text-lg leading-6 font-medium text-gray-900">Settings</h3>
+       <div className="pb-5 dark:pb-0 border-b border-gray-200 dark:border-zinc-700 dark:border-none sm:flex sm:items-center sm:justify-between w-full">
+        <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-zinc-100">
+          Settings
+        </h3>
       </div>
-      <div className="flex space-x-2 rounded-xl bg-gray-100 p-1 max-w-4xl ">
+      <div className="flex space-x-2 rounded-xl bg-gray-100 dark:bg-black dark:border dark:border-zinc-900 p-1 max-w-4xl ">
         {tabs.map((tab) => {
           return (
             <Link key={tab.name} href={tab.href}>
@@ -48,10 +50,10 @@ const SettingsLayout: NextPage<SettingsLayoutProps> = ({ children }) => {
                 key={tab.name}
                 className={clsx(
                   "flex w-full items-center justify-center rounded-lg py-2.5 text-center text-sm font-medium capitalize leading-5 ",
-                  "ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2",
+                  "ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2 dark:ring-transparent",
                   tab.current
-                    ? "bg-white text-blue-700 shadow"
-                    : "text-gray-700 hover:bg-white/[0.12] hover:text-gray-600"
+                    ? "bg-white text-blue-700 dark:text-blue-500 shadow dark:bg-zinc-900"
+                    : "text-gray-700 hover:bg-white/[0.12] hover:text-gray-600 dark:hover:text-zinc-200 dark:text-zinc-300"
                 )}
               >
                 <h1 className="hidden sm:block">{tab.name}</h1>
@@ -61,7 +63,7 @@ const SettingsLayout: NextPage<SettingsLayoutProps> = ({ children }) => {
           );
         })}
       </div>
-      <div className="rounded-xl bg-white">{children}</div>
+      <div className="rounded-xl bg-white dark:bg-black">{children}</div>
     </div>
   );
 };
