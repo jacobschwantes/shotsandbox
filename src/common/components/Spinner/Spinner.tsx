@@ -1,14 +1,15 @@
 
+import clsx from "clsx";
 import { NextComponentType, NextPageContext } from "next";
 interface SpinnerProps {
-  color: string;
+  className: string;
 }
 const Spinner: NextComponentType<NextPageContext, {}, SpinnerProps> = (
-  props
+  {className}
 ) => {
   return (
     <svg
-      className={"animate-spin h-6 w-6 " + props.color}
+      className={clsx("animate-spin h-6 w-6", className)}
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 24 24"
