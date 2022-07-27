@@ -10,6 +10,10 @@ import clsx from "clsx";
 import { useUsage, useLogs } from "@utils/swr/hooks";
 import { useSWRConfig } from "swr";
 import { Table, Modal } from "@components/index";
+const getInterval = (data) => {
+  if (data?.logs.some((item) => item.status === "processing"))  return 6000;
+  return 0;
+};
 const auth = getAuth(firebaseApp);
 const History: NextPage = (props) => {
   const { mutate } = useSWRConfig();
@@ -21,8 +25,10 @@ const History: NextPage = (props) => {
   const [active, setActive] = useState(1);
   const { logs, isLoadingLogs, isErrorLogs } = useLogs(
     props.idToken,
-    `?limit=${batchSize}&page=${active}`
+    `?limit=${batchSize}&page=${active}`,
+    { refreshInterval: (data) => getInterval(data) }
   );
+  const { usage, isLoading, isError } = useUsage(props.idToken);
 
   const dispatchModal = (options) => {
     setModalContent(options);
@@ -41,6 +47,7 @@ const History: NextPage = (props) => {
             onAnimationEnd={() => setSpin(false)}
             onClick={() => {
               setSpin(true);
+              mutate(["/api/user/usage", props.idToken]);
               mutate([
                 `/api/user/logs?limit=${batchSize}&page=${active}`,
                 props.idToken,
@@ -65,23 +72,28 @@ const History: NextPage = (props) => {
           </button> */}
         </div>
       </div>
-  
-      {isLoadingLogs && <Spinner color="blue" />}
+
       {isErrorLogs && (
         <p className="text-red-400 font-medium">
           logs error: {isErrorLogs.message}
         </p>
       )}
-      {logs?.logs && <Table logs={logs.logs} dispatchModal={dispatchModal} />}
-      {logs?.logs && (
+      <Table
+        logs={logs?.logs}
+        isLoading={isLoadingLogs}
+        dispatchModal={dispatchModal}
+        batchSize={10}
+      />
+      {!isLoading && (
         <Pagination
-          pages={Math.ceil(logs.logCount / batchSize)}
+          pages={Math.ceil(usage?.data.usage / batchSize)}
           setActive={setActive}
           active={active}
-          size={logs.logCount}
+          size={usage?.data.usage}
           batchSize={10}
         />
       )}
+
       <Modal open={open} setOpen={setOpen} content={modalContent} />
     </div>
   );
@@ -130,7 +142,7 @@ const Pagination = (props) => {
             <button
               disabled={props.active === 1}
               onClick={() => props.setActive(props.active - 1)}
-              className="relative inline-flex items-center rounded-l-md border border-gray-300 bg-white dark:bg-black dark:border-zinc-900 dark:text-zinc-200 px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50"
+              className="relative inline-flex items-center rounded-l-md border border-gray-300 bg-white dark:bg-black dark:border-zinc-900 dark:text-zinc-200 px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 dark:hover:bg-zinc-900 "
             >
               <span className="sr-only">Previous</span>
               <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
@@ -155,7 +167,7 @@ const Pagination = (props) => {
             <button
               disabled={props.active === props.pages}
               onClick={() => props.setActive(props.active + 1)}
-              className="relative inline-flex items-center rounded-r-md border border-gray-300 bg-white dark:bg-black dark:border-zinc-900 dark:text-zinc-200 px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50"
+              className="relative inline-flex items-center rounded-r-md border border-gray-300 bg-white dark:bg-black dark:border-zinc-900 dark:text-zinc-200 px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 dark:hover:bg-zinc-900 cursor-pointer"
             >
               <span className="sr-only">Next</span>
               <ChevronRightIcon className="h-5 w-5" aria-hidden="true" />

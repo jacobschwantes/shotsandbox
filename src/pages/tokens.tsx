@@ -156,14 +156,14 @@ const Tokens: NextPage = (props) => {
 
       {isLoading && (
         // <Spinner color="blue" />
-        <div className="flex flex-col space-y-3 ">
+        <div className="flex flex-col space-y-5 ">
           {Array.from(Array(5).keys()).map(() => {
             return (
-              <div className="flex flex-col space-y-1">
-                <span className=" w-24 h-3 bg-gray-600  rounded-lg animate-pulse"></span>
-                <div className="bg-black  h-14 w-[416px] rounded-lg flex items-center justify-between p-5">
-                  <span className=" w-3/4 h-3 bg-gray-600 rounded-lg animate-pulse"></span>
-                  <DuplicateIcon className="h-6 text-gray-600 hover:text-blue-500 transition-colors animate-pulse" />
+              <div className="flex flex-col space-y-3 max-w-md w-full">
+                <span className=" w-1/4 h-3 dark:bg-zinc-800  rounded-lg animate-pulse"></span>
+                <div className="h-14 w-[416px] rounded-lg flex items-center justify-between p-5 overflow-hidden relative bg-white dark:bg-black border shadow-lg dark:shadow-none shadow-gray-100  border-gray-200 dark:border-zinc-900 before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:border-t before:border-rose-100/10 before:bg-gradient-to-r before:from-transparent before:via-rose-100/10 before:to-transparent">
+                  <span className=" w-3/4 h-3 bg-zinc-800 rounded-lg "></span>
+                  <DuplicateIcon className="h-6 text-gray-600 hover:text-blue-500 transition-colors " />
                 </div>
               </div>
             );

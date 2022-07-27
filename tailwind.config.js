@@ -14,7 +14,12 @@ module.exports = {
         'spin-left': {
           '0%': { transform: 'rotate(0deg)' },
           '100%': { transform: 'rotate(-720deg)' },
-        }
+        },
+        shimmer: {
+          '100%': {
+            transform: 'translateX(100%)',
+          },
+        },
       }
     },
   },

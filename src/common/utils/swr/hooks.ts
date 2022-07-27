@@ -22,9 +22,8 @@ export const useUsage = (token: string | null) => {
     isError: error,
   };
 };
-export const useLogs = (token: string | null, params: string) => {
-  const { data, error} = useSWR(() => token ? [`/api/user/logs${params}`, token] : null, fetcher);
-
+export const useLogs = (token: string | null, params: string, options) => {
+const { data, error} = useSWR(() => token ? [`/api/user/logs${params}`, token] : null, fetcher, options);
   return {
     logs: data,
     isLoadingLogs: !error && !data,
