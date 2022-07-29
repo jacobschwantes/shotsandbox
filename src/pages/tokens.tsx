@@ -1,6 +1,6 @@
 import { NextPage } from "next";
 import { toast } from "react-toastify";
-
+import { useRef, Fragment } from "react";
 import {
   EyeIcon,
   EyeOffIcon,
@@ -14,7 +14,9 @@ import {
   ClipboardCopyIcon,
   ClipboardCheckIcon,
   CogIcon,
+  ArrowLeftIcon,
 } from "@heroicons/react/outline";
+import { Dialog, Transition } from "@headlessui/react";
 import { debounce, isEqual } from "lodash";
 import { useEffect, useMemo, useState } from "react";
 import clsx from "clsx";
@@ -24,6 +26,7 @@ import { useSWRConfig } from "swr";
 import { RadioGroup } from "@headlessui/react";
 import { ComputePosition, inline } from "@floating-ui/core";
 import Tooltip from "@components/Tooltip";
+import { AnimatePresence, motion } from "framer-motion";
 
 const Tokens: NextPage = (props) => {
   const { mutate } = useSWRConfig();
@@ -32,7 +35,8 @@ const Tokens: NextPage = (props) => {
   const [spin, setSpin] = useState(false);
   const [creatingToken, setCreatingToken] = useState(false);
   const { tokens, isLoading, isError, update } = useTokens(props.idToken);
-  const [selected, setSelected] = useState();
+  const [selected, setSelected] = useState("");
+  const [open, setOpen] = useState(false);
   const { token, isTokenLoading, isTokenError } = useToken(
     props.idToken,
     selected
@@ -43,6 +47,10 @@ const Tokens: NextPage = (props) => {
       clearTimeout(timer1);
     };
   }, [copiedId]);
+  useEffect(() => {
+    if (isTokenLoading) return;
+    if (!isTokenLoading) setOpen(true);
+  }, [selected, isTokenLoading]);
 
   const updateToken = async (key, options) => {
     await fetch(`/api/user/tokens/${key}`, {
@@ -236,75 +244,77 @@ const Tokens: NextPage = (props) => {
       {isError && <div>Error: {isError.message}</div>}
 
       {tokens && (
-        <div className="w-full grid grid-cols-2 gap-5">
-         
-            <div className="flex flex-col max-w-xl space-y-2 ">
-              {tokens.keys.map((item, index) => (
-                <div className={clsx("space-y-1 transition-all", selected && item.key !== selected && "opacity-40")}>
-                  <p className="font-medium dark:text-zinc-200">{item.name}</p>
+        <div className="w-full">
+          <div className="flex flex-col max-w-xl space-y-2 ">
+            {tokens.keys.map((item, index) => (
+              <div className={clsx("space-y-1 transition-all")}>
+                <p className="font-medium dark:text-zinc-200">{item.name}</p>
 
-                  <div className={"flex space-x-2"}>
-                    <div className={clsx("w-full relative")}>
-                      <input
-                      onClick={() => setSelected(item.key)}
-                        value={item.key}
-                        readOnly
-                        name="password"
-                        id="password"
-                        spellCheck={false}
-                        type={showKeys ? "text" : "password"}
-                        className={clsx(
-                          "form-input pr-10 pl-4 py-4 w-full font-medium rounded-lg focus:outline-none bg-black text-gray-400 border-zinc-900 border-2 hover:outline-blue-500 hover:outline-1 hover:outline  transition-colors cursor-pointer"
+                <div className={"flex space-x-2"}>
+                  <div className={clsx("w-full relative")}>
+                    <input
+                      value={item.key}
+                      readOnly
+                      
+                      spellCheck={false}
+
+                      type="text"
+                      className={clsx(
+                        " form-input pr-10 pl-4 py-4 w-full font-medium rounded-lg focus:outline-none bg-black text-gray-400 border-zinc-900 border-2 hover:outline-blue-500 hover:outline-1 hover:outline  transition-colors cursor-pointer"
+                      , !showKeys && "token-field")}
+                    ></input>
+                    <div className="cursor-pointer absolute inset-y-0 right-0 pr-4 flex items-center">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          navigator.clipboard.writeText(item.key);
+                          toast(
+                            <div className="flex items-center space-x-3">
+                              <ClipboardCheckIcon className="h-6 w-6 text-blue-500" />
+                              <span>
+                                <p className="text-sm font-extralight">
+                                  {item.name} copied to clipboard.
+                                </p>
+                              </span>
+                            </div>,
+                            {
+                              theme: "dark",
+                              progressClassName: "toastProgressBlue",
+                            }
+                          );
+                          setCopiedId(index);
+                        }}
+                      >
+                        {copiedId === index ? (
+                          <CheckIcon className="h-6 text-blue-500" />
+                        ) : (
+                          <DuplicateIcon className="h-6 text-gray-400 dark:text-zinc-300 hover:text-blue-500 transition-colors" />
                         )}
-                      ></input>
-                      <div className="cursor-pointer absolute inset-y-0 right-0 pr-4 flex items-center">
-                        <button
-                          type="button"
-                          onClick={() => {
-                            navigator.clipboard.writeText(item.key);
-                            toast(
-                              <div className="flex items-center space-x-3">
-                                <ClipboardCheckIcon className="h-6 w-6 text-blue-500" />
-                                <span>
-                                  <p className="text-sm font-extralight">
-                                    {item.name} copied to clipboard.
-                                  </p>
-                                </span>
-                              </div>,
-                              {
-                                theme: "dark",
-                                progressClassName: "toastProgressBlue",
-                              }
-                            );
-                            setCopiedId(index);
-                          }}
-                        >
-                          {copiedId === index ? (
-                            <CheckIcon className="h-6 text-blue-500" />
-                          ) : (
-                            <DuplicateIcon className="h-6 text-gray-400 dark:text-zinc-300 hover:text-blue-500 transition-colors" />
-                          )}
-                        </button>
-                      </div>
+                      </button>
                     </div>
-                    <button onClick={() => setSelected(item.key)}>
-                      <CogIcon className="h-6 text-gray-400 dark:text-zinc-300" />
-                    </button>
                   </div>
+                  <button
+                    onClick={() => {
+                      setSelected(item.key);
+                    }}
+                  >
+                    <CogIcon className="h-6 text-gray-400 dark:hover:text-zinc-400 dark:text-zinc-300 transition-all" />
+                  </button>
                 </div>
-              ))}
-            
+              </div>
+            ))}
           </div>
           {isTokenLoading && <Spinner className="h-5 w-5" />}
           {isTokenError && <div>Error: {isError.message}</div>}
-          {token?.key && (
-            <div className="max-w-xl">
-              <TokenPage
-                updateToken={updateToken}
-                token={token.key}
-                deleteToken={deleteToken}
-              />
-            </div>
+          {token?.key && !isTokenLoading && (
+            <TokenPage
+              setSelectedToken={setSelected}
+              open={open}
+              setOpen={setOpen}
+              updateToken={updateToken}
+              token={token.key}
+              deleteToken={deleteToken}
+            />
           )}
         </div>
       )}
@@ -329,230 +339,344 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-function TokenPage({ token, updateToken, deleteToken }) {
+function TokenPage({
+  token,
+  updateToken,
+  deleteToken,
+  open,
+  setOpen,
+  setSelectedToken,
+}) {
   const [selected, setSelected] = useState(settings[0]);
   const [tokenOptions, setTokenOptions] = useState(token);
   const [updateLoading, setUpdateLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const cancelButtonRef = useRef(null);
   const eventHandler = (key, value) => {
     setTokenOptions((prevState) => ({
       ...prevState,
       [key]: value,
     }));
   };
-
+  const handleRegex = (name) => {
+    if (!/^[\w-]+$/.test(name)) {
+      setError("Invalid name");
+      return false;
+    }
+    return true;
+  };
   useEffect(() => {
     setTokenOptions(token);
   }, [token]);
   return (
-    <div className="space-y-6">
-      <div className="space-y-2">
-        <h1 className="font-medium text-white text-lg ">Name</h1>
-        <input
-          value={tokenOptions.name}
-          onChange={(e) => eventHandler("name", e.target.value)}
-          name="token-name"
-          id="token-name"
-          spellCheck={false}
-          type="text"
-          className="form-input pr-10 pl-4 py-4 w-full font-medium rounded-lg focus:outline-none bg-black text-gray-400 border-zinc-900 border-2 hover:outline-blue-500 hover:outline-1 hover:outline transition-colors cursor-pointer"
-        />
-      </div>
-      <div className="space-y-3">
-        <div className="">
-          <h1 className="font-medium text-white text-lg ">Usage metrics</h1>
-          <p className="text-zinc-400 ">Usage resets on Aug 1, 2022</p>
-        </div>
-        <div className="space-y-2">
-          <div className="flex justify-between">
-            <h1 className="text-white font-medium ">Requests</h1>
-            <p className="text-zinc-400 font-medium">
-              <span className="text-zinc-200">{token.usage}</span> /{" "}
-              {token.quota_limit === "unlimited" ? <>&infin;</> : token.quota}
-            </p>
-          </div>
-          {token.quota_limit === "limited" && (
-            <div className="h-3 w-full bg-zinc-900 rounded-full relative">
-              <span
-                style={{
-                  width:
-                    token.usage > token.quota
-                      ? "100%"
-                      : (token.usage / token.quota) * 100 + "%",
-                }}
-                className={`absolute h-3 bg-blue-600 rounded-full`}
-              ></span>
-            </div>
-          )}
-        </div>
-      </div>
-      <div className=" space-y-3">
-        <div className="">
-          <h1 className="font-medium text-white text-lg ">Quota limit</h1>
-          <p className="text-zinc-400 ">
-            Define whether this token would be quota limited
-          </p>
-        </div>
-        <RadioGroup
-          value={tokenOptions.quota_limit}
-          onChange={(item) => eventHandler("quota_limit", item)}
+    <Transition.Root show={open} as={Fragment}>
+      <Dialog
+        as="div"
+        className="relative z-10"
+        initialFocus={cancelButtonRef}
+        onClose={() => {
+          setOpen(false);
+          setTimeout(() => setSelectedToken(""), 300);
+        }}
+      >
+        <Transition.Child
+          as={Fragment}
+          enter="ease-out duration-300"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="ease-in duration-200"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
         >
-          <RadioGroup.Label className="sr-only">
-            Privacy setting
-          </RadioGroup.Label>
-          <div className="bg-white dark:bg-black rounded-md -space-y-px">
-            {settings.map((setting, settingIdx) => (
-              <RadioGroup.Option
-                key={setting.name}
-                value={setting.id}
-                className={({ checked }) =>
-                  classNames(
-                    settingIdx === 0 ? "rounded-tl-md rounded-tr-md" : "",
-                    settingIdx === settings.length - 1
-                      ? "rounded-bl-md rounded-br-md"
-                      : "",
-                    checked
-                      ? "bg-blue-50 border-blue-200 dark:border-blue-900 dark:bg-blue-900 z-10"
-                      : "border-gray-200 dark:border-zinc-900",
-                    "relative border p-4 flex cursor-pointer focus:outline-none dark:bg-opacity-30"
-                  )
-                }
-              >
-                {({ active, checked }) => (
-                  <>
-                    <span
-                      className={classNames(
-                        checked
-                          ? "bg-blue-600 border-transparent"
-                          : "bg-white border-gray-300 dark:bg-black dark:border-zinc-800",
-                        active
-                          ? "ring-2 ring-offset-2 ring-blue-600 dark:ring-offset-black"
-                          : "",
-                        "h-4 w-4 mt-0.5 cursor-pointer shrink-0 rounded-full border flex items-center justify-center"
-                      )}
-                      aria-hidden="true"
-                    >
-                      <span className="rounded-full bg-white dark:bg-black w-1.5 h-1.5" />
-                    </span>
-                    <span className="ml-3 flex justify-between space-x-4 w-full">
-                      <RadioGroup.Label
-                        as="span"
-                        className={classNames(
-                          checked
-                            ? "text-blue-900 dark:text-blue-500"
-                            : "text-gray-900 dark:text-zinc-300",
-                          "block text-sm font-medium"
-                        )}
-                      >
-                        {setting.name}
-                      </RadioGroup.Label>
-                      <RadioGroup.Description
-                        as="span"
-                        className={classNames(
-                          checked
-                            ? "text-blue-700 dark:text-blue-500"
-                            : "text-gray-500 dark:text-zinc-400",
-                          "block text-sm"
-                        )}
-                      >
-                        {setting.description}
-                      </RadioGroup.Description>
-                    </span>
-                  </>
-                )}
-              </RadioGroup.Option>
-            ))}
-          </div>
-        </RadioGroup>
-        {tokenOptions.quota_limit === "limited" && (
-          <div className="flex items-center space-x-3">
-            <div className="relative pt-1 flex-1">
-              <label className=" font-medium text-zinc-200">Limit</label>
-              <input
-                value={tokenOptions.quota}
-                min={token.usage}
-                step={25}
-                max={1000}
-                onChange={(e) =>
-                  eventHandler("quota", parseInt(e.target.value))
-                }
-                type="range"
-                className="appearance-none w-full h-3 p-0 focus:outline-none focus:ring-0 focus:shadow-none bg-zinc-900 rounded-full slider"
-                id="customRange1"
-              />
-            </div>
-            <input
-              value={tokenOptions.quota}
-              min={token.usage}
-              max={1000}
-              onChange={(e) => eventHandler("quota", parseInt(e.target.value))}
-              step={25}
-              type="number"
-              className="form-input max-w-[80px] font-medium rounded-lg focus:outline-none bg-black text-gray-400 border-zinc-900 border-2 hover:outline-blue-500 hover:outline-1 hover:outline transition-colors cursor-pointer"
-            />
-          </div>
-        )}
-      </div>
+          <div className="fixed inset-0 bg-zinc-800 backdrop-blur-sm bg-opacity-30 transition-opacity" />
+        </Transition.Child>
 
-      <div className="flex justify-between items-center">
-        <div className="flex space-x-2">
-          <button
-            onClick={() => eventHandler("locked", !tokenOptions.locked)}
-            type="button"
-            className={clsx(
-              tokenOptions.locked
-                ? "bg-red-600 hover:bg-red-700 focus:ring-red-500"
-                : "bg-blue-600 hover:bg-blue-700 focus:ring-blue-500",
-              "inline-flex items-center p-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white  focus:outline-none focus:ring-2 focus:ring-offset-2 dark:ring-offset-black"
-            )}
-          >
-            {tokenOptions.locked ? (
-              <LockClosedIcon className="h-5 w-5" />
-            ) : (
-              <LockOpenIcon className="h-5 w-5" />
-            )}
-          </button>
-          <button
-            onClick={() => {
-              setDeleteLoading(true);
-              deleteToken(token.key, token.name).then(() =>
-                setDeleteLoading(false)
-              );
-            }}
-            type="button"
-            className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 dark:ring-offset-black"
-          >
-            {deleteLoading ? <Spinner className="h-5 w-5" /> : "Revoke Token"}
-          </button>
-        </div>
-        {!isEqual(token, tokenOptions) && token.key === tokenOptions.key && (
-          <div className="flex items-end space-x-5">
-            <p className="text-zinc-400">You have unsaved changes.</p>
-            <button
-              onClick={() => {
-                const allowed = ["locked", "name", "quota", "quota_limit"];
-                const filtered = Object.keys(tokenOptions)
-                  .filter((key) => allowed.includes(key))
-                  .reduce((obj, key) => {
-                    return {
-                      ...obj,
-                      [key]: tokenOptions[key],
-                    };
-                  }, {});
-                setUpdateLoading(true);
-                updateToken(token.key, filtered).then(() =>
-                  setUpdateLoading(false)
-                );
-              }}
-              type="button"
-              className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:ring-offset-black"
+        <div className="fixed z-10 inset-0 overflow-y-auto">
+          <div className="flex items-end sm:items-center justify-center min-h-full p-4 text-center sm:p-0">
+            <Transition.Child
+              as={Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+              enterTo="opacity-100 translate-y-0 sm:scale-100"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100 translate-y-0 sm:scale-100"
+              leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
-              {updateLoading ? <Spinner className="h-5 w-5" /> : "Save"}
-            </button>
+              <Dialog.Panel className="relative bg-black border border-zinc-900 rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-3xl sm:w-full sm:p-5">
+                <div className="space-y-6">
+                  <h1 className="font-medium text-white text-2xl">
+                    Token settings
+                  </h1>
+                  <div className="space-y-2">
+                    <h1 className="font-medium text-zinc-100 text-lg ">Name</h1>
+                    <input
+                      value={tokenOptions.name}
+                      onChange={(e) => {
+                        eventHandler("name", e.target.value);
+                        setError("");
+                      }}
+                     
+                     
+                      type="text"
+                      className={clsx(
+                        "form-input p-4 w-full font-medium rounded-lg focus:outline-none bg-black text-gray-400 border-zinc-900 border transition-colors",
+                        error ? "border-red-500" : "hover:border-blue-500"
+                      )}
+                    />
+                    <p className="text-red-500 font-medium text-sm">{error}</p>
+                  </div>
+                  <div className="space-y-3">
+                    <div className="">
+                      <h1 className="font-medium text-zinc-100 text-lg ">
+                        Usage metrics
+                      </h1>
+                      <p className="text-zinc-400 ">
+                        Usage resets on Aug 1, 2022
+                      </p>
+                    </div>
+                    <div className="space-y-2">
+                      <div className="flex justify-between">
+                        <h1 className="text-zinc-200 font-medium ">Requests</h1>
+                        <p className="text-zinc-400 font-medium">
+                          <span className="text-zinc-200">{token.usage}</span> /{" "}
+                          {token.quota_limit === "unlimited" ? (
+                            <>&infin;</>
+                          ) : (
+                            token.quota
+                          )}
+                        </p>
+                      </div>
+                      {token.quota_limit === "limited" && (
+                        <div className="h-3 w-full bg-zinc-900 rounded-full relative">
+                          <span
+                            style={{
+                              width:
+                                token.usage > token.quota
+                                  ? "100%"
+                                  : (token.usage / token.quota) * 100 + "%",
+                            }}
+                            className={`absolute h-3 bg-blue-600 rounded-full`}
+                          ></span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <div className=" space-y-3">
+                    <div className="">
+                      <h1 className="font-medium text-zinc-100 text-lg ">
+                        Quota limit
+                      </h1>
+                      <p className="text-zinc-400 ">
+                        Define whether this token would be quota limited
+                      </p>
+                    </div>
+
+                    <RadioGroup
+                      value={tokenOptions.quota_limit}
+                      onChange={(item) => eventHandler("quota_limit", item)}
+                    >
+                      <RadioGroup.Label className="sr-only">
+                        Privacy setting
+                      </RadioGroup.Label>
+                      <div className="bg-white dark:bg-black rounded-md -space-y-px">
+                        {settings.map((setting, settingIdx) => (
+                          <RadioGroup.Option
+                            key={setting.name}
+                            value={setting.id}
+                            className={({ checked }) =>
+                              classNames(
+                                settingIdx === 0
+                                  ? "rounded-tl-md rounded-tr-md"
+                                  : "",
+                                settingIdx === settings.length - 1
+                                  ? "rounded-bl-md rounded-br-md"
+                                  : "",
+                                checked
+                                  ? "bg-blue-50 border-blue-200 dark:border-blue-900 dark:bg-blue-900 z-10"
+                                  : "border-gray-200 dark:border-zinc-900",
+                                "relative border p-4 flex cursor-pointer focus:outline-none dark:bg-opacity-30"
+                              )
+                            }
+                          >
+                            {({ active, checked }) => (
+                              <>
+                                <span
+                                  className={classNames(
+                                    checked
+                                      ? "bg-blue-600 border-transparent"
+                                      : "bg-white border-gray-300 dark:bg-black dark:border-zinc-800",
+                                    active
+                                      ? "ring-2 ring-offset-2 ring-blue-600 dark:ring-offset-black"
+                                      : "",
+                                    "h-4 w-4 mt-0.5 cursor-pointer shrink-0 rounded-full border flex items-center justify-center"
+                                  )}
+                                  aria-hidden="true"
+                                >
+                                  <span className="rounded-full bg-white dark:bg-black w-1.5 h-1.5" />
+                                </span>
+                                <span className="ml-3 flex justify-between space-x-4 w-full">
+                                  <RadioGroup.Label
+                                    as="span"
+                                    className={classNames(
+                                      checked
+                                        ? "text-blue-900 dark:text-blue-500"
+                                        : "text-gray-900 dark:text-zinc-300",
+                                      "block text-sm font-medium"
+                                    )}
+                                  >
+                                    {setting.name}
+                                  </RadioGroup.Label>
+                                  <RadioGroup.Description
+                                    as="span"
+                                    className={classNames(
+                                      checked
+                                        ? "text-blue-700 dark:text-blue-500"
+                                        : "text-gray-500 dark:text-zinc-400",
+                                      "block text-sm"
+                                    )}
+                                  >
+                                    {setting.description}
+                                  </RadioGroup.Description>
+                                </span>
+                              </>
+                            )}
+                          </RadioGroup.Option>
+                        ))}
+                      </div>
+                    </RadioGroup>
+                    {tokenOptions.quota_limit === "limited" && (
+                      <div className="flex items-center space-x-3">
+                        <div className="relative pt-1 flex-1">
+                          <label className=" font-medium text-zinc-200">
+                            Limit
+                          </label>
+                          <input
+                            value={tokenOptions.quota}
+                            min={token.usage}
+                            step={25}
+                            max={1000}
+                            onChange={(e) =>
+                              eventHandler("quota", parseInt(e.target.value))
+                            }
+                            type="range"
+                            className="appearance-none w-full h-3 p-0 focus:outline-none focus:ring-0 focus:shadow-none bg-zinc-900 rounded-full slider"
+                            id="customRange1"
+                          />
+                        </div>
+                        <input
+                          value={tokenOptions.quota}
+                          min={token.usage}
+                          max={1000}
+                          onChange={(e) =>
+                            eventHandler("quota", parseInt(e.target.value))
+                          }
+                          step={25}
+                          type="number"
+                          className="form-input max-w-[80px] font-medium rounded-lg focus:outline-none bg-black text-gray-400 border-zinc-900 border hover:outline-blue-500 hover:outline-1 hover:outline transition-colors cursor-pointer"
+                        />
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="flex justify-between items-center">
+                    <div className="flex space-x-2">
+                      <button
+                        onClick={() =>
+                          eventHandler("locked", !tokenOptions.locked)
+                        }
+                        type="button"
+                        className={clsx(
+                          tokenOptions.locked
+                            ? "bg-red-600 hover:bg-red-700 focus:ring-red-500"
+                            : "bg-blue-600 hover:bg-blue-700 focus:ring-blue-500",
+                          "inline-flex items-center p-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white  focus:outline-none focus:ring-2 focus:ring-offset-2 dark:ring-offset-black"
+                        )}
+                      >
+                        {tokenOptions.locked ? (
+                          <LockClosedIcon className="h-5 w-5" />
+                        ) : (
+                          <LockOpenIcon className="h-5 w-5" />
+                        )}
+                      </button>
+                      <button
+                        onClick={() => {
+                          setDeleteLoading(true);
+                          deleteToken(token.key, token.name).then(() => {
+                            setDeleteLoading(false);
+                            setOpen(false);
+                          });
+                        }}
+                        type="button"
+                        className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 dark:ring-offset-black"
+                      >
+                        {deleteLoading ? (
+                          <Spinner className="h-5 w-5" />
+                        ) : (
+                          "Revoke Token"
+                        )}
+                      </button>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <button
+                        type="button"
+                        className="inline-flex items-center px-4 py-2 border border-zinc-900 rounded-md shadow-sm text-sm font-medium text-white bg-black hover:bg-zinc-900"
+                        onClick={() => setOpen(false)}
+                        ref={cancelButtonRef}
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        onClick={() => {
+                          if (!isEqual(token, tokenOptions)) {
+                            setUpdateLoading(true);
+                            const regexCheck = handleRegex(tokenOptions.name);
+                            if (regexCheck) {
+                              const allowed = [
+                                "locked",
+                                "name",
+                                "quota",
+                                "quota_limit",
+                              ];
+                              const filtered = Object.keys(tokenOptions)
+                                .filter((key) => allowed.includes(key))
+                                .reduce((obj, key) => {
+                                  return {
+                                    ...obj,
+                                    [key]: tokenOptions[key],
+                                  };
+                                }, {});
+
+                              updateToken(token.key, filtered).then(() => {
+                                setUpdateLoading(false);
+                                setOpen(false);
+                              });
+                            } else {
+                              setUpdateLoading(false);
+                            }
+                          } else {
+                            setOpen(false);
+                          }
+                        }}
+                        type="button"
+                        className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:ring-offset-black"
+                      >
+                        {updateLoading ? (
+                          <Spinner className="h-5 w-5" />
+                        ) : (
+                          "Save"
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </Dialog.Panel>
+            </Transition.Child>
           </div>
-        )}
-      </div>
-    </div>
+        </div>
+      </Dialog>
+    </Transition.Root>
   );
 }
 

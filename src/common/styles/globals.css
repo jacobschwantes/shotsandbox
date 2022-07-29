@@ -98,6 +98,9 @@ transform: rotateX(var(--container-rotate-x)) rotateY(var(--container-rotate-y))
   background: #04AA6D; /* Green background */
   cursor: pointer; /* Cursor on hover */
 }
+
+
+
 }
 
 .toastProgressBlue {
@@ -111,5 +114,8 @@ transform: rotateX(var(--container-rotate-x)) rotateY(var(--container-rotate-y))
   border-radius: 6px;
   padding: 4px 6px;
   font-size: 14px;
+}
+.token-field {
+  -webkit-text-security: disc
 }
 
