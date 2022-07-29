@@ -100,4 +100,16 @@ transform: rotateX(var(--container-rotate-x)) rotateY(var(--container-rotate-y))
 }
 }
 
+.toastProgressBlue {
+  background: #1d4ed8 !important;
+}
+
+.Tooltip {
+  background: #222;
+  color: white;
+  pointer-events: none;
+  border-radius: 6px;
+  padding: 4px 6px;
+  font-size: 14px;
+}
 
