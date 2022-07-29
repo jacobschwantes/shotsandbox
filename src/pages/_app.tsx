@@ -8,7 +8,7 @@ import { useRouter } from "next/router";
 import AppLayout from "@layouts/AppLayout";
 import { useEffect, useState } from "react";
 import ProgressBar from "@badrap/bar-of-progress";
-import { useToken } from "src/common/hooks/auth";
+import { useIdToken } from "src/common/hooks/auth";
 const progress = new ProgressBar({
   size: 2,
   color: "#6366f1",
@@ -19,7 +19,7 @@ const auth = getAuth(firebaseApp);
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [user, loading, error] = useAuthState(auth);
-  const token = useToken()
+  const token = useIdToken()
   // const [token, setToken] = useState('');
   const router = useRouter();
   // user?.getIdToken().then((res) => setToken(res))
