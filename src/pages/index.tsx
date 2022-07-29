@@ -11,8 +11,6 @@ const Dashboard: NextPage = (props) => {
   const { mutate } = useSWRConfig();
   const [spin, setSpin] = useState(false);
   const { usage, isLoading, isError } = useUsage(props.idToken);
-  const batchSize = 5; // items per chunk
-  const [active, setActive] = useState(1);
 
   return (
     <div className="space-y-4 p-5 overflow-y-auto h-full ">
@@ -39,13 +37,6 @@ const Dashboard: NextPage = (props) => {
               )}
             />
           </button>
-          {/* <button
-          
-            type="button"
-            className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-          >
-            Create Token
-          </button> */}
         </div>
       </div>
       <Stats
@@ -76,32 +67,6 @@ const Dashboard: NextPage = (props) => {
           },
         ]}
       />
-      {/* <div className="grid grid-cols-3 gap-4  ">
-        <Card
-          title="Requests"
-          type="count"
-          count={usage?.data.usage}
-          isLoading={isLoading}
-          isError={isError}
-          change={5.2}
-        />
-        <Card
-          title="Quota remaining"
-          type="count"
-          count={usage?.data.quota - usage?.data.usage}
-          isLoading={isLoading}
-          isError={isError}
-          change={5.2}
-        />
-        <Card
-          title="Failed requests"
-          type="count"
-          count={0}
-          isLoading={isLoading}
-          isError={isError}
-          change={5.2}
-        />
-      </div> */}
       <LineChart dark={true} />
     </div>
   );
@@ -115,33 +80,6 @@ import {
   UsersIcon,
   PaperAirplaneIcon,
 } from "@heroicons/react/outline";
-
-const stats = [
-  {
-    id: 1,
-    name: "Requests",
-    stat: "71,897",
-    icon: PaperAirplaneIcon,
-    change: "122",
-    changeType: "increase",
-  },
-  {
-    id: 2,
-    name: "Avg. Open Rate",
-    stat: "58.16%",
-    icon: MailOpenIcon,
-    change: "5.4%",
-    changeType: "increase",
-  },
-  {
-    id: 3,
-    name: "Failed Requests",
-    stat: "24.57%",
-    icon: EmojiSadIcon,
-    change: "3.2%",
-    changeType: "decrease",
-  },
-];
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
