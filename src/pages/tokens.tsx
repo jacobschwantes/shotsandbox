@@ -255,13 +255,12 @@ const Tokens: NextPage = (props) => {
                     <input
                       value={item.key}
                       readOnly
-                      
                       spellCheck={false}
-
                       type="text"
                       className={clsx(
-                        " form-input pr-10 pl-4 py-4 w-full font-medium rounded-lg focus:outline-none bg-black text-gray-400 border-zinc-900 border-2 hover:outline-blue-500 hover:outline-1 hover:outline  transition-colors cursor-pointer"
-                      , !showKeys && "token-field")}
+                        " form-input pr-10 pl-4 py-4 w-full font-medium rounded-lg focus:outline-none bg-black text-gray-400 border-zinc-900 border-2 hover:outline-blue-500 hover:outline-1 hover:outline  transition-colors cursor-pointer",
+                        !showKeys && "token-field"
+                      )}
                     ></input>
                     <div className="cursor-pointer absolute inset-y-0 right-0 pr-4 flex items-center">
                       <button
@@ -347,7 +346,6 @@ function TokenPage({
   setOpen,
   setSelectedToken,
 }) {
-  const [selected, setSelected] = useState(settings[0]);
   const [tokenOptions, setTokenOptions] = useState(token);
   const [updateLoading, setUpdateLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
@@ -404,7 +402,7 @@ function TokenPage({
               leaveFrom="opacity-100 translate-y-0 sm:scale-100"
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
-              <Dialog.Panel className="relative bg-black border border-zinc-900 rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-3xl sm:w-full sm:p-5">
+              <Dialog.Panel className="relative bg-black border border-zinc-900 rounded-3xl px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-3xl sm:w-full sm:p-8">
                 <div className="space-y-6">
                   <h1 className="font-medium text-white text-2xl">
                     Token settings
@@ -417,8 +415,6 @@ function TokenPage({
                         eventHandler("name", e.target.value);
                         setError("");
                       }}
-                     
-                     
                       type="text"
                       className={clsx(
                         "form-input p-4 w-full font-medium rounded-lg focus:outline-none bg-black text-gray-400 border-zinc-900 border transition-colors",
@@ -441,21 +437,21 @@ function TokenPage({
                         <h1 className="text-zinc-200 font-medium ">Requests</h1>
                         <p className="text-zinc-400 font-medium">
                           <span className="text-zinc-200">{token.usage}</span> /{" "}
-                          {token.quota_limit === "unlimited" ? (
+                          {tokenOptions.quota_limit === "unlimited" ? (
                             <>&infin;</>
                           ) : (
-                            token.quota
+                            tokenOptions.quota
                           )}
                         </p>
                       </div>
-                      {token.quota_limit === "limited" && (
+                      {tokenOptions.quota_limit === "limited" && (
                         <div className="h-3 w-full bg-zinc-900 rounded-full relative">
                           <span
                             style={{
                               width:
                                 token.usage > token.quota
                                   ? "100%"
-                                  : (token.usage / token.quota) * 100 + "%",
+                                  : (token.usage / tokenOptions.quota) * 100 + "%",
                             }}
                             className={`absolute h-3 bg-blue-600 rounded-full`}
                           ></span>
@@ -622,7 +618,10 @@ function TokenPage({
                       <button
                         type="button"
                         className="inline-flex items-center px-4 py-2 border border-zinc-900 rounded-md shadow-sm text-sm font-medium text-white bg-black hover:bg-zinc-900"
-                        onClick={() => setOpen(false)}
+                        onClick={() => {
+                          setOpen(false);
+                          setTimeout(() => setSelectedToken(""), 300);
+                        }}
                         ref={cancelButtonRef}
                       >
                         Cancel
@@ -650,12 +649,14 @@ function TokenPage({
 
                               updateToken(token.key, filtered).then(() => {
                                 setUpdateLoading(false);
+                                setTimeout(() => setSelectedToken(""), 300);
                                 setOpen(false);
                               });
                             } else {
                               setUpdateLoading(false);
                             }
                           } else {
+                            setTimeout(() => setSelectedToken(""), 300);
                             setOpen(false);
                           }
                         }}

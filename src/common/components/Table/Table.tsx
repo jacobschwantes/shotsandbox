@@ -22,9 +22,7 @@ export default function Table({ logs, dispatchModal, isLoading, batchSize }) {
             <th className="px-6 py-3 bg-gray-50 dark:bg-black text-left text-xs font-medium text-gray-500 uppercase tracking-wider rounded-2xl">
               URL
             </th>
-            <th className="px-6 py-3 bg-gray-50 dark:bg-black text-left text-xs font-medium text-gray-500 uppercase tracking-wider rounded-2xl">
-              Token
-            </th>
+
             <th className="hidden px-6 py-3 bg-gray-50 dark:bg-black text-left text-xs font-medium text-gray-500 uppercase tracking-wider md:block">
               Status
             </th>
@@ -50,9 +48,7 @@ export default function Table({ logs, dispatchModal, isLoading, batchSize }) {
                   </p>
                 </div>
               </td>
-              <td className="px-6 py-4 text-left whitespace-nowrap text-sm text-gray-500 rounded-2xl">
-                {transaction.token_name}
-              </td>
+
               <td className=" px-6 py-4 whitespace-nowrap text-sm text-gray-500  ">
                 <span
                   className={classNames(
@@ -119,9 +115,6 @@ const LoadingState = (props) => (
         <tr>
           <th className="px-6 py-3 bg-gray-50 dark:bg-black text-left text-xs font-medium text-gray-500 uppercase tracking-wider rounded-2xl">
             URL
-          </th>
-          <th className="px-6 py-3 bg-gray-50 dark:bg-black text-left text-xs font-medium text-gray-500 uppercase tracking-wider rounded-2xl">
-            Token
           </th>
           <th className="hidden px-6 py-3 bg-gray-50 dark:bg-black text-left text-xs font-medium text-gray-500 uppercase tracking-wider md:block">
             Status
