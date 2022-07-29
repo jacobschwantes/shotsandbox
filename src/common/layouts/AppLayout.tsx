@@ -1,6 +1,6 @@
 import { NextPage } from "next";
 import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+
 import { Header, Navigation } from "@components/index";
 import { ReactNode } from "react";
 interface AppLayoutProps {

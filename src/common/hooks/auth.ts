@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { getAuth } from "firebase/auth";
 import { firebaseApp } from "@modules/auth/firebase/clientApp";
 const auth = getAuth(firebaseApp);
-export function useToken() {
+export function useIdToken() {
   const [token, setToken] = useState(null);
 
   useEffect(() => {
