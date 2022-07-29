@@ -18,6 +18,7 @@ import Toolbar from "./components/Toolbar";
 import { Disclosure } from "@headlessui/react";
 import { ChevronUpIcon } from "@heroicons/react/solid";
 import ColorPicker from "./components/ColorPicker";
+import { motion } from "framer-motion";
 const presets = [
   {
     gradientStop1: "#a8b043",
@@ -103,7 +104,7 @@ const Editor: NextPage = () => {
       return;
     }
 
-    toJpeg(ref.current, { cacheBust: true, width: 2560, height: 1440 })
+    toJpeg(ref.current, { cacheBust: true, width: 1920, height: 1080 })
       .then((dataUrl) => {
         const link = document.createElement("a");
         link.download = "my-image-name.png";
@@ -207,15 +208,12 @@ const Editor: NextPage = () => {
           "flex-1 flex items-center justify-center  dark:bg-black light:grid-effect-light bg-gray-50 dark:grid-effect-dark h-full overflow-hidden z-0  "
         )}
       >
-        <div className="relative  flex-1 flex items-center justify-center">
           <div
-            ref={ref}
+             ref={ref}
             className={clsx(
-              "overflow-hidden z-10 absolute ",
-              dark ? "bg-black" : "bg-white"
+              "overflow-hidden z-10 relative flex items-center justify-center bg-gradient-to-t from-[var(--gradient-stop-1)] to-[var(--gradient-stop-2)]   ",
             )}
           >
-            <div className=" w-full h-full absolute bg-gradient-to-t from-[var(--gradient-stop-1)] to-[var(--gradient-stop-2)]   "></div>
             <div
               className={clsx(
                 " relative aspect-video container template7  ",
@@ -227,9 +225,11 @@ const Editor: NextPage = () => {
               {images.map(
                 (url, index) =>
                   layout >= index + 1 && (
-                    <div
+                    <motion.div
+                      animate={{ x: parseFloat(gapX), y: parseFloat(gapY) }}
+                      transition={{ type: "spring" }}
                       key={index}
-                      className="rounded-xl shadow-2xl overflow-hidden aspect-video relative   "
+                      className="rounded-xl shadow-2xl overflow-hidden aspect-video relative flex flex-col   "
                     >
                       {showToolbar && <Toolbar type="dark" />}
 
@@ -239,13 +239,13 @@ const Editor: NextPage = () => {
                         objectFit="cover"
                         src={`/${url}`}
                       />
-                    </div>
+                    </motion.div>
                   )
               )}
             </div>
           </div>
           {/* <div className="absolute w-[1280px] h-[720px] bg-blue-600 blur-3xl z-0 scale-105"></div> */}
-        </div>
+       
       </div>
 
       <div className=" w-full max-w-xs p-5 space-y-3 overflow-y-auto overflow-x-hidden ">
@@ -417,8 +417,8 @@ const Editor: NextPage = () => {
                     <input
                       onChange={(e) => setGapX(e.target.value)}
                       value={gapX}
-                      min={-50}
-                      max={50}
+                      min={-250}
+                      max={250}
                       type="range"
                       className="appearance-none w-full h-1 p-0 focus:outline-none focus:ring-0 focus:shadow-none bg-blue-500 rounded-full slider"
                       id="customRange1"
@@ -431,8 +431,8 @@ const Editor: NextPage = () => {
                     <input
                       onChange={(e) => setGapY(e.target.value)}
                       value={gapY}
-                      min={-50}
-                      max={50}
+                      min={-250}
+                      max={250}
                       type="range"
                       className="appearance-none w-full h-1 p-0 focus:outline-none focus:ring-0 focus:shadow-none bg-blue-500 rounded-full slider"
                       id="customRange1"
