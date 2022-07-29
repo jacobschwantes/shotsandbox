@@ -1,51 +1,13 @@
 import { ExternalLinkIcon } from "@heroicons/react/outline";
-import {
-  CashIcon,
-  CheckCircleIcon,
-  ChevronDownIcon,
-  ChevronRightIcon,
-  OfficeBuildingIcon,
-  SearchIcon,
-} from "@heroicons/react/solid";
 import Link from "next/link";
 import { Spinner } from "..";
-const transactions = [
-  {
-    id: 1,
-    name: "Payment to Molly Sanders",
-    href: "#",
-    amount: "$20,000",
-    currency: "USD",
-    status: "failed",
-    date: "July 11, 2020",
-    datetime: "2020-07-11",
-  },
-  {
-    id: 2,
-    name: "Payment to Molly Sanders",
-    href: "#",
-    amount: "$20,000",
-    currency: "USD",
-    status: "processing",
-    date: "July 11, 2020",
-    datetime: "2020-07-11",
-  },
-  {
-    id: 3,
-    name: "Payment to Molly Sanders",
-    href: "#",
-    amount: "$20,000",
-    currency: "USD",
-    status: "success",
-    date: "July 11, 2020",
-    datetime: "2020-07-11",
-  },
-  // More transactions...
-];
 const statusStyles = {
-  success: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-400 dark:bg-opacity-50",
-  processing: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-400 dark:backdrop-opacity-50",
-  failed: "bg-gray-100 text-gray-800 dark:bg-zinc-900 dark:text-zinc-300 dark:backdrop-opacity-50",
+  success:
+    "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-400 dark:bg-opacity-50",
+  processing:
+    "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-400 dark:backdrop-opacity-50",
+  failed:
+    "bg-gray-100 text-gray-800 dark:bg-zinc-900 dark:text-zinc-300 dark:backdrop-opacity-50",
 };
 
 function classNames(...classes) {
@@ -60,12 +22,18 @@ export default function Table({ logs, dispatchModal, isLoading, batchSize }) {
             <th className="px-6 py-3 bg-gray-50 dark:bg-black text-left text-xs font-medium text-gray-500 uppercase tracking-wider rounded-2xl">
               URL
             </th>
-
+            <th className="px-6 py-3 bg-gray-50 dark:bg-black text-left text-xs font-medium text-gray-500 uppercase tracking-wider rounded-2xl">
+              Token
+            </th>
             <th className="hidden px-6 py-3 bg-gray-50 dark:bg-black text-left text-xs font-medium text-gray-500 uppercase tracking-wider md:block">
               Status
             </th>
             <th className="px-6 py-3 bg-gray-50 dark:bg-black text-left text-xs font-medium text-gray-500 uppercase tracking-wider rounded-2xl">
               Date
+            </th>
+
+            <th className="px-6 py-3 bg-gray-50 dark:bg-black text-left text-xs font-medium text-gray-500 uppercase tracking-wider rounded-2xl">
+              Latency
             </th>
             <th className="px-6 py-3 bg-gray-50 dark:bg-black text-left text-xs font-medium text-gray-500 uppercase tracking-wider rounded-2xl">
               Result
@@ -82,6 +50,9 @@ export default function Table({ logs, dispatchModal, isLoading, batchSize }) {
                   </p>
                 </div>
               </td>
+              <td className="px-6 py-4 text-left whitespace-nowrap text-sm text-gray-500 rounded-2xl">
+                {transaction.token_name}
+              </td>
               <td className=" px-6 py-4 whitespace-nowrap text-sm text-gray-500  ">
                 <span
                   className={classNames(
@@ -94,6 +65,13 @@ export default function Table({ logs, dispatchModal, isLoading, batchSize }) {
               </td>
               <td className="px-6 py-4 text-left whitespace-nowrap text-sm text-gray-500 rounded-2xl">
                 <time>{new Date(transaction.timestamp).toLocaleString()}</time>
+              </td>
+              <td className="px-6 py-4 text-left whitespace-nowrap text-sm text-gray-500 rounded-2xl">
+                {transaction.status === "processing" ? (
+                  <Spinner className="h-5 w-5" />
+                ) : (
+                  `${transaction.latency} ms`
+                )}
               </td>
               <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500 rounded-2xl flex justify-center ">
                 {transaction.status === "success" ? (
@@ -111,7 +89,9 @@ export default function Table({ logs, dispatchModal, isLoading, batchSize }) {
                       <ExternalLinkIcon className="h-5" />
                     </a>
                   </Link>
-                ) : transaction.status === 'processing' ? <Spinner className="h-5 w-5"/> : (
+                ) : transaction.status === "processing" ? (
+                  <Spinner className="h-5 w-5" />
+                ) : (
                   <button
                     onClick={() =>
                       dispatchModal({ message: transaction.error })
@@ -140,13 +120,16 @@ const LoadingState = (props) => (
           <th className="px-6 py-3 bg-gray-50 dark:bg-black text-left text-xs font-medium text-gray-500 uppercase tracking-wider rounded-2xl">
             URL
           </th>
-
+          <th className="px-6 py-3 bg-gray-50 dark:bg-black text-left text-xs font-medium text-gray-500 uppercase tracking-wider rounded-2xl">
+            Token
+          </th>
           <th className="hidden px-6 py-3 bg-gray-50 dark:bg-black text-left text-xs font-medium text-gray-500 uppercase tracking-wider md:block">
             Status
           </th>
           <th className="px-6 py-3 bg-gray-50 dark:bg-black text-left text-xs font-medium text-gray-500 uppercase tracking-wider rounded-2xl">
             Date
           </th>
+
           <th className="px-6 py-3 bg-gray-50 dark:bg-black text-left text-xs font-medium text-gray-500 uppercase tracking-wider rounded-2xl">
             Result
           </th>
@@ -160,11 +143,14 @@ const LoadingState = (props) => (
                 <p className="text-gray-500 truncate group-hover:text-gray-900 h-3 bg-zinc-900 w-1/4 rounded-full "></p>
               </div>
             </td>
+            <td className="px-6 py-4 text-left whitespace-nowrap text-sm text-gray-500 rounded-2xl">
+              <p className="h-3 bg-zinc-900 w-30 rounded-full"></p>
+            </td>
             <td className=" px-6 py-4 whitespace-nowrap text-sm text-gray-500  ">
               <p className={"  h-3 bg-zinc-900 w-16 rounded-full"}></p>
             </td>
             <td className="px-6 py-4 text-left whitespace-nowrap text-sm text-gray-500 rounded-2xl">
-              <p className="h-3 bg-zinc-900 h-30 rounded-full"></p>
+              <p className="h-3 bg-zinc-900 w-30 rounded-full"></p>
             </td>
             <td className="px-6 py-4 text-center whitespace-nowrap text-sm text-gray-500 rounded-2xl ">
               <p className="h-5 bg-zinc-900  w-5 rounded-full"></p>
