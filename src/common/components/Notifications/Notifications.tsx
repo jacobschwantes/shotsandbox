@@ -12,7 +12,6 @@ import {  toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import { CheckIcon } from "@heroicons/react/solid";
-import { collection, query, where, onSnapshot, doc } from "firebase/firestore";
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
@@ -56,28 +55,24 @@ const read = [
     timestamp: 1643689162,
   },
 ];
-import { db, firebaseApp } from "@modules/auth/firebase/clientApp";
-import { getAuth } from "firebase/auth";
-const auth = getAuth(firebaseApp);
-const start = Date.now();
 
 export default function Notifications(props) {
   const isLoading = false;
-  const mref = useMemo(() => query(collection(db, "users", auth.currentUser?.uid, "notifications"), where("timestamp", ">", start)), []);
-  useEffect(() => {
-    const unsubscribe = onSnapshot(mref, (snapshot) => {
-      snapshot.docChanges().forEach((change) => {
-        let data = change.doc.data();
-        if (change.type === "added") {
-          if (data.timestamp > start) {
-            toast(data.message, {
-              });
-          }
-        }
-      });
-    });
-    return () => unsubscribe();
-  }, []);
+  // const mref = useMemo(() => query(collection(db, "users", auth.currentUser?.uid, "notifications"), where("timestamp", ">", start)), []);
+  // useEffect(() => {
+  //   const unsubscribe = onSnapshot(mref, (snapshot) => {
+  //     snapshot.docChanges().forEach((change) => {
+  //       let data = change.doc.data();
+  //       if (change.type === "added") {
+  //         if (data.timestamp > start) {
+  //           toast(data.message, {
+  //             });
+  //         }
+  //       }
+  //     });
+  //   });
+  //   return () => unsubscribe();
+  // }, []);
 
   return (
     <Menu as="div" className=" inline-block  text-left xs:relative ">
