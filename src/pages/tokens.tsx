@@ -449,7 +449,7 @@ function TokenPage({
                           <span
                             style={{
                               width:
-                                token.usage > token.quota
+                                token.usage > tokenOptions.quota
                                   ? "100%"
                                   : (token.usage / tokenOptions.quota) * 100 + "%",
                             }}

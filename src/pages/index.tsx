@@ -7,10 +7,11 @@ import clsx from "clsx";
 import { useUsage, useLogs } from "@utils/swr/hooks";
 import { useSWRConfig } from "swr";
 import { Table } from "@components/index";
+import { DateTime } from "luxon";
 const Dashboard: NextPage = (props) => {
   const { mutate } = useSWRConfig();
   const [spin, setSpin] = useState(false);
-  const { usage, isLoading, isError } = useUsage(props.idToken);
+  const { usage, isLoading, isError } = useUsage(props.idToken, DateTime.now().zoneName.replace('/', '-'));
 
   return (
     <div className="space-y-4 p-5 overflow-y-auto h-full ">
@@ -25,7 +26,7 @@ const Dashboard: NextPage = (props) => {
             onAnimationEnd={() => setSpin(false)}
             onClick={() => {
               setSpin(true);
-              mutate(["/api/user/usage", props.idToken]);
+              mutate(["/api/user/usage", props.idToken, DateTime.now().zoneName]);
               // asyncHero.execute();
             }}
             className="inline-flex items-center p-2 border border-gray-300 dark:border-zinc-800 dark:bg-black rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 dark:hover:bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:ring-offset-zinc-800 "
@@ -67,7 +68,7 @@ const Dashboard: NextPage = (props) => {
           },
         ]}
       />
-      <LineChart dark={true} />
+      {usage && <LineChart data={usage?.data.chartData.usage7day} dark={true} />}
     </div>
   );
 };

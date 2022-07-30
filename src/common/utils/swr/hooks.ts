@@ -31,9 +31,9 @@ export const useToken = (token: string | null, key: string) => {
     isTokenError: error,
   };
 };
-export const useUsage = (token: string | null) => {
+export const useUsage = (token: string | null, zone: string) => {
   const { data, error } = useSWR(
-    () => (token ? ["/api/user/usage", token] : null),
+    () => (token ? [`/api/user/usage?zone=${zone}`, token] : null),
     fetcher
   );
 
