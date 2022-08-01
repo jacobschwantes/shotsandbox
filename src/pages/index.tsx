@@ -1,18 +1,37 @@
 import { NextPage } from "next";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/solid";
 import { Card, LineChart, Spinner } from "@components/index";
-import { useState } from "react";
-import { EmojiSadIcon, RefreshIcon, ReceiptTaxIcon, CalculatorIcon } from "@heroicons/react/outline";
+import Link from "next/link";
+import { useState, useEffect, useMemo } from "react";
+import {
+  EmojiSadIcon,
+  RefreshIcon,
+  ReceiptTaxIcon,
+  CalculatorIcon,
+} from "@heroicons/react/outline";
 import clsx from "clsx";
 import { useUsage, useLogs } from "@utils/swr/hooks";
 import { useSWRConfig } from "swr";
 import { Table } from "@components/index";
 import { DateTime } from "luxon";
-const Dashboard: NextPage = (props) => {
-  const { mutate } = useSWRConfig();
-  const [spin, setSpin] = useState(false);
-  const { usage, isLoading, isError } = useUsage(props.idToken, DateTime.now().zoneName.replace('/', '-'));
+import { firebaseApp } from "@modules/auth/firebase/clientApp";
+import { getAuth } from "firebase/auth";
 
+const Dashboard: NextPage = (props) => {
+  const auth = getAuth(firebaseApp);
+  const { mutate } = useSWRConfig();
+  const [idToken, setIdToken] = useState(props.idToken);
+  const [spin, setSpin] = useState(false);
+  const { usage, isLoading, isError } = useUsage(
+    idToken,
+    DateTime.now().zoneName.replace("/", "-")
+  );
+  useEffect(() => {
+    if (isError) {
+       props.user.getIdToken().then(result => setIdToken(result))
+    }
+  }, [isError])
+  const [data, setData] = useState("1w");
   return (
     <div className="space-y-4 p-5 overflow-y-auto h-full ">
       <div className="pb-5 dark:pb-0 border-b border-gray-200 dark:border-zinc-700 dark:border-none sm:flex sm:items-center sm:justify-between w-full">
@@ -26,7 +45,9 @@ const Dashboard: NextPage = (props) => {
             onAnimationEnd={() => setSpin(false)}
             onClick={() => {
               setSpin(true);
-              mutate(["/api/user/usage", props.idToken, DateTime.now().zoneName]);
+              mutate([
+                "/api/user/usage",
+              ]);
               // asyncHero.execute();
             }}
             className="inline-flex items-center p-2 border border-gray-300 dark:border-zinc-800 dark:bg-black rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 dark:hover:bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:ring-offset-zinc-800 "
@@ -46,6 +67,7 @@ const Dashboard: NextPage = (props) => {
             id: 1,
             name: "Requests",
             stat: usage?.data.usage,
+            href: "/history",
             icon: PaperAirplaneIcon,
             change: "122",
             changeType: "increase",
@@ -53,6 +75,7 @@ const Dashboard: NextPage = (props) => {
           {
             id: 2,
             name: "Quota Remaining",
+            href: "/settings/billing",
             stat: usage?.data.quota - usage?.data.usage,
             icon: CalculatorIcon,
             change: "5.4%",
@@ -61,14 +84,22 @@ const Dashboard: NextPage = (props) => {
           {
             id: 3,
             name: "Failed Requests",
-            stat: "24.57%",
+            href: "/history",
+            stat: `${((usage?.data.errorCount / usage?.data.usage) * 100).toFixed(2)}%`,
             icon: EmojiSadIcon,
             change: "3.2%",
             changeType: "decrease",
           },
         ]}
       />
-      {usage && <LineChart data={usage?.data.chartData.usage7day} dark={true} />}
+      {usage && (
+        <LineChart
+          seriesOption={data}
+          setData={setData}
+          data={data === '1w' ? usage?.data.chartData.usage7day : usage?.data.chartData.usage30day}
+          dark={true}
+        />
+      )}
     </div>
   );
 };
@@ -81,6 +112,7 @@ import {
   UsersIcon,
   PaperAirplaneIcon,
 } from "@heroicons/react/outline";
+import { auth } from "firebase-admin";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -107,7 +139,7 @@ function Stats(props) {
               <p className="text-2xl font-semibold text-gray-900 dark:text-zinc-200">
                 {item.stat}
               </p>
-              <p
+              {/* <p
                 className={classNames(
                   item.changeType === "increase"
                     ? "text-green-600"
@@ -132,16 +164,18 @@ function Stats(props) {
                   by
                 </span>
                 {item.change}
-              </p>
+              </p> */}
               <div className="absolute bottom-0 inset-x-0 bg-gray-50 dark:bg-black px-4 py-4 sm:px-6 dark:border-t dark:border-zinc-900">
                 <div className="text-sm">
+                  <Link href={item.href}>
+                  
                   <a
-                    href="#"
+                 
                     className="font-medium text-blue-600 hover:text-blue-500"
                   >
-                    {" "}
+          
                     View all<span className="sr-only"> {item.name} stats</span>
-                  </a>
+                  </a></Link>
                 </div>
               </div>
             </dd>
