@@ -82,7 +82,12 @@ async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
             break;
           case "DELETE":
             try {
-              await tokenRef.delete();
+              const batch = firestore.batch();
+              batch.delete(tokenRef.collection("usage").doc('0'))
+              batch.delete(tokenRef.collection("usage").doc('1'))
+              batch.delete(tokenRef.collection("usage").doc('2'))
+              batch.delete(tokenRef)
+              await batch.commit()
               res.status(200).json({ message: "key deleted" });
             } catch (e: any) {
               res.status(500).json({ message: e });
