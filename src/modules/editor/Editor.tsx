@@ -45,7 +45,6 @@ const presets = [
     zoom: "1",
   },
 ];
-const auth = getAuth(firebaseApp);
 
 const generateColorHex = () => {
   return `#${Math.floor(Math.random() * 16777215).toString(16)}`;

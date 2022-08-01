@@ -3,7 +3,7 @@ import type { AppProps } from "next/app";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { getAuth } from "firebase/auth";
 import {firebaseApp} from "../modules/auth/firebase/clientApp";
-import Auth from "../pages/auth";
+import Login from "@modules/auth/login";
 import { useRouter } from "next/router";
 import AppLayout from "@layouts/AppLayout";
 import { useEffect, useState } from "react";
@@ -32,11 +32,11 @@ function MyApp({ Component, pageProps }: AppProps) {
   if (user && !error) {
     return (
       <AppLayout>
-        <Component idToken={token} {...pageProps} />
+        <Component user={user} idToken={token} {...pageProps} />
       </AppLayout>
     );
   } else if (!user && !loading) {
-    return <Auth />;
+    return <Login/>;
   } else {
     return (
       <div className="flex h-screen w-screen items-center justify-center dark:bg-black  ">

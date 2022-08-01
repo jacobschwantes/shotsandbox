@@ -5,7 +5,6 @@ import { getAuth } from "firebase/auth";
 import { useState } from "react";
 import { QuestionMarkCircleIcon } from "@heroicons/react/solid";
 import SettingsLayout from "@layouts/SettingsLayout";
-const auth = getAuth(firebaseApp);
 const Account: NextPage = () => {
   //   const [message, setMessage] = useState("");
   //   const writeNotification = async () => {

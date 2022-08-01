@@ -3,6 +3,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { firestore } from "@utils/firebase-admin";
 import { values, groupBy } from "lodash";
 import { DateTime, Interval } from "luxon";
+import { DocumentReference } from "firebase/firestore";
 type Data = {
   message: string;
 };
@@ -26,19 +27,38 @@ const aggregateData = (data, zone) => {
   let defaultData = Array.from(Array(29).keys()).map((x) => {
     const date = DateTime.now()
       .setZone(zone)
+      .startOf("day")
       .minus({ days: x + 1 });
-    return { x: date.toLocaleString(), y: 0 };
+    return { x: date.toISO(), y: 0 };
   });
 
   data.forEach((chunk) => {
     const dateString = DateTime.fromMillis(chunk[0].timestamp, {
       zone: zone,
-    }).toLocaleString();
+    })
+      .startOf("day")
+      .toISO();
     const idx = defaultData.findIndex((item) => item.x === dateString);
     defaultData[idx] = { x: dateString, y: chunk.length };
   });
 
   return defaultData.reverse();
+};
+
+const getDailyLogs = async (userRef, zone) => {
+  const logsRef = userRef.collection("logs");
+  const logsSnapshot = await logsRef
+    .where(
+      "timestamp",
+      ">=",
+      DateTime.now().setZone(zone).startOf("day").toMillis()
+    )
+    .get();
+
+    const logs = logsSnapshot.docs.map(log => log.data())
+    const erroredLogs = logs.filter(item => item.status === 'failed');
+  
+    return {count: logs.length, errors: erroredLogs.length}
 };
 
 const runAggregation = async (userRef, zone) => {
@@ -47,7 +67,6 @@ const runAggregation = async (userRef, zone) => {
   try {
     const res = await firestore.runTransaction(async (t) => {
       const logsSnapshot = await t.get(logsRef);
-      const usageDailySnapshot = await t.get(usageRef);
       const logs = [];
       logsSnapshot.docs.forEach((doc) => logs.push(doc.data()));
       const groupedData = groupData(logs, zone);
@@ -57,22 +76,18 @@ const runAggregation = async (userRef, zone) => {
           DateTime.now().setZone(zone).startOf("day").toMillis() <
           item.timestamp
       );
-      usageDailySnapshot.docs.forEach((doc) => {
-        t.delete(doc.ref);
-      });
+      const errorCount = logs.filter((item) => item.status === 'failed');
       const aggregated6Day = aggregatedData.slice(-6);
-      if (count.length > 0) {
-        t.set(usageRef.doc("0"), { count: count.length });
-      }
       t.update(userRef, {
+        errorCount: errorCount.length,
         lastAggregation: Date.now(),
         chartData: { usage6day: aggregated6Day, usage29day: aggregatedData },
       });
       const updatedData = aggregatedData.concat({
-        x: DateTime.now().setZone(zone).startOf("day").toLocaleString(),
+        x: DateTime.now().setZone(zone).startOf("day").toISO(),
         y: count.length,
       });
-      return { usage7day: updatedData.slice(-7), usage30day: updatedData };
+      return {errorCount: errorCount.length, chartData: {usage7day: updatedData.slice(-7), usage30day: updatedData} };
     });
     console.log("Transaction success", res);
     return res;
@@ -103,20 +118,21 @@ async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
       check
     ) {
       const newAggregateData = await runAggregation(userRef, zone);
-      const data = { ...docData, usage, chartData: newAggregateData };
+      const data = { ...docData, usage, ...newAggregateData };
       if (newAggregateData)
         res.status(200).json({ message: "usage found", data });
       else res.status(500).json({ message: "failed to aggregate data" });
     } else {
-      const dailyUsage = await getCount(userRef.collection("usage_daily"));
+      const dailyUsage = await getDailyLogs(userRef, zone)
       const dailyData = {
-        x: DateTime.now().setZone(zone).startOf("day").toLocaleString(),
-        y: dailyUsage,
+        x: DateTime.now().setZone(zone).startOf("day").toISO(),
+        y: dailyUsage.count,
       };
       docData.chartData = {
         usage7day: docData.chartData.usage6day.concat(dailyData),
         usage30day: docData.chartData.usage29day.concat(dailyData),
       };
+      docData.errorCount += dailyUsage.errors
       const data = { ...docData, usage };
       res.status(200).json({ message: "usage found", data });
     }

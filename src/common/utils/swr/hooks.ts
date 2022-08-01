@@ -44,7 +44,7 @@ export const useUsage = (token: string | null, zone: string) => {
   };
 };
 export const useLogs = (token: string | null, params: string, options) => {
-  const { data, error } = useSWR(
+  const { data, error, isValidating } = useSWR(
     () => (token ? [`/api/user/logs${params}`, token] : null),
     fetcher,
     options
@@ -52,6 +52,7 @@ export const useLogs = (token: string | null, params: string, options) => {
   return {
     logs: data,
     isLoadingLogs: !error && !data,
+    isValidating,
     isErrorLogs: error,
   };
 };

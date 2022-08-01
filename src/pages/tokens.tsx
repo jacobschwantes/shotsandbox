@@ -27,18 +27,18 @@ import { RadioGroup } from "@headlessui/react";
 import { ComputePosition, inline } from "@floating-ui/core";
 import Tooltip from "@components/Tooltip";
 import { AnimatePresence, motion } from "framer-motion";
-
 const Tokens: NextPage = (props) => {
   const { mutate } = useSWRConfig();
   const [showKeys, setShowKeys] = useState(false);
   const [copiedId, setCopiedId] = useState("");
   const [spin, setSpin] = useState(false);
   const [creatingToken, setCreatingToken] = useState(false);
-  const { tokens, isLoading, isError, update } = useTokens(props.idToken);
+  const [idToken, setIdToken] = useState(props.idToken);
+  const { tokens, isLoading, isError, update } = useTokens(idToken);
   const [selected, setSelected] = useState("");
   const [open, setOpen] = useState(false);
   const { token, isTokenLoading, isTokenError } = useToken(
-    props.idToken,
+   idToken,
     selected
   );
   useEffect(() => {
@@ -51,11 +51,17 @@ const Tokens: NextPage = (props) => {
     if (isTokenLoading) return;
     if (!isTokenLoading) setOpen(true);
   }, [selected, isTokenLoading]);
+  
+  useEffect(() => {
+    if (isError) {
+       props.user.getIdToken().then(result => setIdToken(result))
+    }
+  }, [isError])
 
   const updateToken = async (key, options) => {
     await fetch(`/api/user/tokens/${key}`, {
       headers: {
-        Authorization: `Bearer ${props.idToken}`,
+        Authorization: `Bearer ${idToken}`,
         "Content-Type": "application/json",
       },
       method: "POST",
@@ -66,8 +72,8 @@ const Tokens: NextPage = (props) => {
         else throw await res.json();
       })
       .then((data) => {
-        mutate(["/api/user/tokens", props.idToken]);
-        mutate([`/api/user/tokens/${key}`, props.idToken]);
+        mutate(["/api/user/tokens", idToken]);
+        mutate([`/api/user/tokens/${key}`, idToken]);
         toast(
           <div className="flex items-center space-x-3">
             <CheckCircleIcon className="h-6 w-6 text-blue-500" />
@@ -100,7 +106,7 @@ const Tokens: NextPage = (props) => {
   const deleteToken = async (key: string, name: string) => {
     await fetch(`/api/user/tokens/${key}`, {
       headers: {
-        Authorization: `Bearer ${props.idToken}`,
+        Authorization: `Bearer ${idToken}`,
         "Content-Type": "application/json",
       },
       method: "DELETE",
@@ -115,7 +121,7 @@ const Tokens: NextPage = (props) => {
         });
 
         update({ ...{ keys: newData } });
-        mutate([`/api/user/tokens/${key}`, props.idToken]);
+        mutate([`/api/user/tokens/${key}`, idToken]);
         toast(
           <div className="flex items-center space-x-3">
             <CheckCircleIcon className="h-6 w-6 text-blue-500" />
@@ -137,7 +143,7 @@ const Tokens: NextPage = (props) => {
   const createToken = async () => {
     setCreatingToken(true);
     const result = await fetch("/api/user/tokens", {
-      headers: { Authorization: `Bearer ${props.idToken}` },
+      headers: { Authorization: `Bearer ${idToken}` },
       method: "POST",
     })
       .then(async (res) => {
@@ -192,7 +198,7 @@ const Tokens: NextPage = (props) => {
             onAnimationEnd={() => setSpin(false)}
             onClick={() => {
               setSpin(true);
-              mutate(["/api/user/tokens", props.idToken]);
+              mutate(["/api/user/tokens", idToken]);
             }}
             className="inline-flex items-center p-2 border border-gray-300 dark:border-zinc-800 dark:bg-black rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 dark:hover:bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:ring-offset-zinc-800 "
           >
@@ -241,14 +247,14 @@ const Tokens: NextPage = (props) => {
           })}
         </div>
       )}
-      {isError && <div>Error: {isError.message}</div>}
+      {isError && <div className="text-red-500">Error: {isError.message}</div>}
 
-      {tokens && (
+      {tokens?.keys && (
         <div className="w-full">
           <div className="flex flex-col max-w-xl space-y-2 ">
             {tokens.keys.map((item, index) => (
               <div className={clsx("space-y-1 transition-all")}>
-                <p className="font-medium dark:text-zinc-200">{item.name}</p>
+                <p className="dark:text-zinc-200">{item.name}</p>
 
                 <div className={"flex space-x-2"}>
                   <div className={clsx("w-full relative")}>
@@ -402,13 +408,13 @@ function TokenPage({
               leaveFrom="opacity-100 translate-y-0 sm:scale-100"
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
-              <Dialog.Panel className="relative bg-black border border-zinc-900 rounded-3xl px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-3xl sm:w-full sm:p-8">
+              <Dialog.Panel className="relative bg-black border border-zinc-900 rounded-2xl px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-4xl sm:w-full sm:p-6">
                 <div className="space-y-6">
-                  <h1 className="font-medium text-white text-2xl">
+                  <h1 className="font-medium text-white text-lg">
                     Token settings
                   </h1>
                   <div className="space-y-2">
-                    <h1 className="font-medium text-zinc-100 text-lg ">Name</h1>
+                    <h1 className="font-medium text-zinc-100 ">Name</h1>
                     <input
                       value={tokenOptions.name}
                       onChange={(e) => {
@@ -417,7 +423,7 @@ function TokenPage({
                       }}
                       type="text"
                       className={clsx(
-                        "form-input p-4 w-full font-medium rounded-lg focus:outline-none bg-black text-gray-400 border-zinc-900 border transition-colors",
+                        "form-input text-sm p-3 w-1/2 font-medium rounded-lg focus:outline-none bg-black text-gray-400 border-zinc-900 border transition-colors",
                         error ? "border-red-500" : "hover:border-blue-500"
                       )}
                     />
@@ -425,18 +431,18 @@ function TokenPage({
                   </div>
                   <div className="space-y-3">
                     <div className="">
-                      <h1 className="font-medium text-zinc-100 text-lg ">
+                      <h1 className="font-medium text-zinc-100 ">
                         Usage metrics
                       </h1>
-                      <p className="text-zinc-400 ">
+                      <p className="text-zinc-400 text-sm ">
                         Usage resets on Aug 1, 2022
                       </p>
                     </div>
                     <div className="space-y-2">
                       <div className="flex justify-between">
                         <h1 className="text-zinc-200 font-medium ">Requests</h1>
-                        <p className="text-zinc-400 font-medium">
-                          <span className="text-zinc-200">{token.usage}</span> /{" "}
+                        <p className="text-zinc-400 font-medium text-sm">
+                          <span className="text-zinc-200 ">{token.usage}</span> /{" "}
                           {tokenOptions.quota_limit === "unlimited" ? (
                             <>&infin;</>
                           ) : (
@@ -461,10 +467,10 @@ function TokenPage({
                   </div>
                   <div className=" space-y-3">
                     <div className="">
-                      <h1 className="font-medium text-zinc-100 text-lg ">
+                      <h1 className="font-medium text-zinc-100  ">
                         Quota limit
                       </h1>
-                      <p className="text-zinc-400 ">
+                      <p className="text-zinc-400 text-sm ">
                         Define whether this token would be quota limited
                       </p>
                     </div>
@@ -551,7 +557,6 @@ function TokenPage({
                           <input
                             value={tokenOptions.quota}
                             min={token.usage}
-                            step={25}
                             max={1000}
                             onChange={(e) =>
                               eventHandler("quota", parseInt(e.target.value))
@@ -568,9 +573,8 @@ function TokenPage({
                           onChange={(e) =>
                             eventHandler("quota", parseInt(e.target.value))
                           }
-                          step={25}
                           type="number"
-                          className="form-input max-w-[80px] font-medium rounded-lg focus:outline-none bg-black text-gray-400 border-zinc-900 border hover:outline-blue-500 hover:outline-1 hover:outline transition-colors cursor-pointer"
+                          className="form-input max-w-[80px] font-medium text-sm rounded-lg focus:outline-none bg-black text-gray-400 border-zinc-900 border hover:outline-blue-500 hover:outline-1 hover:outline transition-colors cursor-pointer"
                         />
                       </div>
                     )}
