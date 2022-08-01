@@ -2,7 +2,7 @@ import { NextPage } from "next";
 import { addDoc, collection } from "firebase/firestore";
 import { db, firebaseApp } from "@modules/auth/firebase/clientApp";
 import { getAuth } from "firebase/auth";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/solid";
 import { Card, LineChart, Spinner } from "@components/index";
 import { EmojiSadIcon, RefreshIcon } from "@heroicons/react/outline";
@@ -10,25 +10,39 @@ import clsx from "clsx";
 import { useUsage, useLogs } from "@utils/swr/hooks";
 import { useSWRConfig } from "swr";
 import { Table, Modal } from "@components/index";
+import { useIdToken } from "src/common/hooks/auth";
+import { DateTime } from "luxon";
 const getInterval = (data) => {
-  if (data?.logs.some((item) => item.status === "processing"))  return 6000;
+  if (data?.logs.some((item) => item.status === "processing")) return 6000;
   return 0;
 };
 const auth = getAuth(firebaseApp);
 const History: NextPage = (props) => {
   const { mutate } = useSWRConfig();
+
   const [spin, setSpin] = useState(false);
   const [open, setOpen] = useState(false);
   const [modalContent, setModalContent] = useState({});
-
+  const [entriesCount, setEntriesCount] = useState(0);
+  const [idToken, setIdToken] = useState(props.idToken);
   const batchSize = 10; // items per chunk
   const [active, setActive] = useState(1);
-  const { logs, isLoadingLogs, isErrorLogs } = useLogs(
-    props.idToken,
+  const { logs, isLoadingLogs, isErrorLogs, isValidating } = useLogs(
+    idToken,
     `?limit=${batchSize}&page=${active}`,
     { refreshInterval: (data) => getInterval(data) }
   );
-  const { usage, isLoading, isError } = useUsage(props.idToken);
+
+  useEffect(() => {
+    if (logs?.entries) {
+      setEntriesCount(logs.entries);
+    }
+  }, [logs]);
+
+  useEffect(() => {
+    console.log("running side effect");
+    props.user.getIdToken().then((result) => setIdToken(result));
+  }, [isErrorLogs]);
 
   const dispatchModal = (options) => {
     setModalContent(options);
@@ -47,11 +61,8 @@ const History: NextPage = (props) => {
             onAnimationEnd={() => setSpin(false)}
             onClick={() => {
               setSpin(true);
-              mutate(["/api/user/usage", props.idToken]);
-              mutate([
-                `/api/user/logs?limit=${batchSize}&page=${active}`,
-                props.idToken,
-              ]);
+              mutate(["/api/user/usage"]);
+              mutate([`/api/user/logs?limit=${batchSize}&page=${active}`]);
               // asyncHero.execute();
             }}
             className="inline-flex items-center p-2 border border-gray-300 dark:border-zinc-800 dark:bg-black rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 dark:hover:bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:ring-offset-zinc-800 "
@@ -79,20 +90,20 @@ const History: NextPage = (props) => {
         </p>
       )}
       <Table
+        isValidating={isValidating}
         logs={logs?.logs}
         isLoading={isLoadingLogs}
         dispatchModal={dispatchModal}
         batchSize={10}
       />
-      {!isLoading && (
-        <Pagination
-          pages={Math.ceil(usage?.data.usage / batchSize)}
-          setActive={setActive}
-          active={active}
-          size={usage?.data.usage}
-          batchSize={10}
-        />
-      )}
+
+      <Pagination
+        pages={Math.ceil(entriesCount / batchSize)}
+        setActive={setActive}
+        active={active}
+        size={entriesCount}
+        batchSize={10}
+      />
 
       <Modal open={open} setOpen={setOpen} content={modalContent} />
     </div>
@@ -148,21 +159,81 @@ const Pagination = (props) => {
               <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
             </button>
             {/* Current: "z-10 bg-blue-50 border-blue-500 text-blue-600", Default: "bg-white border-gray-300 text-gray-500 hover:bg-gray-50" */}
-            {Array.from(Array(props.pages)).map((item, ind) => {
-              return (
-                <button
-                  className={
-                    props.active === ind + 1
-                      ? " relative z-10 inline-flex items-center border border-blue-500 dark:bg-blue-900 dark:text-blue-200  bg-blue-50 px-4 py-2 text-sm font-medium text-blue-600"
-                      : "relative inline-flex items-center border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 dark:hover:bg-zinc-900 dark:bg-black dark:border-zinc-900 dark:text-zinc-200"
-                  }
-                  id={ind}
-                  onClick={() => props.setActive(++ind)}
-                >
-                  {ind + 1}
-                </button>
-              );
-            })}
+            {props.pages > 5 ? (
+              <>
+                {(Math.ceil(props.active / 5) - 1) * 5 > 0 && (
+                  <>
+                    <button
+                      className={
+                        props.active === 1
+                          ? " relative z-10 inline-flex items-center border border-blue-500 dark:bg-blue-900 dark:text-blue-200  bg-blue-50 px-4 py-2 text-sm font-medium text-blue-600"
+                          : "relative inline-flex items-center border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 dark:hover:bg-zinc-900 dark:bg-black dark:border-zinc-900 dark:text-zinc-200"
+                      }
+                      onClick={() => props.setActive(1)}
+                    >
+                      {1}
+                    </button>
+                    <span className="relative inline-flex items-center border border-gray-300 bg-white dark:bg-black dark:border-zinc-900 dark:text-zinc-200 px-4 py-2 text-sm font-medium text-gray-500 ">
+                      ...
+                    </span>
+                  </>
+                )}
+                {Array.from(Array(props.pages))
+                  .map((item, idx) => idx + 1)
+                  .slice(
+                    (Math.ceil(props.active / 5) - 1) * 5,
+                    Math.ceil(props.active / 5) * 5
+                  )
+                  .map((item, ind) => {
+                    return (
+                      <button
+                        className={
+                          props.active === item
+                            ? " relative z-10 inline-flex items-center border border-blue-500 dark:bg-blue-900 dark:text-blue-200  bg-blue-50 px-4 py-2 text-sm font-medium text-blue-600"
+                            : "relative inline-flex items-center border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 dark:hover:bg-zinc-900 dark:bg-black dark:border-zinc-900 dark:text-zinc-200"
+                        }
+                        id={ind}
+                        onClick={() => props.setActive(item)}
+                      >
+                        {item}
+                      </button>
+                    );
+                  })}
+                {Math.floor(props.pages / 5) >= props.active / 5 && (
+                  <>
+                    <span className="relative inline-flex items-center border border-gray-300 bg-white dark:bg-black dark:border-zinc-900 dark:text-zinc-200 px-4 py-2 text-sm font-medium text-gray-500">
+                      ...
+                    </span>
+                    <button
+                      className={
+                        props.active === props.pages
+                          ? " relative z-10 inline-flex items-center border border-blue-500 dark:bg-blue-900 dark:text-blue-200  bg-blue-50 px-4 py-2 text-sm font-medium text-blue-600"
+                          : "relative inline-flex items-center border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 dark:hover:bg-zinc-900 dark:bg-black dark:border-zinc-900 dark:text-zinc-200"
+                      }
+                      onClick={() => props.setActive(props.pages)}
+                    >
+                      {props.pages}
+                    </button>
+                  </>
+                )}
+              </>
+            ) : (
+              Array.from(Array(props.pages)).map((item, ind) => {
+                return (
+                  <button
+                    className={
+                      props.active === ind + 1
+                        ? " relative z-10 inline-flex items-center border border-blue-500 dark:bg-blue-900 dark:text-blue-200  bg-blue-50 px-4 py-2 text-sm font-medium text-blue-600"
+                        : "relative inline-flex items-center border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 dark:hover:bg-zinc-900 dark:bg-black dark:border-zinc-900 dark:text-zinc-200"
+                    }
+                    id={ind}
+                    onClick={() => props.setActive(++ind)}
+                  >
+                    {ind + 1}
+                  </button>
+                );
+              })
+            )}
 
             <button
               disabled={props.active === props.pages}
