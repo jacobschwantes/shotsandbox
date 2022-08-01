@@ -60,7 +60,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
     snapshot.forEach((doc) => {
       logs.push(doc.data());
     });
-    res.status(200).json({ message: "found logs", logs, logCount });
+    res.status(200).json({ message: "found logs", logs, logCount, entries: logCount });
   }
 }
 export default withAuth(handler);
