@@ -13,7 +13,8 @@ import { Table, Modal } from "@components/index";
 import { useIdToken } from "src/common/hooks/auth";
 import { DateTime } from "luxon";
 const getInterval = (data) => {
-  if (data?.logs.some((item) => item.status === "processing")) return 6000;
+  if (!data) return 0; 
+  if (data.logs && data.logs.some((item) => item.status === "processing")) return 6000;
   return 0;
 };
 const auth = getAuth(firebaseApp);
