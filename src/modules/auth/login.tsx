@@ -57,6 +57,7 @@ const PasswordPage: NextComponentType<
     try {
       await signInWithEmailAndPassword(auth, email, password);
     } catch (e: any) {
+      console.log(JSON.stringify(e))
       setError(e.message);
     }
 
