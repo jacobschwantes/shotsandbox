@@ -9,7 +9,7 @@ import {
   signOut,
   createUserWithEmailAndPassword,
 } from "firebase/auth";
-import {firebaseApp} from "./firebase/clientApp";
+import { firebaseApp } from "./firebase/clientApp";
 const auth = getAuth(firebaseApp);
 type Tab = {
   heading: string;
@@ -57,7 +57,7 @@ const PasswordPage: NextComponentType<
     try {
       await signInWithEmailAndPassword(auth, email, password);
     } catch (e: any) {
-      console.log(JSON.stringify(e))
+      console.log(JSON.stringify(e));
       setError(e.message);
     }
 
@@ -249,18 +249,11 @@ const SignUpPage: NextComponentType<NextPageContext, {}, SignUpPageProps> = ({
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const submitSignUp = async () => {
-    await createUserWithEmailAndPassword(auth, email, password).then(
-      async (userCredential) => {
-        const token = await userCredential.user.getIdToken();
-    
-        const res = await fetch("/api/user/create", {
-
-          headers: { Authorization: `Bearer ${token}` },
-      })
-        .catch((e) => console.log("api/user/create error, ", e));
-    }).catch(e => setError(e.message));
-        setLoading(false);
-      }
+    await createUserWithEmailAndPassword(auth, email, password).catch((e) =>
+      setError(e.message)
+    );
+    setLoading(false);
+  };
   return (
     <>
       <form
@@ -343,7 +336,7 @@ const SignUpPage: NextComponentType<NextPageContext, {}, SignUpPageProps> = ({
           <p className="text-red-500 font-medium text-sm">{passwordError}</p>
           <p className="text-red-500 font-medium text-sm">{error}</p>
         </div>
-        
+
         <button
           type="submit"
           className="bg-blue-500 hover:bg-blue-400 w-full border border-blue-900 p-4 rounded-lg font-medium tracking-wide text-gray-900 flex items-center justify-center"
