@@ -31,7 +31,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
       break;
     case "POST":
       if (!req.email_verified) {
-        res.status(401).send("email not verified");
+        res.status(401).json({message: "email not verified"});
       } else {
         const newKey = generateKey();
         const userRef = firestore.collection("API_KEYS").doc(newKey);
