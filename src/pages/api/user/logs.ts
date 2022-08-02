@@ -54,7 +54,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
   // cities have the exact same population value.
 
   if (snapshot.empty) {
-    res.status(404).json({ message: "no logs" });
+    res.status(404).json({ message: "no logs", logs: [], entries: logCount });
   } else {
     const logs = [];
     snapshot.forEach((doc) => {
