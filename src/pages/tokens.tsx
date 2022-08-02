@@ -37,10 +37,7 @@ const Tokens: NextPage = (props) => {
   const { tokens, isLoading, isError, update } = useTokens(idToken);
   const [selected, setSelected] = useState("");
   const [open, setOpen] = useState(false);
-  const { token, isTokenLoading, isTokenError } = useToken(
-   idToken,
-    selected
-  );
+  const { token, isTokenLoading, isTokenError } = useToken(idToken, selected);
   useEffect(() => {
     let timer1 = setTimeout(() => setCopiedId(""), 6000);
     return () => {
@@ -51,12 +48,12 @@ const Tokens: NextPage = (props) => {
     if (isTokenLoading) return;
     if (!isTokenLoading) setOpen(true);
   }, [selected, isTokenLoading]);
-  
+
   useEffect(() => {
     if (isError) {
-       props.user.getIdToken().then(result => setIdToken(result))
+      props.user.getIdToken().then((result) => setIdToken(result));
     }
-  }, [isError])
+  }, [isError]);
 
   const updateToken = async (key, options) => {
     await fetch(`/api/user/tokens/${key}`, {
@@ -121,7 +118,7 @@ const Tokens: NextPage = (props) => {
         });
 
         update({ ...{ keys: newData } });
-        mutate([`/api/user/tokens/${key}`, idToken]);
+       
         toast(
           <div className="flex items-center space-x-3">
             <CheckCircleIcon className="h-6 w-6 text-blue-500" />
@@ -141,9 +138,16 @@ const Tokens: NextPage = (props) => {
       .catch((e) => console.log("error, ", e));
   };
   const createToken = async () => {
+    let token = idToken;
     setCreatingToken(true);
+    if (!props.user.emailVerified) {
+      await props.user.getIdToken(true).then((result) => {
+        setIdToken(result);
+        token = result;
+      });
+    }
     const result = await fetch("/api/user/tokens", {
-      headers: { Authorization: `Bearer ${idToken}` },
+      headers: { Authorization: `Bearer ${token}` },
       method: "POST",
     })
       .then(async (res) => {
@@ -442,7 +446,8 @@ function TokenPage({
                       <div className="flex justify-between">
                         <h1 className="text-zinc-200 font-medium ">Requests</h1>
                         <p className="text-zinc-400 font-medium text-sm">
-                          <span className="text-zinc-200 ">{token.usage}</span> /{" "}
+                          <span className="text-zinc-200 ">{token.usage}</span>{" "}
+                          /{" "}
                           {tokenOptions.quota_limit === "unlimited" ? (
                             <>&infin;</>
                           ) : (
@@ -457,7 +462,8 @@ function TokenPage({
                               width:
                                 token.usage > tokenOptions.quota
                                   ? "100%"
-                                  : (token.usage / tokenOptions.quota) * 100 + "%",
+                                  : (token.usage / tokenOptions.quota) * 100 +
+                                    "%",
                             }}
                             className={`absolute h-3 bg-blue-600 rounded-full`}
                           ></span>
@@ -606,6 +612,8 @@ function TokenPage({
                           deleteToken(token.key, token.name).then(() => {
                             setDeleteLoading(false);
                             setOpen(false);
+                            setTimeout(() => setSelectedToken(""), 300);
+                            
                           });
                         }}
                         type="button"
