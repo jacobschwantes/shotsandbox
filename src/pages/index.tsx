@@ -85,7 +85,7 @@ const Dashboard: NextPage = (props) => {
             id: 3,
             name: "Failed Requests",
             href: "/history",
-            stat: `${((usage?.data.errorCount / usage?.data.usage) * 100).toFixed(2)}%`,
+            stat: `${(usage?.data?.errorCount === 0 ? 0 : (usage?.data?.errorCount / usage?.data?.usage) * 100).toFixed(2)}%`,
             icon: EmojiSadIcon,
             change: "3.2%",
             changeType: "decrease",
