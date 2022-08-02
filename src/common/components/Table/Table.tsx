@@ -15,7 +15,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 export default function Table({ logs, dispatchModal, isLoading, batchSize, isValidating }) {
-  return !isLoading ? (
+  return !isLoading && logs ? (
     <div className="rounded-2xl bg-white dark:bg-black border shadow-lg dark:shadow-none shadow-gray-100  border-gray-200 dark:border-zinc-900">
       <table className="   divide-y divide-gray-200 dark:divide-zinc-900 ">
         <thead>
