@@ -1,181 +1,413 @@
 import { NextPage } from "next";
-import { addDoc, collection } from "firebase/firestore";
-import { db, firebaseApp } from "@modules/auth/firebase/clientApp";
-import { getAuth } from "firebase/auth";
 import { useState } from "react";
-import { QuestionMarkCircleIcon } from "@heroicons/react/solid";
 import SettingsLayout from "@layouts/SettingsLayout";
+import { RadioGroup } from "@headlessui/react";
+import { CheckCircleIcon } from "@heroicons/react/solid";
+import clsx from "clsx";
+const themeOptions = [
+  {
+    id: 1,
+    title: "System preference",
+  },
+  {
+    id: 2,
+    title: "Light",
+  },
+  {
+    id: 3,
+    title: "Dark",
+  },
+];
+
 const Account: NextPage = () => {
-  //   const [message, setMessage] = useState("");
-  //   const writeNotification = async () => {
-  //     const docRef = await addDoc(
-  //       collection(db, "users", auth.currentUser?.uid, "notifications"),
-  //       {
-  //         message,
-  //         timestamp: Date.now(),
-  //       }
-  //     );
-  //   };
+  const [selectedTheme, setSelectedTheme] = useState(themeOptions[0]);
   return (
     <div className="flex-1  p-5 h-full overflow-y-auto ">
       <SettingsLayout>
-        <main className=" pb-10 lg:py-12  max-w-7xl">
-          <div className="lg:grid lg:grid-cols-12 lg:gap-x-5">
-            {/* Payment details */}
-            <div className="space-y-6 sm:px-6 lg:px-0 lg:col-span-9">
-              <section aria-labelledby="payment-details-heading">
-                <form action="#" method="POST">
-                  <div className="shadow sm:rounded-md sm:overflow-hidden">
-                    <div className="bg-white py-6 px-4 sm:p-6">
-                      <div>
-                        <h2
-                          id="payment-details-heading"
-                          className="text-lg leading-6 font-medium text-gray-900"
-                        >
-                          Payment details
-                        </h2>
-                        <p className="mt-1 text-sm text-gray-500">
-                          Update your billing information. Please note that
-                          updating your location could affect your tax rates.
-                        </p>
-                      </div>
+        <div className="max-w-4xl space-y-6 ">
+          <RadioGroup value={selectedTheme} onChange={setSelectedTheme}>
+            <RadioGroup.Label className="text-sm">
+              <h1 className="font-medium text-zinc-300">Theme</h1>
+              <p className="text-zinc-400">
+                Select UI theme preference
+              </p>
+            </RadioGroup.Label>
 
-                      <div className="mt-6 grid grid-cols-4 gap-6">
-                        <div className="col-span-4 sm:col-span-2">
-                          <label
-                            htmlFor="first-name"
-                            className="block text-sm font-medium text-gray-700"
-                          >
-                            First name
-                          </label>
-                          <input
-                            type="text"
-                            name="first-name"
-                            id="first-name"
-                            autoComplete="cc-given-name"
-                            className="form-input mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-900 focus:border-gray-900 sm:text-sm"
-                          />
-                        </div>
+            <div className="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-3 sm:gap-x-4">
+              {themeOptions.map((theme) => (
+                <RadioGroup.Option key={theme.id} value={theme}>
+                  {({ checked, active }) => (
+                    <div className="space-y-2">
+                      <div
+                        className={clsx(
+                          checked ? "outline-blue-600" : "outline-zinc-800",
 
-                        <div className="col-span-4 sm:col-span-2">
-                          <label
-                            htmlFor="last-name"
-                            className="block text-sm font-medium text-gray-700"
-                          >
-                            Last name
-                          </label>
-                          <input
-                            type="text"
-                            name="last-name"
-                            id="last-name"
-                            autoComplete="cc-family-name"
-                            className="form-input mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-900 focus:border-gray-900 sm:text-sm"
-                          />
-                        </div>
-
-                        <div className="col-span-4 sm:col-span-2">
-                          <label
-                            htmlFor="email-address"
-                            className="block text-sm font-medium text-gray-700"
-                          >
-                            Email address
-                          </label>
-                          <input
-                            type="text"
-                            name="email-address"
-                            id="email-address"
-                            autoComplete="email"
-                            className="form-input mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-900 focus:border-gray-900 sm:text-sm"
-                          />
-                        </div>
-
-                        <div className="col-span-4 sm:col-span-1">
-                          <label
-                            htmlFor="expiration-date"
-                            className="block text-sm font-medium text-gray-700"
-                          >
-                            Expration date
-                          </label>
-                          <input
-                            type="text"
-                            name="expiration-date"
-                            id="expiration-date"
-                            autoComplete="cc-exp"
-                            className="form-input mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-900 focus:border-gray-900 sm:text-sm"
-                            placeholder="MM / YY"
-                          />
-                        </div>
-
-                        <div className="col-span-4 sm:col-span-1">
-                          <label
-                            htmlFor="security-code"
-                            className="flex items-center text-sm font-medium text-gray-700"
-                          >
-                            <span>Security code</span>
-                            <QuestionMarkCircleIcon
-                              className="ml-1 flex-shrink-0 h-5 w-5 text-gray-300"
-                              aria-hidden="true"
-                            />
-                          </label>
-                          <input
-                            type="text"
-                            name="security-code"
-                            id="security-code"
-                            autoComplete="cc-csc"
-                            className="form-input mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-900 focus:border-gray-900 sm:text-sm"
-                          />
-                        </div>
-
-                        <div className="col-span-4 sm:col-span-2">
-                          <label
-                            htmlFor="country"
-                            className="block text-sm font-medium text-gray-700"
-                          >
-                            Country
-                          </label>
-                          <select
-                            id="country"
-                            name="country"
-                            autoComplete="country-name"
-                            className="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-900 focus:border-gray-900 sm:text-sm"
-                          >
-                            <option>United States</option>
-                            <option>Canada</option>
-                            <option>Mexico</option>
-                          </select>
-                        </div>
-
-                        <div className="col-span-4 sm:col-span-2">
-                          <label
-                            htmlFor="postal-code"
-                            className="block text-sm font-medium text-gray-700"
-                          >
-                            ZIP / Postal code
-                          </label>
-                          <input
-                            type="text"
-                            name="postal-code"
-                            id="postal-code"
-                            autoComplete="postal-code"
-                            className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-gray-900 focus:border-gray-900 sm:text-sm"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    <div className="px-4 py-3 bg-gray-50 text-right sm:px-6">
-                      <button
-                        type="submit"
-                        className="bg-gray-800 border border-transparent rounded-md shadow-sm py-2 px-4 inline-flex justify-center text-sm font-medium text-white hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900"
+                          "relative outline rounded-xl shadow-sm cursor-pointer focus:outline-none "
+                        )}
                       >
-                        Save
-                      </button>
+                        {theme.title === "System preference" ? (
+                          <div className="">
+                            <div className="w-1/2 overflow-hidden h-full absolute">
+                              <div
+                                className={clsx(
+                                  false ? "bg-zinc-900" : "  bg-zinc-200",
+                                  "pt-4 px-4  w-[286px] aspect-video rounded-xl flex flex-col absolute  "
+                                )}
+                              >
+                                <div
+                                  className={clsx(
+                                    false ? "bg-black" : "bg-white",
+                                    "flex-1 rounded-t-lg flex flex-col"
+                                  )}
+                                >
+                                  <div
+                                    className={clsx(
+                                      false
+                                        ? "border-zinc-800"
+                                        : "border-zinc-200",
+                                      "w-full border-b flex p-2"
+                                    )}
+                                  >
+                                    <div className="flex space-x-1">
+                                      <div className="bg-red-500 h-1.5 w-1.5 rounded-full" />
+                                      <div className="bg-yellow-500 h-1.5 w-1.5 rounded-full" />
+                                      <div className="bg-green-500 h-1.5 w-1.5 rounded-full" />
+                                    </div>
+                                  </div>
+                                  <div
+                                    className={clsx(
+                                      false
+                                        ? "divide-zinc-800"
+                                        : "divide-zinc-200",
+                                      "flex w-full flex-1 divide-x"
+                                    )}
+                                  >
+                                    <div className="flex flex-col space-y-2 w-1/5 p-2">
+                                      {Array.from(Array(5)).map((item) => (
+                                        <div
+                                          className={clsx(
+                                            false
+                                              ? "bg-zinc-800"
+                                              : "bg-zinc-200",
+                                            "w-full h-1.5 rounded-full"
+                                          )}
+                                        />
+                                      ))}
+                                    </div>
+                                    <div className="flex flex-col pt-2 px-2 flex-1 space-y-2">
+                                      <div className="flex justify-between">
+                                        <div
+                                          className={clsx(
+                                            false
+                                              ? "bg-zinc-800"
+                                              : "bg-zinc-200",
+                                            "w-1/2 h-1.5 rounded-full"
+                                          )}
+                                        />
+                                        <div
+                                          className={clsx(
+                                            false
+                                              ? "bg-zinc-800"
+                                              : "bg-zinc-300",
+                                            "w-1/5 h-2.5 bg-zinc-800 rounded-sm"
+                                          )}
+                                        />
+                                        <div
+                                          className={clsx(
+                                            false
+                                              ? "bg-zinc-800"
+                                              : "bg-zinc-200",
+                                            "w-1/5 h-2.5 bg-zinc-700 rounded-sm"
+                                          )}
+                                        />
+                                      </div>
+                                      <div
+                                        className={clsx(
+                                          false ? "bg-zinc-800" : "bg-zinc-200",
+                                          "rounded-t w-full flex-1"
+                                        )}
+                                      ></div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>{" "}
+                            </div>
+                            <div
+                              className={clsx(
+                                true ? "bg-zinc-900" : "  bg-zinc-200",
+                                "pt-4 px-4  w-full aspect-video rounded-xl flex flex-col "
+                              )}
+                            >
+                              <div
+                                className={clsx(
+                                  true ? "bg-black" : "bg-white",
+                                  "flex-1 rounded-t-lg flex flex-col"
+                                )}
+                              >
+                                <div
+                                  className={clsx(
+                                    true
+                                      ? "border-zinc-800"
+                                      : "border-zinc-200",
+                                    "w-full border-b flex p-2"
+                                  )}
+                                >
+                                  <div className="flex space-x-1">
+                                    <div className="bg-red-500 h-1.5 w-1.5 rounded-full" />
+                                    <div className="bg-yellow-500 h-1.5 w-1.5 rounded-full" />
+                                    <div className="bg-green-500 h-1.5 w-1.5 rounded-full" />
+                                  </div>
+                                </div>
+                                <div
+                                  className={clsx(
+                                    true
+                                      ? "divide-zinc-800"
+                                      : "divide-zinc-200",
+                                    "flex w-full flex-1 divide-x"
+                                  )}
+                                >
+                                  <div className="flex flex-col space-y-2 w-1/5 p-2">
+                                    {Array.from(Array(5)).map((item) => (
+                                      <div
+                                        className={clsx(
+                                          true ? "bg-zinc-800" : "bg-zinc-200",
+                                          "w-full h-1.5 rounded-full"
+                                        )}
+                                      />
+                                    ))}
+                                  </div>
+                                  <div className="flex flex-col pt-2 px-2 flex-1 space-y-2">
+                                    <div className="flex justify-between">
+                                      <div
+                                        className={clsx(
+                                          true ? "bg-zinc-800" : "bg-zinc-200",
+                                          "w-1/2 h-1.5 rounded-full"
+                                        )}
+                                      />
+                                      <div
+                                        className={clsx(
+                                          true ? "bg-zinc-800" : "bg-zinc-300",
+                                          "w-1/5 h-2.5 bg-zinc-800 rounded-sm"
+                                        )}
+                                      />
+                                      <div
+                                        className={clsx(
+                                          true ? "bg-zinc-800" : "bg-zinc-200",
+                                          "w-1/5 h-2.5 bg-zinc-700 rounded-sm"
+                                        )}
+                                      />
+                                    </div>
+                                    <div
+                                      className={clsx(
+                                        true ? "bg-zinc-800" : "bg-zinc-200",
+                                        "rounded-t w-full flex-1"
+                                      )}
+                                    ></div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        ) : (
+                          <div
+                            className={clsx(
+                              theme.title === "Dark"
+                                ? "bg-zinc-900"
+                                : "bg-zinc-200",
+                              "pt-4 px-4  w-full aspect-video rounded-xl flex flex-col"
+                            )}
+                          >
+                            <div
+                              className={clsx(
+                                theme.title === "Dark"
+                                  ? "bg-black"
+                                  : "bg-white",
+                                "flex-1 rounded-t-lg flex flex-col"
+                              )}
+                            >
+                              <div
+                                className={clsx(
+                                  theme.title === "Dark"
+                                    ? "border-zinc-800"
+                                    : "border-zinc-200",
+                                  "w-full border-b flex p-2"
+                                )}
+                              >
+                                <div className="flex space-x-1">
+                                  <div className="bg-red-500 h-1.5 w-1.5 rounded-full" />
+                                  <div className="bg-yellow-500 h-1.5 w-1.5 rounded-full" />
+                                  <div className="bg-green-500 h-1.5 w-1.5 rounded-full" />
+                                </div>
+                              </div>
+                              <div
+                                className={clsx(
+                                  theme.title === "Dark"
+                                    ? "divide-zinc-800"
+                                    : "divide-zinc-200",
+                                  "flex w-full flex-1 divide-x"
+                                )}
+                              >
+                                <div className="flex flex-col space-y-2 w-1/5 p-2">
+                                  {Array.from(Array(5)).map((item) => (
+                                    <div
+                                      className={clsx(
+                                        theme.title === "Dark"
+                                          ? "bg-zinc-800"
+                                          : "bg-zinc-200",
+                                        "w-full h-1.5 rounded-full"
+                                      )}
+                                    />
+                                  ))}
+                                </div>
+                                <div className="flex flex-col pt-2 px-2 flex-1 space-y-2">
+                                  <div className="flex justify-between">
+                                    <div
+                                      className={clsx(
+                                        theme.title === "Dark"
+                                          ? "bg-zinc-800"
+                                          : "bg-zinc-200",
+                                        "w-1/2 h-1.5 rounded-full"
+                                      )}
+                                    />
+                                    <div
+                                      className={clsx(
+                                        theme.title === "Dark"
+                                          ? "bg-zinc-800"
+                                          : "bg-zinc-300",
+                                        "w-1/5 h-2.5 bg-zinc-800 rounded-sm"
+                                      )}
+                                    />
+                                    <div
+                                      className={clsx(
+                                        theme.title === "Dark"
+                                          ? "bg-zinc-800"
+                                          : "bg-zinc-200",
+                                        "w-1/5 h-2.5 bg-zinc-700 rounded-sm"
+                                      )}
+                                    />
+                                  </div>
+                                  <div
+                                    className={clsx(
+                                      theme.title === "Dark"
+                                        ? "bg-zinc-800"
+                                        : "bg-zinc-200",
+                                      "rounded-t w-full flex-1"
+                                    )}
+                                  ></div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+
+                        <span
+                          className={clsx(
+                            checked && "bg-white",
+                            "absolute top-0 right-0 translate-x-0.5 -translate-y-1"
+                          )}
+                        >
+                          <CheckCircleIcon
+                            className={clsx(
+                              !checked ? "invisible" : "",
+                              "h-6 w-6 text-blue-600 -m-1.5"
+                            )}
+                            aria-hidden="true"
+                          />{" "}
+                        </span>
+                      </div>
+                      <p className="text-zinc-200 text-sm  font-medium">
+                        {theme.title}
+                      </p>
                     </div>
-                  </div>
-                </form>
-              </section>
+                  )}
+                </RadioGroup.Option>
+              ))}
             </div>
-          </div>
-        </main>
+          </RadioGroup>
+
+          <fieldset className="border-b border-zinc-800">
+            <legend className="sr-only">Email preferences</legend>
+
+            <div className="divide-y divide-zinc-800">
+              <div className="text-sm pb-4">
+                <h1 className="font-medium text-zinc-300">Email</h1>
+                <p className="text-zinc-400">
+                  Select email messaging preferences
+                </p>
+              </div>
+
+              <div className="relative flex items-start py-4">
+                <div className="min-w-0 flex-1 text-sm">
+                  <label
+                    htmlFor="marketing-news"
+                    className="font-medium text-zinc-300"
+                  >
+                    Marketing & News
+                  </label>
+                  <p id="marketing-news-description" className="text-zinc-400">
+                    Get notified when new features release or when there are
+                    major changes to the platform.
+                  </p>
+                </div>
+                <div className="ml-3 flex items-center h-5">
+                  <input
+                    id="marketing-news"
+                    aria-describedby="marketing-news-description"
+                    name="marketing-news"
+                    type="checkbox"
+                    className="form-checkbox focus:ring-blue-600 focus:ring-offset-black h-4 w-4 text-blue-600 border-zinc-900 rounded bg-zinc-800"
+                  />
+                </div>
+              </div>
+              <div className="relative flex items-start py-4">
+                <div className="min-w-0 flex-1 text-sm">
+                  <label
+                    htmlFor="transactional"
+                    className="font-medium text-zinc-300"
+                  >
+                    Transactional
+                  </label>
+                  <p id="trnsactional-description" className="text-zinc-400">
+                    Get notified when you run out of quota and when changes are
+                    made to your account.
+                  </p>
+                </div>
+                <div className="ml-3 flex items-center h-5">
+                  <input
+                    id="transactional"
+                    aria-describedby="transactional-description"
+                    name="transactional"
+                    type="checkbox"
+                    className="form-checkbox focus:ring-blue-600 focus:ring-offset-black h-4 w-4 text-blue-600 border-zinc-900 rounded bg-zinc-800"
+                  />
+                </div>
+              </div>
+              <div className="relative flex items-start py-4">
+                <div className="min-w-0 flex-1 text-sm">
+                  <label
+                    htmlFor="billing"
+                    className="font-medium text-zinc-300"
+                  >
+                    Billing
+                  </label>
+                  <p id="billing-description" className="text-zinc-400">
+                    Get notified when quota resets and when new invoices are
+                    available.
+                  </p>
+                </div>
+                <div className="ml-3 flex items-center h-5">
+                  <input
+                    id="billing"
+                    aria-describedby="billing-description"
+                    name="billing"
+                    type="checkbox"
+                    className="form-checkbox focus:ring-blue-600 focus:ring-offset-black h-4 w-4 text-blue-600 border-zinc-900 rounded bg-zinc-800"
+                  />
+                </div>
+              </div>
+            </div>
+          </fieldset>
+        </div>
       </SettingsLayout>
     </div>
   );
