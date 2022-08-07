@@ -14,7 +14,7 @@ const statusStyles = {
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
-export default function Table({ logs, dispatchModal, isLoading, batchSize, isValidating }) {
+export default function Table({ logs, dispatchModal, isLoading, batchSize }) {
   return !isLoading && logs ? (
     <div className="rounded-2xl bg-white dark:bg-black border shadow-lg dark:shadow-none shadow-gray-100  border-gray-200 dark:border-zinc-900">
       <table className="   divide-y divide-gray-200 dark:divide-zinc-900 ">
@@ -41,7 +41,7 @@ export default function Table({ logs, dispatchModal, isLoading, batchSize, isVal
         </thead>
         <tbody className="bg-white dark:bg-black divide-y divide-gray-200 dark:divide-zinc-900     ">
           {logs.map((transaction, index) => (
-            <tr key={index} className={clsx(isValidating && " opacity-90", "bg-white dark:bg-black rounded-2xl transition-all ")}>
+            <tr key={index} className="bg-white dark:bg-black rounded-2xl transition-all ">
               <td className="max-w-0 w-full px-6 py-4 whitespace-nowrap text-sm text-gray-900 rounded-2xl">
                 <div className="flex ">
                   <p className="text-gray-500 truncate group-hover:text-gray-900 ">
