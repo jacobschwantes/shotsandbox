@@ -7,7 +7,7 @@
       "@components/*": ["src/common/components/*"],
       "@styles/*": ["src/common/styles/*"],
       "@layouts/*": ["src/common/layouts/*"],
-      "@types/*": ["src/common/types/*"],
+      "@customTypes/*": ["src/common/types/*"],
       "@modules/*": ["src/modules/*"],
       "@utils/*": ["src/common/utils/*"],
       "@content/*": ["src/content/*"]
