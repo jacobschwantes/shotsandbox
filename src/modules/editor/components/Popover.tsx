@@ -60,7 +60,6 @@ const Popover = ({ children, render, placement }: Props) => {
             transition={{ type: "spring", damping: 20, stiffness: 300 }}
             {...getFloatingProps({
               ref: floating,
-              className: "Tooltip",
               style: {
                 position: strategy,
                 top: y ?? 0,
