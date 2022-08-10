@@ -1,4 +1,4 @@
-import { ArrowLeftIcon, XIcon } from "@heroicons/react/solid";
+import { XIcon } from "@heroicons/react/solid";
 import { firebaseApp } from "@modules/auth/firebase/clientApp";
 import {
   getAuth,
@@ -6,11 +6,9 @@ import {
   applyActionCode,
   confirmPasswordReset,
 } from "firebase/auth";
-import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useState, useRef, SetStateAction, Dispatch } from "react";
-import { EyeIcon, EyeOffIcon, LogoutIcon } from "@heroicons/react/outline";
-import Link from "next/link";
+import { EyeIcon, EyeOffIcon} from "@heroicons/react/outline";
 import { Spinner } from "@components/index";
 import { NextComponentType, NextPageContext } from "next";
 import { Tooltip } from "@components/index";
@@ -39,13 +37,13 @@ const errorDictionary = {
     userCode: "Password is too weak.",
   },
 };
-const handleError = (error) => {
-  const foundError = errorDictionary[error];
+const handleError = (error: string) => {
+  const foundError = errorDictionary[error as keyof typeof errorDictionary];
   if (!error || !foundError) return "An unexpected error occured.";
   return foundError.userCode;
 };
 
-export default function Page({ user }) {
+export default function Page() {
   const auth = getAuth(firebaseApp);
   const firstRenderRef = useRef(true);
   const router = useRouter();
@@ -58,8 +56,8 @@ export default function Page({ user }) {
   const [success, setSuccess] = useState(false);
   const [emailVerified, setEmailVerified] = useState(false);
 
-  const submitPassword = (password) => {
-    confirmPasswordReset(auth, oobCode, password)
+  const submitPassword = (password: string) => {
+    confirmPasswordReset(auth, oobCode as string, password)
       .then(() => {
         setSubmitPasswordLoading(false);
         setSuccess(true);
@@ -74,7 +72,7 @@ export default function Page({ user }) {
     if (firstRenderRef.current && router.isReady) {
       switch (mode) {
         case "resetPassword":
-          verifyPasswordResetCode(auth, oobCode)
+          verifyPasswordResetCode(auth, oobCode as string)
             .then(() => {
               setLoading(false);
               setPasswordCodeVerified(true);
@@ -85,7 +83,7 @@ export default function Page({ user }) {
             });
           break;
         case "verifyEmail":
-          applyActionCode(auth, oobCode)
+          applyActionCode(auth, oobCode as string)
             .then(() => {
               setLoading(false);
               setEmailVerified(true);
@@ -235,7 +233,7 @@ const PasswordPage: NextComponentType<
     );
   };
 
-  const checkMatch = (p1, p2) => {
+  const checkMatch = (p1: string, p2: string) => {
     return p1 === p2;
   };
   return (
