@@ -1,8 +1,11 @@
-import { Fragment, useState } from "react";
+import { Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { CheckIcon } from "@heroicons/react/outline";
-
-export default function Modal({ setOpen, open, content }) {
+interface ModalProps {
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  open: boolean;
+  content: { message: string };
+}
+export default function Modal({ setOpen, open, content }: ModalProps) {
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={setOpen}>

@@ -1,8 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { withAuth } from "@utils/middlewares";
-import type { NextApiRequest, NextApiResponse } from "next";
 import { firestore } from "@utils/firebase-admin";
-async function getCount(docRef) {
+async function getCount(docRef: FirebaseFirestore.DocumentReference) {
   const querySnapshot = await docRef.collection("usage").get();
   const documents = querySnapshot.docs;
   let count = 0;
@@ -11,30 +10,51 @@ async function getCount(docRef) {
   }
   return count;
 }
-async function aggregateUsage(doc) {
+async function aggregateUsage(doc: FirebaseFirestore.DocumentData) {
   const data = doc.data();
   const key = doc.id;
   const count = await getCount(firestore.collection("API_KEYS").doc(key));
   return { ...data, key, usage: count };
 }
 type Data = {
-  name: string;
+  message: string;
+  key?: {
+    key: string;
+    usage: number;
+    locked: boolean;
+    name: string;
+    quota: number;
+    quota_limit: string;
+    userid: string;
+  };
 };
-
-const checkOptions = (options) => {
+interface TokenOptions  {
+  name: string;
+  quota: number;
+  locked: boolean;
+  quota_limit: string;
+};
+const checkOptions = (options: TokenOptions) => {
   const schema = {
-    name: (value) =>
+    name: (value: string) =>
       /^[\w-]+$/.test(value) && value.length > 0 && value.length < 28,
-    quota: (value) =>
-      parseInt(value) === Number(value) && value >= 0 && value <= 1000,
-    locked: (value) => typeof value === "boolean",
-    quota_limit: (value) =>
+    quota: (value: number) => Number(value) && value >= 0 && value <= 1000,
+    locked: (value: boolean) => typeof value === "boolean",
+    quota_limit: (value: string) =>
       (String(value) && value === "limited") || "unlimited",
   };
 
-  const validate = (object, schema) =>
+  const validate = (
+    object: TokenOptions,
+    schema: {
+      name: (value: string) => boolean;
+      quota: (value: number) => boolean | number;
+      locked: (value: boolean) => boolean;
+      quota_limit: (value: string) => string | boolean;
+    }
+  ) =>
     Object.keys(schema)
-      .filter((key) => !schema[key](object[key]))
+      .filter((key) => !schema[key as keyof typeof schema](object[key]))
       .map((key) => new Error(`${key} is invalid.`));
 
   const errors = validate(options, schema);
@@ -49,8 +69,11 @@ const checkOptions = (options) => {
     return true;
   }
 };
+interface ApiRequest extends NextApiRequest {
+  uid: string;
+}
 // TODO token is getting looked up twice in aggregate usage when only usage needs to get looked up
-async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
+async function handler(req: ApiRequest, res: NextApiResponse<Data>) {
   const key = req.query.token;
   const method = req.method;
   const options = req.body;
@@ -61,7 +84,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
     const doc = await tokenRef.get();
     const token = doc.data();
     if (doc.exists) {
-      if (token.userid === req.uid) {
+      if (token && token.userid === req.uid) {
         switch (method) {
           case "GET":
             const usage = await aggregateUsage(doc);
@@ -83,11 +106,11 @@ async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
           case "DELETE":
             try {
               const batch = firestore.batch();
-              batch.delete(tokenRef.collection("usage").doc('0'))
-              batch.delete(tokenRef.collection("usage").doc('1'))
-              batch.delete(tokenRef.collection("usage").doc('2'))
-              batch.delete(tokenRef)
-              await batch.commit()
+              batch.delete(tokenRef.collection("usage").doc("0"));
+              batch.delete(tokenRef.collection("usage").doc("1"));
+              batch.delete(tokenRef.collection("usage").doc("2"));
+              batch.delete(tokenRef);
+              await batch.commit();
               res.status(200).json({ message: "key deleted" });
             } catch (e: any) {
               res.status(500).json({ message: e });

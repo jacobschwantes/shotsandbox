@@ -2,11 +2,23 @@ import React from "react";
 import dynamic from "next/dynamic";
 import { DateTime } from "luxon";
 import clsx from "clsx";
-
+import { ApexOptions } from "apexcharts";
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
-
-export default function LineChart(props) {
-  const options = {
+interface LineChartProps {
+  dark: boolean;
+  isLoading: boolean;
+  seriesOption: string;
+  data: { x: string; y: number }[];
+  setData: React.Dispatch<React.SetStateAction<string>>;
+}
+export default function LineChart({
+  dark,
+  isLoading,
+  seriesOption,
+  data,
+  setData,
+}: LineChartProps) {
+  const options: { options: ApexOptions; loadingOptions: ApexOptions } = {
     options: {
       theme: {
         mode: "dark",
@@ -52,19 +64,19 @@ export default function LineChart(props) {
         fontSize: "14px",
         fontWeight: 600,
         labels: {
-          colors: props.dark ? "#f3f4f6" : "#111827",
+          colors: dark ? "#f3f4f6" : "#111827",
         },
       },
       grid: {
         show: false,
         strokeDashArray: 3,
-        borderColor: props.dark ? "#18181b" : "#e5e7eb",
+        borderColor: dark ? "#18181b" : "#e5e7eb",
       },
       yaxis: {
         labels: {
           show: false,
           style: {
-            colors: props.dark ? "#71717a" : "#9ca3af",
+            colors: dark ? "#71717a" : "#9ca3af",
             fontSize: "12px",
             fontFamily: "font-family: Inter",
             fontWeight: 600,
@@ -98,7 +110,7 @@ export default function LineChart(props) {
             return DateTime.fromISO(value).toFormat("LLL d");
           },
           style: {
-            colors: props.dark ? "#71717a" : "#9ca3af",
+            colors: dark ? "#71717a" : "#9ca3af",
             fontSize: "12px",
             fontFamily: "font-family: Inter",
             fontWeight: 600,
@@ -106,7 +118,7 @@ export default function LineChart(props) {
         },
       },
     },
-  loadingOptions: {
+    loadingOptions: {
       colors: ["#27272a"],
       fill: {
         type: "solid",
@@ -118,9 +130,6 @@ export default function LineChart(props) {
         },
         background: "transparent",
         animations: {
-          enabled: false,
-        },
-        dynamicAnimation: {
           enabled: false,
         },
       },
@@ -142,7 +151,7 @@ export default function LineChart(props) {
 
   const dataOptions = ["1w", "1m"];
 
-  return props.isLoading ? (
+  return isLoading ? (
     <div className="relative overflow-hidden rounded-2xl border  dark:border-zinc-900  border-gray-100 dark:bg-black space-y-3 opacity-70">
       <div className="space-y-3 p-5">
         <p className="h-4 bg-zinc-900 w-60 rounded-full"></p>
@@ -170,9 +179,7 @@ export default function LineChart(props) {
         <span>
           <h1 className="font-medium text-zinc-100 text-xl">Requests</h1>
           <p className="text-zinc-400">
-            {props.seriesOption === "1w"
-              ? "Over last 7 days"
-              : "Over last 30 days"}
+            {seriesOption === "1w" ? "Over last 7 days" : "Over last 30 days"}
           </p>
         </span>
         <div className="text-zinc-100 flex space-x-3 text-sm">
@@ -180,11 +187,11 @@ export default function LineChart(props) {
             <button
               className={clsx(
                 "uppercase transition-colors duration-300 ",
-                props.seriesOption === option
+                seriesOption === option
                   ? "text-blue-500"
                   : "text-zinc-500 hover:text-zinc-100"
               )}
-              onClick={() => props.setData(option)}
+              onClick={() => setData(option)}
             >
               {option}
             </button>
@@ -196,7 +203,7 @@ export default function LineChart(props) {
         series={[
           {
             name: "Requests",
-            data: props.data,
+            data: data,
           },
         ]}
         type="line"

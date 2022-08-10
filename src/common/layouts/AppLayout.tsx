@@ -22,11 +22,11 @@ const AppLayout: NextPage<AppLayoutProps> = ({ children }) => {
         theme="colored"
         pauseOnHover
       />
-      <div className="absolute w-full z-40">
+      <div className="absolute w-full ">
         <Header />
       </div>
       <div className=" pt-20 dark:bg-black dark:border-zinc-900 dark:border-r ">
-        <Navigation active="projects" wideNav={false} />
+        <Navigation wideNav={false} />
       </div>
       <div className="flex-1 h-full pt-16">{children}</div>
     </div>

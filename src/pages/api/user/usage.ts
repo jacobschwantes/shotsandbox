@@ -3,11 +3,29 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { firestore } from "@utils/firebase-admin";
 import { values, groupBy } from "lodash";
 import { DateTime, Interval } from "luxon";
-import { DocumentReference } from "firebase/firestore";
-type Data = {
+type ResData = {
   message: string;
+  data?: LogData;
 };
-async function getCount(docRef) {
+type LogData = {
+  usage?: number;
+  chartData?: {
+    usage30day?: { x: string; y: number }[];
+    usage7day?: { x: string; y: number }[];
+  };
+  errorCount?: number;
+};
+type UsageLog = {
+  href: string;
+  id: number;
+  latency: number;
+  status: string;
+  timestamp: number;
+  token_name: string;
+  url: string;
+  error: string;
+};
+async function getCount(docRef: FirebaseFirestore.CollectionReference) {
   const querySnapshot = await docRef.get();
   const documents = querySnapshot.docs;
   let count = 0;
@@ -16,14 +34,14 @@ async function getCount(docRef) {
   }
   return count;
 }
-const groupData = (data, zone) => {
+const groupData = (data: UsageLog[], zone: string) => {
   return values(
     groupBy(data, (d) =>
       DateTime.fromMillis(d.timestamp, { zone: zone }).startOf("day")
     )
   );
 };
-const aggregateData = (data, zone) => {
+const aggregateData = (data: UsageLog[][], zone: string) => {
   let defaultData = Array.from(Array(29).keys()).map((x) => {
     const date = DateTime.now()
       .setZone(zone)
@@ -45,7 +63,10 @@ const aggregateData = (data, zone) => {
   return defaultData.reverse();
 };
 
-const getDailyLogs = async (userRef, zone) => {
+const getDailyLogs = async (
+  userRef: FirebaseFirestore.DocumentReference,
+  zone: string
+) => {
   const logsRef = userRef.collection("logs");
   const logsSnapshot = await logsRef
     .where(
@@ -55,20 +76,24 @@ const getDailyLogs = async (userRef, zone) => {
     )
     .get();
 
-    const logs = logsSnapshot.docs.map(log => log.data())
-    const erroredLogs = logs.filter(item => item.status === 'failed');
-  
-    return {count: logs.length, errors: erroredLogs.length}
+  const logs = logsSnapshot.docs.map((log) => log.data());
+  const erroredLogs = logs.filter((item) => item.status === "failed");
+
+  return { count: logs.length, errors: erroredLogs.length };
 };
 
-const runAggregation = async (userRef, zone) => {
+const runAggregation = async (
+  userRef: FirebaseFirestore.DocumentReference,
+  zone: string
+) => {
   const logsRef = userRef.collection("logs");
-  const usageRef = userRef.collection("usage_daily");
   try {
     const res = await firestore.runTransaction(async (t) => {
       const logsSnapshot = await t.get(logsRef);
-      const logs = [];
-      logsSnapshot.docs.forEach((doc) => logs.push(doc.data()));
+      const logs: UsageLog[] = [];
+      logsSnapshot.docs.forEach((doc: FirebaseFirestore.DocumentData) =>
+        logs.push(doc.data())
+      );
       const groupedData = groupData(logs, zone);
       const aggregatedData = aggregateData(groupedData, zone);
       const count = logs.filter(
@@ -76,7 +101,7 @@ const runAggregation = async (userRef, zone) => {
           DateTime.now().setZone(zone).startOf("day").toMillis() <
           item.timestamp
       );
-      const errorCount = logs.filter((item) => item.status === 'failed');
+      const errorCount = logs.filter((item) => item.status === "failed");
       const aggregated6Day = aggregatedData.slice(-6);
       t.update(userRef, {
         errorCount: errorCount.length,
@@ -87,7 +112,13 @@ const runAggregation = async (userRef, zone) => {
         x: DateTime.now().setZone(zone).startOf("day").toISO(),
         y: count.length,
       });
-      return {errorCount: errorCount.length, chartData: {usage7day: updatedData.slice(-7), usage30day: updatedData} };
+      return {
+        errorCount: errorCount.length,
+        chartData: {
+          usage7day: updatedData.slice(-7),
+          usage30day: updatedData,
+        },
+      };
     });
     console.log("Transaction success", res);
     return res;
@@ -95,16 +126,23 @@ const runAggregation = async (userRef, zone) => {
     console.log("Transaction failure:", e);
   }
 };
-
-async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
+interface ApiRequest extends NextApiRequest {
+  uid: string;
+  email: string;
+  email_verified: boolean
+}
+async function handler(req: ApiRequest, res: NextApiResponse<ResData>) {
   const userRef = firestore.collection("users").doc(req.uid);
   const doc = await userRef.get();
-  const zone = req.query.zone.replace("-", "/");
+  const zone =
+    typeof req.query.zone === "string"
+      ? req.query.zone.replace("-", "/")
+      : req.query.zone[0].replace("-", "/");
 
   if (!doc.exists) {
     res.status(404).json({ message: "user does not exist" });
   } else {
-    const usage = await getCount(userRef.collection("usage"));
+    const usage: number = await getCount(userRef.collection("usage"));
     const docData = doc.data();
     const now = DateTime.now();
     const lastAggregation = docData?.lastAggregation;
@@ -123,16 +161,19 @@ async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
         res.status(200).json({ message: "usage found", data });
       else res.status(500).json({ message: "failed to aggregate data" });
     } else {
-      const dailyUsage = await getDailyLogs(userRef, zone)
+      const dailyUsage = await getDailyLogs(userRef, zone);
       const dailyData = {
         x: DateTime.now().setZone(zone).startOf("day").toISO(),
         y: dailyUsage.count,
       };
-      docData.chartData = {
-        usage7day: docData.chartData.usage6day.concat(dailyData),
-        usage30day: docData.chartData.usage29day.concat(dailyData),
-      };
-      docData.errorCount += dailyUsage.errors
+
+      if (docData) {
+        docData.chartData = {
+          usage7day: docData.chartData.usage6day.concat(dailyData),
+          usage30day: docData.chartData.usage29day.concat(dailyData),
+        };
+        docData.errorCount += dailyUsage.errors;
+      }
       const data = { ...docData, usage };
       res.status(200).json({ message: "usage found", data });
     }

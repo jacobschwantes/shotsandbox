@@ -1,6 +1,6 @@
-import useSWR, { mutate } from "swr";
+import useSWR, { mutate, SWRConfiguration } from "swr";
 
-const fetcher = (url, token) =>
+const fetcher = (url: string, token: string) =>
   fetch(url, { headers: { Authorization: "Bearer " + token } }).then((res) =>
     res.json()
   );
@@ -43,8 +43,8 @@ export const useUsage = (token: string | null, zone: string) => {
     isError: error,
   };
 };
-export const useLogs = (token: string | null, params: string, options) => {
-  const { data, error, isValidating } = useSWR(
+export const useLogs = (token: string | null, params: string, options: SWRConfiguration) => {
+  const { data, error } = useSWR(
     () => (token ? [`/api/user/logs${params}`, token] : null),
     fetcher,
     options
@@ -52,7 +52,6 @@ export const useLogs = (token: string | null, params: string, options) => {
   return {
     logs: data,
     isLoadingLogs: !error && !data,
-    isValidating,
     isErrorLogs: error,
   };
 };

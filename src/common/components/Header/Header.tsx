@@ -1,11 +1,10 @@
 import { Fragment } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
-import {Notifications} from "@components/index"
+import { Notifications } from "@components/index";
 import {
   BellIcon,
   BookOpenIcon,
   ChipIcon,
-  CreditCardIcon,
   DownloadIcon,
   MenuIcon,
   XIcon,
@@ -17,14 +16,14 @@ const navigation = [
   { name: "App", href: "#", icon: ChipIcon },
 ];
 import Link from "next/link";
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
+import clsx from "clsx";
 
 export default function Header() {
   return (
-    <Disclosure as="nav" className="bg-white shadow-sm z-30 dark:bg-black dark:border-b dark:border-zinc-900">
+    <Disclosure
+      as="nav"
+      className="bg-white shadow-sm z-30 dark:bg-black dark:border-b dark:border-zinc-900"
+    >
       {({ open }) => (
         <>
           <div className=" px-2 sm:px-6 lg:px-6 ">
@@ -32,13 +31,17 @@ export default function Header() {
               <div className="flex items-center justify-between flex-1">
                 <Link href="/">
                   <span className="hidden lg:flex  items-center justify-center space-x-2 dark:text-white ">
-                    <img className=" h-7 mt-1.5 dark:bg-zinc-200 rounded-md p-0.5 " src="logo.svg" alt="logo" />
+                    <img
+                      className=" h-7 mt-1.5 dark:bg-zinc-200 rounded-md p-0.5 "
+                      src="logo.svg"
+                      alt="logo"
+                    />
                     <h1 className="text-2xl">screenshotify</h1>
                   </span>
                 </Link>
                 <div className="hidden sm:block">
                   <div className="flex space-x-4 z-20">
-                    <Notifications/>
+                    <Notifications />
                   </div>
                 </div>
               </div>
@@ -63,11 +66,9 @@ export default function Header() {
                   key={item.name}
                   as="a"
                   href={item.href}
-                  className={classNames(
-                    
-                "block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white "
+                  className={clsx(
+                    "block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white "
                   )}
-                 
                 >
                   {item.name}
                 </Disclosure.Button>

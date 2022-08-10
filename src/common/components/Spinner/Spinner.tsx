@@ -1,4 +1,3 @@
-
 import clsx from "clsx";
 import { NextComponentType, NextPageContext } from "next";
 interface SpinnerProps {
