@@ -1,40 +1,21 @@
-import { Fragment } from "react";
-import { Disclosure, Menu, Transition } from "@headlessui/react";
 import {
-  FolderIcon,
-  ClipboardListIcon,
-  LinkIcon,
-  NewspaperIcon,
-  DatabaseIcon,
-  ChipIcon,
-  CalendarIcon,
-  ChatAlt2Icon,
-  UsersIcon,
-  SpeakerphoneIcon,
   CogIcon,
   LogoutIcon,
   KeyIcon,
   ChartBarIcon,
-  PencilIcon,
   AdjustmentsIcon,
   ArchiveIcon,
 } from "@heroicons/react/outline";
-// const navigation = [
-//   { name: "Pricing", href: "/pricing", icon: CreditCardIcon },
-//   { name: "Download", href: "/download", icon: DownloadIcon },
-//   { name: "Docs", href: "#", icon: BookOpenIcon },
-//   { name: "App", href: "#", icon: ChipIcon },
-// ];
 import Link from "next/link";
 import { signOut, getAuth } from "firebase/auth";
 import { firebaseApp } from "@modules/auth/firebase/clientApp";
 import { useRouter } from "next/router";
+import clsx from "clsx";
 const auth = getAuth(firebaseApp);
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
+interface NavigationProps {
+  wideNav: boolean;
 }
-
-export default function Navigation(props) {
+export default function Navigation({ wideNav }: NavigationProps) {
   const router = useRouter();
   const generalNavigation = [
     {
@@ -68,14 +49,7 @@ export default function Navigation(props) {
       current: router.asPath.includes("settings"),
     },
   ];
-  const adminNavigation = [
-    {
-      name: "Logout",
-      href: "/logout",
-      icon: LogoutIcon,
-      action: props.active === "logout",
-    },
-  ];
+
   return (
     <nav className=" flex flex-col justify-between p-3 z-10 h-full  ">
       <div className="flex-col  space-y-4 ">
@@ -83,7 +57,7 @@ export default function Navigation(props) {
           <Link key={index} href={item.href}>
             <a
               key={item.name}
-              className={classNames(
+              className={clsx(
                 item.current
                   ? "bg-blue-200 text-blue-600 dark:bg-blue-900 dark:text-blue-600   "
                   : "text-gray-300  ",
@@ -93,13 +67,11 @@ export default function Navigation(props) {
               <item.icon
                 className={
                   "h-6 w-6 flex-shrink-0 transition-colors " +
-                  (props.wideNav ? " mr-3 " : " group-hover:mr-3")
+                  (wideNav ? " mr-3 " : " group-hover:mr-3")
                 }
                 aria-hidden="true"
               />
-              <span
-                className={props.wideNav ? " flex" : " hidden group-hover:flex"}
-              >
+              <span className={wideNav ? " flex" : " hidden group-hover:flex"}>
                 {item.name}
               </span>
             </a>
@@ -112,7 +84,7 @@ export default function Navigation(props) {
           onClick={() => {
             signOut(auth);
           }}
-          className={classNames(
+          className={clsx(
             " flex items-center  p-3 rounded-lg border border-transparent text-center  text-gray-300 transition-all hover:bg-gray-100 dark:hover:bg-zinc-900 dark:bg-opacity-50 "
           )}
         >
