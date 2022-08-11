@@ -849,6 +849,13 @@
     "@types/mime" "^1"
     "@types/node" "*"
 
+"@types/sharp@^0.30.5":
+  "integrity" "sha512-EhO29617AIBqxoVtpd1qdBanWpspk/kD2B6qTFRJ31Q23Rdf+DNU1xlHSwtqvwq1vgOqBwq1i38SX+HGCymIQg=="
+  "resolved" "https://registry.npmjs.org/@types/sharp/-/sharp-0.30.5.tgz"
+  "version" "0.30.5"
+  dependencies:
+    "@types/node" "*"
+
 "@typescript-eslint/parser@^5.21.0":
   "integrity" "sha512-2oYYUws5o2liX6SrFQ5RB88+PuRymaM2EU02/9Ppoyu70vllPnHVO7ioxDdq/ypXHA277R04SVjxvwI8HmZpzA=="
   "resolved" "https://registry.npmjs.org/@typescript-eslint/parser/-/parser-5.30.0.tgz"
