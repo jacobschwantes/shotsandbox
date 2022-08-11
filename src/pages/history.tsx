@@ -17,10 +17,8 @@ const getInterval = (data) => {
   if (data.logs && data.logs.some((item) => item.status === "processing")) return 6000;
   return 0;
 };
-const auth = getAuth(firebaseApp);
 const History: NextPage = (props) => {
   const { mutate } = useSWRConfig();
-
   const [spin, setSpin] = useState(false);
   const [open, setOpen] = useState(false);
   const [modalContent, setModalContent] = useState({});
@@ -28,7 +26,7 @@ const History: NextPage = (props) => {
   const [idToken, setIdToken] = useState(props.idToken);
   const batchSize = 10; // items per chunk
   const [active, setActive] = useState(1);
-  const { logs, isLoadingLogs, isErrorLogs, isValidating } = useLogs(
+  const { logs, isLoadingLogs, isErrorLogs} = useLogs(
     idToken,
     `?limit=${batchSize}&page=${active}`,
     { refreshInterval: (data) => getInterval(data) }
@@ -42,10 +40,12 @@ const History: NextPage = (props) => {
 
   useEffect(() => {
     console.log("running side effect");
-    props.user.getIdToken().then((result) => setIdToken(result));
+    props.user.getIdToken().then((result: string) => setIdToken(result));
   }, [isErrorLogs]);
-
-  const dispatchModal = (options) => {
+type ModalOptions = {
+  message: string
+}
+  const dispatchModal = (options: ModalOptions) => {
     setModalContent(options);
     setOpen(true);
   };
@@ -64,7 +64,6 @@ const History: NextPage = (props) => {
               setSpin(true);
               mutate(["/api/user/usage"]);
               mutate([`/api/user/logs?limit=${batchSize}&page=${active}`]);
-              // asyncHero.execute();
             }}
             className="inline-flex items-center p-2 border border-gray-300 dark:border-zinc-800 dark:bg-black rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 dark:hover:bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:ring-offset-zinc-800 "
           >
@@ -75,13 +74,6 @@ const History: NextPage = (props) => {
               )}
             />
           </button>
-          {/* <button
-          
-            type="button"
-            className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-          >
-            Create Token
-          </button> */}
         </div>
       </div>
 
@@ -91,7 +83,6 @@ const History: NextPage = (props) => {
         </p>
       )}
       <Table
-        isValidating={isValidating}
         logs={logs?.logs}
         isLoading={isLoadingLogs}
         dispatchModal={dispatchModal}
@@ -159,7 +150,6 @@ const Pagination = (props) => {
               <span className="sr-only">Previous</span>
               <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
             </button>
-            {/* Current: "z-10 bg-blue-50 border-blue-500 text-blue-600", Default: "bg-white border-gray-300 text-gray-500 hover:bg-gray-50" */}
             {props.pages > 5 ? (
               <>
                 {(Math.ceil(props.active / 5) - 1) * 5 > 0 && (
@@ -193,7 +183,7 @@ const Pagination = (props) => {
                             ? " relative z-10 inline-flex items-center border border-blue-500 dark:bg-blue-900 dark:text-blue-200  bg-blue-50 px-4 py-2 text-sm font-medium text-blue-600"
                             : "relative inline-flex items-center border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 dark:hover:bg-zinc-900 dark:bg-black dark:border-zinc-900 dark:text-zinc-200"
                         }
-                        id={ind}
+                        id={`${ind}`}
                         onClick={() => props.setActive(item)}
                       >
                         {item}
@@ -227,7 +217,7 @@ const Pagination = (props) => {
                         ? " relative z-10 inline-flex items-center border border-blue-500 dark:bg-blue-900 dark:text-blue-200  bg-blue-50 px-4 py-2 text-sm font-medium text-blue-600"
                         : "relative inline-flex items-center border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 dark:hover:bg-zinc-900 dark:bg-black dark:border-zinc-900 dark:text-zinc-200"
                     }
-                    id={ind}
+                    id={`${ind}`}
                     onClick={() => props.setActive(++ind)}
                   >
                     {ind + 1}
