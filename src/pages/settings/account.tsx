@@ -8,48 +8,57 @@ import SettingsLayout from "@layouts/SettingsLayout";
 import { useSendEmailVerification } from "react-firebase-hooks/auth";
 import Spinner from "@components/Spinner";
 import { toast } from "react-toastify";
-const auth = getAuth(firebaseApp);
-
+import { getFunctions, httpsCallable } from "firebase/functions";
+import { CheckCircleIcon } from "@heroicons/react/outline";
+const functions = getFunctions();
+const resetPassword = httpsCallable(functions, "resetPassword");
 const Account: NextPage = (props) => {
-  //   const [message, setMessage] = useState("");
-  //   const writeNotification = async () => {
-  //     const docRef = await addDoc(
-  //       collection(db, "users", auth.currentUser?.uid, "notifications"),
-  //       {
-  //         message,
-  //         timestamp: Date.now(),
-  //       }
-  //     );
-  //   };
-  const [sendEmailVerification, sending, error] =
-    useSendEmailVerification(auth);
+  const [loading, setLoading] = useState(false);
+  const handleResetPassword = () => {
+    setLoading(true);
+    resetPassword()
+      .then((result) => {
+        setLoading(false);
+        toast(
+          <div className="flex items-center space-x-3">
+            <CheckCircleIcon className="h-6 w-6 text-blue-500" />
+            <span>
+              <p className="text-sm font-extralight">
+                Password reset email sent to {props.user.email}.
+              </p>
+            </span>
+          </div>,
+          {
+            theme: "dark",
+            progressClassName: "toastProgressBlue",
+          }
+        );
+      })
+      .catch((e: any) =>
+        toast(
+          <div className="flex items-center space-x-3">
+            <span>
+              <h1 className=" font-medium">{e.error}</h1>
+              <p className="text-sm font-extralight">{e.message}</p>
+            </span>
+          </div>,
+          {
+            type: "error",
+          }
+        )
+      );
+  };
   return (
     <div className="flex-1  p-5 h-full overflow-y-auto ">
       <SettingsLayout>
         <main className=" pb-10 lg:py-12  max-w-7xl">
-          {!props.user.emailVerified && (
-            <>
-            <button
-              onClick={async () => {
-                await sendEmailVerification();
-                toast("verification email sent");
-              }}
-              type="button"
-              className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:ring-offset-black"
-            >
-              {sending ? <Spinner className="h-4 w-4" /> : "verify email"}
-            </button> 
-              <button
-              onClick={async () => {
-                await props.user.getIdToken(true)
-                
-              }}
-              type="button"
-              className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:ring-offset-black"
-            >
-              {sending ? <Spinner className="h-4 w-4" /> : "check verification"}
-            </button></>
-          )}
+          <button
+            onClick={handleResetPassword}
+            type="button"
+            className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:ring-offset-black"
+          >
+            Reset password {loading && <Spinner className="h-5 w-5" />}
+          </button>
           <div className="lg:grid lg:grid-cols-12 lg:gap-x-5">
             {/* Payment details */}
             <div className="space-y-6 sm:px-6 lg:px-0 lg:col-span-9">
