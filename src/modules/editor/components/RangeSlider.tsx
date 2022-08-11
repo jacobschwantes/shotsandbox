@@ -16,7 +16,7 @@ export function RangeSlider({
   max = 1,
 }: InputProps) {
   return (
-    <div className="flex items-center space-x-4">
+    <div>
       <label htmlFor="customRange1" className=" font-medium">
         {children}
       </label>
