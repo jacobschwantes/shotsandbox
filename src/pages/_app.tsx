@@ -82,6 +82,9 @@ function MyApp({ Component, pageProps }: AppProps) {
   if (router.asPath.includes("_auth")) {
     return <Component {...pageProps} />;
   }
+  if (router.asPath.includes("editor")) {
+    return <Component {...pageProps} />;
+  }
   if (user?.emailVerified && !error) {
     return (
       <AppLayout>
