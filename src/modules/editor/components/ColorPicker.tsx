@@ -8,7 +8,7 @@ import {
 import React from "react";
 interface ColorPickerProps {
   color: string;
-  setColor: React.Dispatch<React.SetStateAction<string>>;
+  setColor: (val: string) => void;
   type: string;
 }
 const ColorPicker: NextComponentType<NextPageContext, {}, ColorPickerProps> = ({
@@ -46,7 +46,7 @@ const ColorPicker: NextComponentType<NextPageContext, {}, ColorPickerProps> = ({
       >
         <button
           style={{ background: color }}
-          className="rounded-full p-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 border-gray-100 border-2 "
+          className="rounded-full p-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 border-zinc-700 border-2 "
         />
       </Popover>
     </div>
