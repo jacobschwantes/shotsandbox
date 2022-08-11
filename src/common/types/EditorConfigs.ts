@@ -4,44 +4,62 @@ export type ImageDoc = {
   src: string;
 };
 export type BackgroundConfig = {
-  gradient: {
-    colors: string[];
+  color?: string;
+  gradient?: {
+    stops: string[];
     direction: number;
   };
+  type: "solid" | "gradient" | "transparent";
+};
+export type OrientationConfig = {
+  rotateX: number;
+  rotateY: number;
+  rotateZ: number;
+  perspective: number;
 };
 export type PositionConfig = {
   x: number;
   y: number;
-  rotateX: number;
-  rotateY: number;
-  rotateZ: number;
 };
 export type SizeConfig = {
   scale: number;
-  perspective: number;
   dimensions: {
-    scaleFactor: string;
-    width: string;
-    height: string;
+    aspectRatio: string;
+    width: number;
+    height: number;
   };
+};
+export type BorderConfig = {
+  radius: number;
+  width: number;
+  color: string;
 };
 export type ShadowConfig = {
   type: string;
+  previewSize: string;
   size: string;
-  color?: string;
+  color: string;
 };
 export type FrameConfig = {
-  borderRadius: number;
-  mockup: {
-    type: string;
-    theme: string;
+  show: boolean;
+  dark: boolean;
+  opacity: number;
+  buttons: {
+    show: boolean;
+    dark: boolean;
+    solid: boolean;
+  };
+  searchBar: {
+    show: boolean;
   };
 };
 export type Config = {
   id: string;
   name: string;
   size: SizeConfig;
+  orientation: OrientationConfig;
   position: PositionConfig;
+  border: BorderConfig;
   background: BackgroundConfig;
   shadow: ShadowConfig;
   frame: FrameConfig;
