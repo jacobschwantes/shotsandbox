@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useMemo } from "react";
+import { Fragment } from "react";
 import { Transition } from "@headlessui/react";
 import { Menu } from "@headlessui/react";
 import {
@@ -7,14 +7,9 @@ import {
   MailIcon,
   CalendarIcon,
 } from "@heroicons/react/outline";
-import {  toast } from 'react-toastify';
-
-import 'react-toastify/dist/ReactToastify.css';
-
+import "react-toastify/dist/ReactToastify.css";
 import { CheckIcon } from "@heroicons/react/solid";
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
+import clsx from "clsx";
 function findTime(time: number) {
   let now = Date.now();
   let difference = now / 1000 - time;
@@ -55,8 +50,7 @@ const read = [
     timestamp: 1643689162,
   },
 ];
-
-export default function Notifications(props) {
+export default function Notifications() {
   const isLoading = false;
   // const mref = useMemo(() => query(collection(db, "users", auth.currentUser?.uid, "notifications"), where("timestamp", ">", start)), []);
   // useEffect(() => {
@@ -120,31 +114,32 @@ export default function Notifications(props) {
                   <h1 className="px-3 py-1 text-sm font-semibold text-gray-500 dark:text-zinc-400">
                     NEW
                   </h1>
-                  {!isLoading
-                    ? unread.map((item, index) => {
-                        return (
-                          <div
-                            key={index}
-                            className="flex cursor-pointer items-center space-x-3 bg-blue-50 dark:bg-zinc-700 p-3 hover:bg-gray-100 dark:hover:bg-zinc-600 "
-                          >
-                            <MailIcon
-                              className="h-10 w-10 flex-shrink-0 rounded-full  text-blue-500 transition-colors"
-                              aria-hidden="true"
-                            />
-                            <div className="flex flex-col space-y-1">
-                              <h1 className="font-semibold dark:text-zinc-100 ">{item.message}</h1>
-                              <p className="font-normal text-gray-500 dark:text-zinc-400 ">
-                                {item.submessage}
-                              </p>
-                              <h1 className="flex items-center text-xs text-gray-400">
-                                <ClockIcon className="mr-1 h-3 w-3 text-gray-400" />{" "}
-                                {findTime(item.timestamp / 1000)}
-                              </h1>
-                            </div>
+                  {!isLoading &&
+                    unread.map((item, index) => {
+                      return (
+                        <div
+                          key={index}
+                          className="flex cursor-pointer items-center space-x-3 bg-blue-50 dark:bg-zinc-700 p-3 hover:bg-gray-100 dark:hover:bg-zinc-600 "
+                        >
+                          <MailIcon
+                            className="h-10 w-10 flex-shrink-0 rounded-full  text-blue-500 transition-colors"
+                            aria-hidden="true"
+                          />
+                          <div className="flex flex-col space-y-1">
+                            <h1 className="font-semibold dark:text-zinc-100 ">
+                              {item.message}
+                            </h1>
+                            <p className="font-normal text-gray-500 dark:text-zinc-400 ">
+                              {item.submessage}
+                            </p>
+                            <h1 className="flex items-center text-xs text-gray-400">
+                              <ClockIcon className="mr-1 h-3 w-3 text-gray-400" />{" "}
+                              {findTime(item.timestamp / 1000)}
+                            </h1>
                           </div>
-                        );
-                      })
-                    : null}
+                        </div>
+                      );
+                    })}
                 </div>
               )}
             </Menu.Item>
@@ -167,12 +162,14 @@ export default function Notifications(props) {
                           aria-hidden="true"
                         />
                         <div className="flex flex-col space-y-1">
-                          <h1 className="font-semibold dark:text-zinc-100 ">{item.message}</h1>
+                          <h1 className="font-semibold dark:text-zinc-100 ">
+                            {item.message}
+                          </h1>
                           <p className="font-normal text-gray-500 dark:text-zinc-400 ">
                             {item.submessage}
                           </p>
                           <h1 className="flex items-center text-xs text-gray-400">
-                            <ClockIcon className="mr-1 h-3 w-3 text-gray-400" />{" "}
+                            <ClockIcon className="mr-1 h-3 w-3 text-gray-400" />
                             {findTime(item.timestamp)}
                           </h1>
                         </div>
@@ -190,7 +187,7 @@ export default function Notifications(props) {
                   onClick={(e) => {
                     e.preventDefault();
                   }}
-                  className={classNames(
+                  className={clsx(
                     active ? "bg-gray-100 dark:bg-zinc-700" : "",
                     "block cursor-pointer rounded-b-lg border-t dark:border-zinc-700 px-4 py-2 text-center text-sm transition-colors dark:text-blue-500"
                   )}
