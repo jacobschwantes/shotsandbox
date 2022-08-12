@@ -12,6 +12,11 @@
   transform: perspective(20rem) rotateX(5deg) rotateY(-15deg) rotateZ(10deg);
 }
 @layer utilities {
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
   .template4 {
     transform: perspective(var(--perspective-var))
       rotateX(calc(var(--rotateX-var) * -1))

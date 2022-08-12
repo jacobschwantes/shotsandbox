@@ -328,6 +328,7 @@ const dimensionPresets = [
     dimensions: [
       { name: "open graph", width: 1200, height: 630 },
       { name: "cover photo", width: 1500, height: 500 },
+      { name: "image", width: 2400, height: 1350 },
     ],
   },
   {
@@ -346,8 +347,11 @@ const dimensionPresets = [
       </svg>
     ),
     dimensions: [
+      { name: "news feed", width: 1200, height: 1200 },
+      { name: "story", width: 1080, height: 1920 },
+      { name: "cover", width: 830, height: 312 },
+      { name: "event", width: 1336, height: 700 },
       { name: "open graph", width: 1200, height: 630 },
-      { name: "cover photo", width: 1500, height: 500 },
     ],
   },
   {
@@ -366,8 +370,8 @@ const dimensionPresets = [
       </svg>
     ),
     dimensions: [
-      { name: "open graph", width: 1200, height: 630 },
-      { name: "cover photo", width: 1500, height: 500 },
+      { name: "feed", width: 1200, height: 1200 },
+      { name: "story", width: 1080, height: 1920 },
     ],
   },
   {
@@ -385,10 +389,7 @@ const dimensionPresets = [
         />
       </svg>
     ),
-    dimensions: [
-      { name: "open graph", width: 1200, height: 630 },
-      { name: "cover photo", width: 1500, height: 500 },
-    ],
+    dimensions: [{ name: "shot", width: 2800, height: 2100 }],
   },
   {
     name: "linkedin",
@@ -402,8 +403,9 @@ const dimensionPresets = [
       </svg>
     ),
     dimensions: [
-      { name: "open graph", width: 1200, height: 630 },
-      { name: "cover photo", width: 1500, height: 500 },
+      { name: "feed", width: 1200, height: 1200 },
+      { name: "cover", width: 792, height: 198 },
+      { name: "story", width: 1080, height: 1920 },
     ],
   },
   {
@@ -425,8 +427,8 @@ const dimensionPresets = [
       </svg>
     ),
     dimensions: [
-      { name: "open graph", width: 1200, height: 630 },
-      { name: "cover photo", width: 1500, height: 500 },
+      { name: "thumbnail", width: 240, height: 240 },
+      { name: "gallery", width: 1270, height: 760 },
     ],
   },
   {
@@ -440,10 +442,7 @@ const dimensionPresets = [
         <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
       </svg>
     ),
-    dimensions: [
-      { name: "open graph", width: 1200, height: 630 },
-      { name: "cover photo", width: 1500, height: 500 },
-    ],
+    dimensions: [{ name: "readme header", width: 1618, height: 556 }],
   },
 ];
 const Editor: NextPage = () => {
@@ -521,6 +520,9 @@ const Editor: NextPage = () => {
       canvasWidth: config.size.dimensions.width,
       canvasHeight: config.size.dimensions.height,
       pixelRatio: 1,
+      style: {
+        borderRadius: "0px"
+      }
     })
       .then((dataUrl) => {
         const link = document.createElement("a");
@@ -536,6 +538,9 @@ const Editor: NextPage = () => {
     toJpeg(elementRef, {
       canvasWidth: config.size.dimensions.width,
       canvasHeight: config.size.dimensions.height,
+      style: {
+        borderRadius: "0px"
+      },
       pixelRatio: 1,
     })
       .then((dataUrl) => {
@@ -576,6 +581,9 @@ const Editor: NextPage = () => {
               canvasWidth: config.size.dimensions.width,
               canvasHeight: config.size.dimensions.height,
               pixelRatio: 1,
+              style: {
+                borderRadius: "0px"
+              },
             })
               .then((dataUrl) => {
                 navigator.clipboard.write([
@@ -594,7 +602,7 @@ const Editor: NextPage = () => {
         }
       }
     },
-    [ref, showWatermark]
+    [ref, showWatermark, config]
   );
   useEffect(() => {
     console.log(config);
@@ -637,8 +645,8 @@ const Editor: NextPage = () => {
   }
 
   return (
-    <div className="h-screen w-screen bg-black flex flex-col">
-      <div className="p-5 flex justify-between">
+    <div className="h-screen w-screen bg-black flex flex-col overflow-hidden">
+      <div className="p-5 flex justify-between absolute w-full bg-black">
         <h1 className="text-zinc-200">Editor</h1>
         <div className="flex space-x-2">
           <Popover
@@ -655,7 +663,7 @@ const Editor: NextPage = () => {
                       <>
                         <Disclosure.Button className="flex w-full justify-between rounded-lg capitalize bg-blue-100 px-4 py-2 text-left text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring focus-visible:ring-blue-500 focus-visible:ring-opacity-75">
                           <div className="flex items-center">
-                            <item.icon className="" />
+                            <item.icon />
                             {item.name}
                           </div>
                           <ChevronUpIcon
@@ -696,11 +704,77 @@ const Editor: NextPage = () => {
                     )}
                   </Disclosure>
                 ))}
+                <div className="flex space-x-5 items-end">
+                  <div>
+                    <label
+                      htmlFor="email"
+                      className="block text-sm font-medium text-zinc-100"
+                    >
+                      Width
+                    </label>
+                    <div className="mt-1">
+                      <input
+                        value={config.size.dimensions.width}
+                        onChange={(e) =>
+                          updateConfig({
+                            size: {
+                              ...config.size,
+                              dimensions: {
+                                ...config.size.dimensions,
+                                width: parseInt(e.target.value),
+                                aspectRatio: reduce(e.target.value, config.size.dimensions.height).join(
+                                  " / "
+                                ),
+                                
+                              },
+                            },
+                          })
+                        }
+                        type="number"
+                        name="email"
+                        id="email"
+                        className="form-input flex w-full justify-between items-center space-x-2 border border-zinc-800 hover:border-blue-500 text-zinc-200 bg-zinc-900 hover:bg-blue-900 bg-opacity-25 hover:bg-opacity-25 transition-all cursor-pointer bg py-2 px-4 rounded-lg"
+                      />
+                    </div>
+                  </div>
+                  <p className="font-medium text-zinc-300 text-lg pb-2">x</p>
+                  <div>
+                    <label
+                      htmlFor="email"
+                      className="block text-sm font-medium text-zinc-100"
+                    >
+                      Height
+                    </label>
+                    <div className="mt-1">
+                      <input
+                        value={config.size.dimensions.height}
+                        type="number"
+                        onChange={(e) =>
+                          updateConfig({
+                            size: {
+                              ...config.size,
+                              dimensions: {
+                                ...config.size.dimensions,
+                                height: parseInt(e.target.value),
+                                aspectRatio: reduce(config.size.dimensions.width, e.target.value).join(
+                                  " / "
+                                ),
+                              },
+                            },
+                          })
+                        }
+                        name="email"
+                        id="email"
+                        className="appearance-none form-input flex w-full justify-between items-center space-x-2 border border-zinc-800 hover:border-blue-500 text-zinc-200 bg-zinc-900 hover:bg-blue-900 bg-opacity-25 hover:bg-opacity-25 transition-all cursor-pointer bg py-2 px-4 rounded-lg"
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
             )}
           >
             <button className="flex items-center justify-center space-x-2 border border-zinc-800 text-zinc-200 bg-zinc-900 hover:bg-zinc-800 bg-opacity-25 hover:bg-opacity-25 transition-all cursor-pointer bg py-2 px-4 rounded-lg">
-              {config.size.dimensions.width} x {config.size.dimensions.height}
+              {config.size.dimensions.width} x {config.size.dimensions.height}{" "}
               px
               <ChevronDownIcon className="h-4 w-4 ml-1" />
             </button>
@@ -812,94 +886,90 @@ const Editor: NextPage = () => {
           </Popover>
         </div>
       </div>
-      <div className="flex justify-between flex-1 ">
+      <div className="flex justify-between h-full pt-[82px] ">
         {/* Editor preview container */}
         <div
           className={clsx(
-            "flex-1 flex items-center justify-center  dark:bg-black light:grid-effect-light bg-gray-50 dark:grid-effect-dark h-full overflow-hidden  "
+            "flex-1  dark:bg-black light:grid-effect-light bg-gray-50 dark:grid-effect-dark p-20   "
           )}
         >
-          <div className="rounded-3xl overflow-hidden flex-1 max-w-[1920px]">
-            <motion.div
-              style={
-                removeBackground
-                  ? {
-                      background: "transparent",
-                      aspectRatio: config.size.dimensions.aspectRatio,
-                    }
-                  : {
-                      background: `linear-gradient(${
-                        config.background.gradient?.direction
-                      }deg, ${config.background.gradient?.stops.join(",")})`,
-                      aspectRatio: config.size.dimensions.aspectRatio,
-                    }
-              }
-              ref={ref}
+          <motion.div
+            style={
+              removeBackground
+                ? {
+                    background: "transparent",
+                    aspectRatio: `auto ${config.size.dimensions.aspectRatio}`,
+                  }
+                : {
+                    background: `linear-gradient(${
+                      config.background.gradient?.direction
+                    }deg, ${config.background.gradient?.stops.join(",")})`,
+                    aspectRatio: config.size.dimensions.aspectRatio,
+                  }
+            }
+            ref={ref}
+            className={clsx(
+              "overflow-hidden relative flex items-center justify-center max-h-full max-w-full rounded-3xl"
+            )}
+          >
+            {showWatermark && (
+              <span
+                ref={watermarkRef}
+                className="absolute bottom-5 right-5 bg-white p-2 rounded-2xl shadow-xl z-10"
+              >
+                <h1 className="font-medium">SCREENSHOTIFY</h1>
+              </span>
+            )}
+
+            <div
               className={clsx(
-                "overflow-hidden relative flex items-center justify-center aspect-video"
+                " absolute aspect-video container template7  ",
+                layout < 3 ? " flex items-center  " : "grid-cols-2 grid   "
               )}
             >
-              {showWatermark && (
-                <span
-                  ref={watermarkRef}
-                  className="absolute bottom-5 right-5 bg-white p-2 rounded-2xl shadow-xl z-10"
-                >
-                  <h1 className="font-medium">SCREENSHOTIFY</h1>
-                </span>
-              )}
-
-              <div
-                className={clsx(
-                  " relative aspect-video container template7  ",
-                  layout < 3 ? " flex items-center  " : "grid-cols-2 grid   "
-                )}
-              >
-                {imageStack.map(
-                  (url, index) =>
-                    layout >= index + 1 && (
-                      <motion.div
-                        animate={{
-                          x: config.position.x * containerSize.width,
-                          y: config.position.y * containerSize.height,
-                          scale: config.size.scale,
-                          rotateX: config.orientation.rotateX,
-                          rotateY: config.orientation.rotateY,
-                          rotateZ: config.orientation.rotateZ,
-                          transformPerspective: config.orientation.perspective,
-                        }}
-                        transition={{ type: "spring" }}
-                        key={index}
-                        style={{
-                          boxShadow: `${config.shadow.color} ${config.shadow.size}`,
-                          borderRadius: `${config.border.radius}rem`,
-                          borderColor: config.border.color,
-                          borderWidth: `${config.border.width}px`,
-                        }}
-                        className="overflow-hidden aspect-video relative flex flex-col flex-1 "
-                      >
-                        {config.frame.show && (
-                          <Toolbar options={config.frame} />
+              {imageStack.map(
+                (url, index) =>
+                  layout >= index + 1 && (
+                    <motion.div
+                      animate={{
+                        x: config.position.x * containerSize.width,
+                        y: config.position.y * containerSize.height,
+                        scale: config.size.scale,
+                        rotateX: config.orientation.rotateX,
+                        rotateY: config.orientation.rotateY,
+                        rotateZ: config.orientation.rotateZ,
+                        transformPerspective: config.orientation.perspective,
+                      }}
+                      transition={{ type: "spring" }}
+                      key={index}
+                      style={{
+                        boxShadow: `${config.shadow.color} ${config.shadow.size}`,
+                        borderRadius: `${config.border.radius}rem`,
+                        borderColor: config.border.color,
+                        borderWidth: `${config.border.width}px`,
+                      }}
+                      className="overflow-hidden aspect-video relative flex flex-col flex-1 "
+                    >
+                      {config.frame.show && <Toolbar options={config.frame} />}
+                      <div
+                        className={clsx(
+                          config.frame.show && "mt-[44px]",
+                          "relative flex-1 "
                         )}
-                        <div
-                          className={clsx(
-                            config.frame.show && "mt-[44px]",
-                            "relative flex-1 "
-                          )}
-                        >
-                          <Image layout="fill" src={url.src} />
-                        </div>
-                      </motion.div>
-                    )
-                )}
-              </div>
-            </motion.div>
-          </div>
+                      >
+                        <Image layout="fill" src={url.src} />
+                      </div>
+                    </motion.div>
+                  )
+              )}
+            </div>
+          </motion.div>
         </div>
 
         {/* Controls column start */}
-        <div className="flex border-l border-blue-900 ">
+        <div className="flex border-l border-blue-900 h-full ">
           {/* Editor navigation start */}
-          <div className="flex flex-col h-full pl-2 bg-">
+          <div className="flex flex-col h-full pl-2 overflow-y-auto">
             <div className="flex flex-col  bg-zinc-900 bg-opacity-50">
               {generalNavigation.map((item, index) => (
                 <div className={clsx(active === item && "bg-black w-full")}>
