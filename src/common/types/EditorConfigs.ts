@@ -4,9 +4,9 @@ export type ImageDoc = {
   src: string;
 };
 export type BackgroundConfig = {
-  color?: string;
-  gradient?: {
-    stops: string[];
+  color: string;
+  gradient: {
+    stops: { color: string; id: string | number }[];
     direction: number;
   };
   type: "solid" | "gradient" | "transparent";

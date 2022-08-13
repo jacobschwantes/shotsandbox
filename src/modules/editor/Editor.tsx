@@ -23,6 +23,7 @@ import {
   TemplateIcon,
   DuplicateIcon,
   ChevronDownIcon,
+  TrashIcon,
 } from "@heroicons/react/solid";
 import { toast } from "react-toastify";
 import {
@@ -42,6 +43,7 @@ import Toggle from "./components/Toggle";
 import Tooltip from "@components/Tooltip";
 import Popover from "./components/Popover";
 import { Disclosure } from "@headlessui/react";
+import GradientList from "./components/GradientList";
 const generateColorHex = () => {
   return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
 };
@@ -227,6 +229,346 @@ const framePresets: { type: string; config: FrameConfig }[] = [
   },
 ];
 
+const gradientPresets = [
+  {
+    stops: [
+      { color: "#00ff87", id: 1 },
+      { color: "#60efff", id: 2 },
+    ],
+    direction: 90,
+  },
+  {
+    stops: [
+      { color: "#0061ff", id: 1 },
+      { color: "#60efff", id: 2 },
+    ],
+    direction: 90,
+  },
+  {
+    stops: [
+      { color: "#ff1b6b", id: 1 },
+      { color: "#45caff", id: 2 },
+    ],
+    direction: 90,
+  },
+  {
+    stops: [
+      { color: "#40c9ff", id: 1 },
+      { color: "#e81cff", id: 2 },
+    ],
+    direction: 90,
+  },
+  {
+    stops: [
+      { color: "#ff930f", id: 1 },
+      { color: "#fff95b", id: 2 },
+    ],
+    direction: 90,
+  },
+  {
+    stops: [
+      { color: "#ff0f7b", id: 1 },
+      { color: "#f89b29", id: 2 },
+    ],
+    direction: 90,
+  },
+  {
+    stops: [
+      { color: "#bf0fff", id: 1 },
+      { color: "#cbff49", id: 2 },
+    ],
+    direction: 90,
+  },
+  {
+    stops: [
+      { color: "#696eff", id: 1 },
+      { color: "#f8acff", id: 2 },
+    ],
+    direction: 90,
+  },
+  {
+    stops: [
+      { color: "#ff5858", id: 1 },
+      { color: "#ffc8c8", id: 2 },
+    ],
+    direction: 90,
+  },
+  {
+    stops: [
+      { color: "#595cff", id: 1 },
+      { color: "#c6f8ff", id: 2 },
+    ],
+    direction: 90,
+  },
+  {
+    stops: [
+      { color: "#f9c58d", id: 1 },
+      { color: "#f492f0", id: 2 },
+    ],
+    direction: 90,
+  },
+  {
+    stops: [
+      { color: "#84ffc9", id: 1 },
+      { color: "#aab2ff", id: 2 },
+      { color: "#eca0ff", id: 3 },
+    ],
+    direction: 90,
+  },
+  {
+    stops: [
+      { color: "#f492f0", id: 1 },
+      { color: "#a18dce", id: 2 },
+    ],
+    direction: 90,
+  },
+  {
+    stops: [
+      { color: "#f6d5f7", id: 1 },
+      { color: "#fbe9d7", id: 2 },
+    ],
+    direction: 90,
+  },
+  {
+    stops: [
+      { color: "#e9b7ce", id: 1 },
+      { color: "#d3f3f1", id: 2 },
+    ],
+    direction: 90,
+  },
+  {
+    stops: [
+      { color: "#1dbde6", id: 1 },
+      { color: "#f1515e", id: 2 },
+    ],
+    direction: 90,
+  },
+  {
+    stops: [
+      { color: "#57ebde", id: 1 },
+      { color: "#aefb2a", id: 2 },
+    ],
+    direction: 90,
+  },
+  {
+    stops: [
+      { color: "#f4f269", id: 1 },
+      { color: "#5cb270", id: 2 },
+    ],
+    direction: 90,
+  },
+  {
+    stops: [
+      { color: "#b597f6", id: 1 },
+      { color: "#96c6ea", id: 2 },
+    ],
+    direction: 90,
+  },
+  {
+    stops: [
+      { color: "#f6cfbe", id: 1 },
+      { color: "#b9dcf2", id: 2 },
+    ],
+    direction: 90,
+  },
+  {
+    stops: [
+      { color: "#d397fa", id: 1 },
+      { color: "#8364e8", id: 2 },
+    ],
+    direction: 90,
+  },
+  {
+    stops: [
+      { color: "#ffcb6b", id: 1 },
+      { color: "#3d8bff", id: 2 },
+    ],
+    direction: 90,
+  },
+  {
+    stops: [
+      { color: "#95f9c3", id: 1 },
+      { color: "#0b3866", id: 2 },
+    ],
+    direction: 90,
+  },
+  {
+    stops: [
+      { color: "#83f5e5", id: 1 },
+      { color: "#e761bd", id: 2 },
+    ],
+    direction: 90,
+  },
+  {
+    stops: [
+      { color: "#e8bdf9", id: 1 },
+      { color: "#d8ded6", id: 2 },
+    ],
+    direction: 90,
+  },
+  {
+    stops: [
+      { color: "#6d90b9", id: 1 },
+      { color: "#bbc7dc", id: 2 },
+    ],
+    direction: 90,
+  },
+  {
+    stops: [
+      { color: "#bc1b68", id: 1 },
+      { color: "#d3989b", id: 2 },
+    ],
+    direction: 90,
+  },
+  {
+    stops: [
+      { color: "#f28367", id: 1 },
+      { color: "#ff5282", id: 2 },
+    ],
+    direction: 90,
+  },
+  {
+    stops: [
+      { color: "#e91fa8", id: 1 },
+      { color: "#b9dfee", id: 2 },
+    ],
+    direction: 90,
+  },
+  {
+    stops: [
+      { color: "#cad0ff", id: 1 },
+      { color: "#e3e3e3", id: 2 },
+    ],
+    direction: 90,
+  },
+  {
+    stops: [
+      { color: "#dd83ad", id: 1 },
+      { color: "#c3e1fc", id: 2 },
+    ],
+    direction: 90,
+  },
+  {
+    stops: [
+      { color: "#c7b3cc", id: 1 },
+      { color: "#268ab2", id: 2 },
+    ],
+    direction: 90,
+  },
+  {
+    stops: [
+      { color: "#c9def4", id: 1 },
+      { color: "#f5ccd4", id: 2 },
+      { color: "#b8a4c9", id: 3 },
+    ],
+    direction: 90,
+  },
+  {
+    stops: [
+      { color: "#caefd7", id: 1 },
+      { color: "#f5bfd7", id: 2 },
+      { color: "#abc9e9", id: 3 },
+    ],
+    direction: 90,
+  },
+  {
+    stops: [
+      { color: "#58efec", id: 1 },
+      { color: "#e85c90", id: 2 },
+      { color: "#fcc9ba", id: 3 },
+    ],
+    direction: 90,
+  },
+  {
+    stops: [
+      { color: "#f9e7bb", id: 1 },
+      { color: "#e97cbb", id: 2 },
+      { color: "#3d47d9", id: 3 },
+    ],
+    direction: 90,
+  },
+  {
+    stops: [
+      { color: "#45a0ea", id: 1 },
+      { color: "#eca9bb", id: 2 },
+      { color: "#f9658e", id: 3 },
+    ],
+    direction: 90,
+  },
+  {
+    stops: [
+      { color: "#f4e784", id: 1 },
+      { color: "#f24389", id: 2 },
+      { color: "#a478f1", id: 3 },
+    ],
+    direction: 90,
+  },
+  {
+    stops: [
+      { color: "#5de0f0", id: 1 },
+      { color: "#f7a6f5", id: 2 },
+      { color: "#e64f6f", id: 3 },
+    ],
+    direction: 90,
+  },
+  {
+    stops: [
+      { color: "#a4e9f9", id: 1 },
+      { color: "#c5aef2", id: 2 },
+      { color: "#8578ea", id: 3 },
+    ],
+    direction: 90,
+  },
+  {
+    stops: [
+      { color: "#fff1bf", id: 1 },
+      { color: "#ec458d", id: 2 },
+      { color: "#474ed7", id: 3 },
+    ],
+    direction: 90,
+  },
+  {
+    stops: [
+      { color: "#d3eef4", id: 1 },
+      { color: "#f1eec8", id: 2 },
+      { color: "#f3a46c", id: 3 },
+    ],
+    direction: 90,
+  },
+  {
+    stops: [
+      { color: "#0e0725", id: 1 },
+      { color: "#5c03bc", id: 2 },
+      { color: "#e536ab", id: 3 },
+      { color: "#f4e5f0", id: 4 },
+    ],
+    direction: 90,
+  },
+];
+const solidColorPresets = [
+  { color: "#FFFFFF" },
+  { color: "#000000" },
+  { color: "#FF0000" },
+  { color: "#FF9D00" },
+  { color: "#32FF00" },
+  { color: "#00FFD0" },
+  { color: "#00E7FF" },
+  { color: "#00ABFF" },
+  { color: "#002CFF" },
+  { color: "#5F00FF" },
+  { color: "#AD00FF" },
+  { color: "#FF00F3" },
+  { color: "#FF005E" },
+  { color: "#d5d5d5" },
+  { color: "#4582a5" },
+  { color: "#32353a" },
+  { color: "#0c0f14" },
+  { color: "#8f86f6" },
+  { color: "#f6a486" },
+  { color: "#86caf6" },
+  { color: "#a3e6c6" },
+];
+
 const shadowPresets: ShadowConfig[] = [
   {
     type: "none",
@@ -282,8 +624,12 @@ const defaultConfig: Config = {
   },
   background: {
     type: "gradient",
+    color: "#252525",
     gradient: {
-      stops: ["#cd96b3", "#bda6f0"],
+      stops: [
+        { color: "#cd96b3", id: "664" },
+        { color: "#bda6f0", id: "356" },
+      ],
       direction: 70,
     },
   },
@@ -521,8 +867,8 @@ const Editor: NextPage = () => {
       canvasHeight: config.size.dimensions.height,
       pixelRatio: 1,
       style: {
-        borderRadius: "0px"
-      }
+        borderRadius: "0px",
+      },
     })
       .then((dataUrl) => {
         const link = document.createElement("a");
@@ -539,7 +885,7 @@ const Editor: NextPage = () => {
       canvasWidth: config.size.dimensions.width,
       canvasHeight: config.size.dimensions.height,
       style: {
-        borderRadius: "0px"
+        borderRadius: "0px",
       },
       pixelRatio: 1,
     })
@@ -582,7 +928,7 @@ const Editor: NextPage = () => {
               canvasHeight: config.size.dimensions.height,
               pixelRatio: 1,
               style: {
-                borderRadius: "0px"
+                borderRadius: "0px",
               },
             })
               .then((dataUrl) => {
@@ -722,10 +1068,10 @@ const Editor: NextPage = () => {
                               dimensions: {
                                 ...config.size.dimensions,
                                 width: parseInt(e.target.value),
-                                aspectRatio: reduce(e.target.value, config.size.dimensions.height).join(
-                                  " / "
-                                ),
-                                
+                                aspectRatio: reduce(
+                                  e.target.value,
+                                  config.size.dimensions.height
+                                ).join(" / "),
                               },
                             },
                           })
@@ -756,9 +1102,10 @@ const Editor: NextPage = () => {
                               dimensions: {
                                 ...config.size.dimensions,
                                 height: parseInt(e.target.value),
-                                aspectRatio: reduce(config.size.dimensions.width, e.target.value).join(
-                                  " / "
-                                ),
+                                aspectRatio: reduce(
+                                  config.size.dimensions.width,
+                                  e.target.value
+                                ).join(" / "),
                               },
                             },
                           })
@@ -901,9 +1248,14 @@ const Editor: NextPage = () => {
                     aspectRatio: `auto ${config.size.dimensions.aspectRatio}`,
                   }
                 : {
-                    background: `linear-gradient(${
-                      config.background.gradient?.direction
-                    }deg, ${config.background.gradient?.stops.join(",")})`,
+                    background:
+                      config.background.type === "gradient"
+                        ? `linear-gradient(${
+                            config.background.gradient?.direction
+                          }deg, ${config.background.gradient?.stops
+                            .map((item) => item.color)
+                            .join(",")})`
+                        : config.background.color,
                     aspectRatio: config.size.dimensions.aspectRatio,
                   }
             }
@@ -1093,9 +1445,13 @@ const Editor: NextPage = () => {
                                     perspective: 3000,
                                   },
                                   background: {
+                                    color: "#000",
                                     type: "gradient",
                                     gradient: {
-                                      stops: ["#cd96b3", "#bda6f0"],
+                                      stops: [
+                                        { color: "#cd96b3", id: "sdf454sdf" },
+                                        { color: "#bda6f0", id: "sdf454sdf" },
+                                      ],
                                       direction: 70,
                                     },
                                   },
@@ -1120,9 +1476,13 @@ const Editor: NextPage = () => {
                                     perspective: 3000,
                                   },
                                   background: {
+                                    color: "000",
                                     type: "gradient",
                                     gradient: {
-                                      stops: ["#cd96b3", "#bda6f0"],
+                                      stops: [
+                                        { color: "#cd96b3", id: "sdf454sdf" },
+                                        { color: "#bda6f0", id: "sdf454sdf" },
+                                      ],
                                       direction: 70,
                                     },
                                   },
@@ -1847,30 +2207,180 @@ const Editor: NextPage = () => {
                       case "background":
                         return (
                           <>
-                            {config.background.gradient?.stops.map(
-                              (color, index) => (
-                                <ColorPicker
-                                  type="hex"
-                                  color={color}
-                                  setColor={(val) => {
-                                    if (config.background.gradient) {
-                                      const old = [
-                                        ...config.background.gradient.stops,
-                                      ];
-                                      old[index] = val;
+                            <div className="flex space-x-2 rounded-xl bg-gray-100 dark:bg-black dark:border dark:border-zinc-900 p-1 max-w-4xl ">
+                              <button
+                                onClick={() =>
+                                  updateConfig({
+                                    ...config,
+                                    background: {
+                                      ...config.background,
+                                      type: "gradient",
+                                    },
+                                  })
+                                }
+                                className={clsx(
+                                  "flex w-full items-center justify-center rounded-lg py-2.5 text-center text-sm font-medium capitalize leading-5 ",
+                                  "ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2 dark:ring-transparent",
+                                  config.background.type === "gradient"
+                                    ? "bg-white text-blue-700 dark:text-blue-500 shadow dark:bg-zinc-900"
+                                    : "text-gray-700 hover:bg-white/[0.12] hover:text-gray-600 dark:hover:text-zinc-200 dark:text-zinc-300"
+                                )}
+                              >
+                                <h1 className="hidden sm:block">gradient</h1>
+                              </button>
+                              <button
+                                onClick={() =>
+                                  updateConfig({
+                                    ...config,
+                                    background: {
+                                      ...config.background,
+                                      type: "solid",
+                                    },
+                                  })
+                                }
+                                className={clsx(
+                                  "flex w-full items-center justify-center rounded-lg py-2.5 text-center text-sm font-medium capitalize leading-5 ",
+                                  "ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2 dark:ring-transparent",
+                                  config.background.type === "solid"
+                                    ? "bg-white text-blue-700 dark:text-blue-500 shadow dark:bg-zinc-900"
+                                    : "text-gray-700 hover:bg-white/[0.12] hover:text-gray-600 dark:hover:text-zinc-200 dark:text-zinc-300"
+                                )}
+                              >
+                                <h1 className="hidden sm:block">solid</h1>
+                              </button>
+                            </div>
+                            {config.background.type === "gradient" ? (
+                              <>
+                                <RangeSlider
+                                  value={config.background.gradient.direction}
+                                  set={(val) =>
+                                    updateConfig({
+                                      background: {
+                                        ...config.background,
+                                        gradient: {
+                                          ...config.background.gradient,
+                                          direction: val,
+                                        },
+                                      },
+                                    })
+                                  }
+                                  min={0}
+                                  max={359}
+                                >
+                                  <div className="flex space-x-2 items-center">
+                                    <p className=" font-medium text-zinc-300">
+                                      Direction
+                                    </p>
+                                    <button
+                                      className="hover:text-zinc-400 transition-colors"
+                                      onClick={() => {
+                                        updateConfig({
+                                          background: {
+                                            ...config.background,
+                                            gradient: {
+                                              ...config.background.gradient,
+                                              direction: 90,
+                                            },
+                                          },
+                                        });
+                                      }}
+                                    >
+                                      <RefreshIcon className="h-4" />
+                                    </button>
+                                  </div>
+                                </RangeSlider>
+                                <div className=" space-y-7  ">
+                                  <label className="font-medium text-zinc-300">
+                                    Colors
+                                  </label>
+
+                                  <GradientList
+                                    list={config.background.gradient.stops}
+                                    setList={(newList) => {
                                       updateConfig({
                                         background: {
                                           ...config.background,
                                           gradient: {
                                             ...config.background.gradient,
-                                            stops: old,
+                                            stops: newList,
                                           },
                                         },
                                       });
-                                    }
-                                  }}
-                                />
-                              )
+                                    }}
+                                  />
+                                </div>
+                                <div className="space-y-2">
+                                  <label className="font-medium text-zinc-300">
+                                    Presets
+                                  </label>
+                                  <div className="grid grid-cols-7 gap-2">
+                                    {gradientPresets.map(
+                                      ({ stops, direction }) => (
+                                        <button
+                                          style={{
+                                            background: `linear-gradient(${90}deg, ${stops
+                                              .map((item) => item.color)
+                                              .join(",")})`,
+                                          }}
+                                          onClick={() =>
+                                            updateConfig({
+                                              background: {
+                                                ...config.background,
+                                                gradient: {
+                                                  stops,
+                                                  direction,
+                                                },
+                                              },
+                                            })
+                                          }
+                                          className="aspect-square h-full rounded-full border border-zinc-600"
+                                        ></button>
+                                      )
+                                    )}
+                                  </div>
+                                </div>
+                              </>
+                            ) : (
+                              <>
+                                <div className="space-y-2">
+                                  <label className="font-medium text-zinc-300">
+                                    Color
+                                  </label>
+                                  <ColorPicker
+                                    type="hex"
+                                    color={config.background.color}
+                                    setColor={(val) => {
+                                      updateConfig({
+                                        background: {
+                                          ...config.background,
+                                          color: val,
+                                        },
+                                      });
+                                    }}
+                                  />
+                                </div>
+                                <div className="space-y-2">
+                                  <label className="font-medium text-zinc-300">
+                                    Presets
+                                  </label>
+                                  <div className="grid grid-cols-7 gap-2">
+                                    {solidColorPresets.map(({ color }) => (
+                                      <button
+                                        style={{ background: color }}
+                                        onClick={() =>
+                                          updateConfig({
+                                            background: {
+                                              ...config.background,
+                                              color,
+                                            },
+                                          })
+                                        }
+                                        className="aspect-square h-full rounded-full border border-zinc-600"
+                                      ></button>
+                                    ))}
+                                  </div>
+                                </div>
+                              </>
                             )}
                           </>
                         );

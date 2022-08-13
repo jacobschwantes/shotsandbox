@@ -17,8 +17,9 @@ const ColorPicker: NextComponentType<NextPageContext, {}, ColorPickerProps> = ({
   type = "hex",
 }) => {
   return (
-    <div className="flex items-center space-x-2">
+    <div className="flex items-center space-x-2 relative">
       <Popover
+      
         render={() =>
           type === "hex" ? (
             <div className="bg-zinc-900 p-3 rounded-lg space-y-3">
@@ -46,7 +47,7 @@ const ColorPicker: NextComponentType<NextPageContext, {}, ColorPickerProps> = ({
       >
         <button
           style={{ background: color }}
-          className="rounded-full p-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 border-zinc-700 border-2 "
+          className="rounded-full p-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 border-zinc-700 border-2 z-10 "
         />
       </Popover>
     </div>
