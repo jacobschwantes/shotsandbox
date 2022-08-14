@@ -24,6 +24,8 @@ import {
   DuplicateIcon,
   ChevronDownIcon,
   TrashIcon,
+  AnnotationIcon,
+  SwitchHorizontalIcon,
 } from "@heroicons/react/solid";
 import { toast } from "react-toastify";
 import {
@@ -38,12 +40,13 @@ import type {
   ShadowConfig,
   FrameConfig,
   Config,
-} from "@customTypes/EditorConfigs";
+} from "@customTypes/configs";
 import Toggle from "./components/Toggle";
 import Tooltip from "@components/Tooltip";
 import Popover from "./components/Popover";
 import { Disclosure } from "@headlessui/react";
 import GradientList from "./components/GradientList";
+import ScreenshotModal from "./components/ScreenshotModal";
 const generateColorHex = () => {
   return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
 };
@@ -97,24 +100,30 @@ const generalNavigation = [
   },
   {
     id: 6,
+    name: "Header",
+    href: "/history",
+    icon: AnnotationIcon,
+  },
+  {
+    id: 7,
     name: "Background",
     href: "/history",
     icon: ColorSwatchIcon,
   },
   {
-    id: 7,
+    id: 8,
     name: "Shadow",
     href: "/settings/account",
     icon: SunIcon,
   },
   {
-    id: 8,
+    id: 9,
     name: "Frames",
     href: "/settings/account",
     icon: DesktopComputerIcon,
   },
   {
-    id: 9,
+    id: 10,
     name: "Border",
     icon: BookmarkAltIcon,
   },
@@ -644,6 +653,21 @@ const defaultConfig: Config = {
     width: 0,
     color: "rgba(0, 0, 0, 1)",
   },
+  header: {
+    show: false,
+    anchored: false,
+    align: "vertical",
+    content: {
+      title: "The best image editing tool for founders",
+      subtitle: "Turn boring screenshots into stunning graphics",
+      color: "rgba(255, 255, 255, 1)",
+      bold: true,
+      italic: false,
+      size: 3.5,
+      padding: 5,
+      translateX: 0,
+    },
+  },
   frame: {
     show: true,
     dark: false,
@@ -799,6 +823,8 @@ const Editor: NextPage = () => {
       src: "/sample.jpeg",
     },
   ] as ImageDoc[]);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [config, setConfig] = useState(defaultConfig);
   const [history, setHistory] = useState([] as Config[]);
   const [historyIdx, setHistoryIdx] = useState(0);
@@ -809,6 +835,50 @@ const Editor: NextPage = () => {
   const ref = useRef<HTMLDivElement>(null);
   const watermarkRef = useRef<HTMLDivElement>(null);
   const containerSize = useWindowSize(ref);
+
+  const getScreenshot = async (options) => {
+    setIsLoading(true);
+    await fetch(
+      `https://api.screenshotify.io/screenshot?url=${options.url}&width=${options.width}&height=${options.height}&token=${options.token}&json=true`,
+      {
+        method: "GET",
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          cors: "no-cors",
+        },
+      }
+    )
+      .then(async (res) => {
+        if (res.ok) {
+          return res.json();
+        } else {
+          throw new Error(await res.text());
+        }
+      })
+      .then((image) => {
+        const newImage = {
+          id: uniqueId(),
+          fileName: image.meta.url,
+          src: image.src,
+        };
+        setModalOpen(false);
+        setImageStack([...imageStack, newImage]);
+      })
+      .catch((e) =>
+        toast(
+          <div className="flex items-center space-x-3">
+            <span>
+              <p className="text-sm font-extralight">{e.message}</p>
+            </span>
+          </div>,
+          {
+            type: "error",
+          }
+        )
+      );
+
+    setIsLoading(false);
+  };
 
   const addImage = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
@@ -992,6 +1062,12 @@ const Editor: NextPage = () => {
 
   return (
     <div className="h-screen w-screen bg-black flex flex-col overflow-hidden">
+      <ScreenshotModal
+        open={modalOpen}
+        setOpen={setModalOpen}
+        isLoading={isLoading}
+        handleSubmit={getScreenshot}
+      />
       <div className="p-5 flex justify-between absolute w-full bg-black">
         <h1 className="text-zinc-200">Editor</h1>
         <div className="flex space-x-2">
@@ -1279,14 +1355,56 @@ const Editor: NextPage = () => {
                 layout < 3 ? " flex items-center  " : "grid-cols-2 grid   "
               )}
             >
-              {imageStack.map(
-                (url, index) =>
-                  layout >= index + 1 && (
+              {imageStack.map((url, index) =>
+                layout >= index + 1 && config.header.anchored ? (
+                  <motion.div
+                    transition={{ type: "spring" }}
+                    key={index}
+                    animate={{
+                      x: config.position.x * containerSize.width,
+                      y: config.position.y * containerSize.height,
+                      scale: config.size.scale,
+                    }}
+                    className={clsx(
+                      config.header.align === "vertical" ? "flex-col" : "items-center",
+                      "relative flex flex-1"
+                    )}
+                  >
+                    {config.header.show && (
+                      <motion.div
+                        animate={{
+                          x:
+                            config.header.content.translateX *
+                            containerSize.width,
+                        }}
+                        style={{ color: config.header.content.color }}
+                        className={clsx(
+                          config.header.content.italic && "italic", config.header.align === 'horizontal' ? ' max-w-xl text-left' : "text-center",
+                          " space-y-2"
+                        )}
+                      >
+                        <h1
+                          style={{
+                            fontSize: `${1.25 * config.header.content.size}rem`,
+                          }}
+                          className={clsx(
+                            config.header.content.bold && "font-bold",
+                            ""
+                          )}
+                        >
+                          {config.header.content.title}
+                        </h1>
+                        <p
+                          style={{
+                            fontSize: `${0.75 * config.header.content.size}rem`,
+                          }}
+                        >
+                          {config.header.content.subtitle}
+                        </p>
+                      </motion.div>
+                    )}
                     <motion.div
                       animate={{
-                        x: config.position.x * containerSize.width,
-                        y: config.position.y * containerSize.height,
-                        scale: config.size.scale,
                         rotateX: config.orientation.rotateX,
                         rotateY: config.orientation.rotateY,
                         rotateZ: config.orientation.rotateZ,
@@ -1294,13 +1412,18 @@ const Editor: NextPage = () => {
                       }}
                       transition={{ type: "spring" }}
                       key={index}
+                      className="aspect-video relative flex flex-col flex-1 overflow-hidden "
                       style={{
                         boxShadow: `${config.shadow.color} ${config.shadow.size}`,
                         borderRadius: `${config.border.radius}rem`,
                         borderColor: config.border.color,
                         borderWidth: `${config.border.width}px`,
+                        marginTop: !config.header.show || config.header.align === 'horizontal'
+                        ? 0 :`${config.header.content.padding}rem`,
+                        marginLeft: !config.header.show || config.header.align === 'vertical'
+                        ? 0 :`${config.header.content.padding}rem`
+                        
                       }}
-                      className="overflow-hidden aspect-video relative flex flex-col flex-1 "
                     >
                       {config.frame.show && <Toolbar options={config.frame} />}
                       <div
@@ -1309,10 +1432,81 @@ const Editor: NextPage = () => {
                           "relative flex-1 "
                         )}
                       >
-                        <Image layout="fill" src={url.src} />
+                        <Image priority layout="fill" src={url.src} />
                       </div>
                     </motion.div>
-                  )
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    transition={{ type: "spring" }}
+                    key="container2"
+                    animate={{
+                      x: config.position.x * containerSize.width,
+                      y: config.position.y * containerSize.height,
+                      scale: config.size.scale,
+                      rotateX: config.orientation.rotateX,
+                      rotateY: config.orientation.rotateY,
+                      rotateZ: config.orientation.rotateZ,
+                      transformPerspective: config.orientation.perspective,
+                    }}
+                    className={clsx(
+                      config.header.align === "vertical" ? "flex-col" : "items-center",
+                      "relative flex flex-1 "
+                    )}
+                  >
+                    {config.header.show && (
+                      <div
+                        style={{ color: config.header.content.color }}
+                        className={clsx(
+                          config.header.content.italic && "italic",config.header.align === 'horizontal' ? ' max-w-xl text-left' : "text-center",
+                          "space-y-2"
+                        )}
+                      >
+                        <h1
+                          style={{
+                            fontSize: `${1.25 * config.header.content.size}rem`,
+                          }}
+                          className={clsx(
+                            config.header.content.bold && "font-bold",
+                            ""
+                          )}
+                        >
+                          {config.header.content.title}
+                        </h1>
+                        <p
+                          style={{
+                            fontSize: `${0.75 * config.header.content.size}rem`,
+                          }}
+                        >
+                          {config.header.content.subtitle}
+                        </p>
+                      </div>
+                    )}
+                    <div
+                      className="aspect-video relative flex flex-col flex-1 overflow-hidden "
+                      style={{
+                        boxShadow: `${config.shadow.color} ${config.shadow.size}`,
+                        borderRadius: `${config.border.radius}rem`,
+                        borderColor: config.border.color,
+                        borderWidth: `${config.border.width}px`,
+                        marginTop: !config.header.show || config.header.align === 'horizontal'
+                        ? 0 :`${config.header.content.padding}rem`,
+                        marginLeft: !config.header.show || config.header.align === 'vertical'
+                        ? 0 :`${config.header.content.padding}rem`
+                      }}
+                    >
+                      {config.frame.show && <Toolbar options={config.frame} />}
+                      <div
+                        className={clsx(
+                          config.frame.show && "mt-[44px]",
+                          "relative flex-1 "
+                        )}
+                      >
+                        <Image priority layout="fill" src={url.src} />
+                      </div>
+                    </div>
+                  </motion.div>
+                )
               )}
             </div>
           </motion.div>
@@ -1395,7 +1589,10 @@ const Editor: NextPage = () => {
                         return (
                           <>
                             <div className=" space-y-2">
-                              <button className="w-full flex items-center justify-center space-x-3 border border-zinc-800 text-zinc-200 bg-zinc-900 hover:bg-zinc-800 bg-opacity-25 hover:bg-opacity-25 transition-all cursor-pointer bg py-2 rounded-lg">
+                              <button
+                                onClick={() => setModalOpen(!modalOpen)}
+                                className="w-full flex items-center justify-center space-x-3 border border-zinc-800 text-zinc-200 bg-zinc-900 hover:bg-zinc-800 bg-opacity-25 hover:bg-opacity-25 transition-all cursor-pointer bg py-2 rounded-lg"
+                              >
                                 <CameraIcon className="h-5 w-5" />
                                 <span className="font-medium text-base">
                                   Screenshot
@@ -1874,6 +2071,322 @@ const Editor: NextPage = () => {
                               </div>
                             ))}
                           </div> */}
+                          </>
+                        );
+                      case "header":
+                        return (
+                          <>
+                            <Toggle
+                              enabled={config.header.show}
+                              setEnabled={(value) =>
+                                updateConfig({
+                                  header: {
+                                    ...config.header,
+                                    show: value,
+                                  },
+                                })
+                              }
+                            >
+                              <p className="font-medium text-zinc-300 whitespace-nowrap">
+                                Show
+                              </p>
+                            </Toggle>
+                            <Toggle
+                              enabled={config.header.anchored}
+                              setEnabled={(value) =>
+                                updateConfig({
+                                  header: {
+                                    ...config.header,
+                                    anchored: value,
+                                  },
+                                })
+                              }
+                            >
+                              <p className="font-medium text-zinc-300 whitespace-nowrap">
+                                Anchored
+                              </p>
+                            </Toggle>
+                            <div className="space-y-2">
+                              <h1 className="block text-sm font-medium text-zinc-100 ">
+                                Title
+                              </h1>
+                              <input
+                                value={config.header.content.title}
+                                onChange={(e) =>
+                                  updateConfig({
+                                    header: {
+                                      ...config.header,
+                                      content: {
+                                        ...config.header.content,
+                                        title: e.target.value,
+                                      },
+                                    },
+                                  })
+                                }
+                                placeholder="An all-in-on tool fo..."
+                                type="text"
+                                className="appearance-none form-input focus:outline-none flex w-full justify-between items-center space-x-2 border border-zinc-800 hover:border-blue-500 text-zinc-200 bg-zinc-900 hover:bg-blue-900 bg-opacity-25 hover:bg-opacity-25 transition-all cursor-pointer bg py-2 px-4 rounded-lg"
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <h1 className="block text-sm font-medium text-zinc-100 ">
+                                Subtitle
+                              </h1>
+                              <input
+                                value={config.header.content.subtitle}
+                                onChange={(e) =>
+                                  updateConfig({
+                                    header: {
+                                      ...config.header,
+                                      content: {
+                                        ...config.header.content,
+                                        subtitle: e.target.value,
+                                      },
+                                    },
+                                  })
+                                }
+                                placeholder="Amazing features for..."
+                                type="text"
+                                className="appearance-none form-input focus:outline-none flex w-full justify-between items-center space-x-2 border border-zinc-800 hover:border-blue-500 text-zinc-200 bg-zinc-900 hover:bg-blue-900 bg-opacity-25 hover:bg-opacity-25 transition-all cursor-pointer bg py-2 px-4 rounded-lg"
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <h1 className="block text-sm font-medium text-zinc-100 ">
+                                Align
+                              </h1>
+                              <div className="flex space-x-2 rounded-xl bg-gray-100 dark:bg-black dark:border dark:border-zinc-900 p-1 max-w-4xl ">
+                                <button
+                                  onClick={() =>
+                                    updateConfig({
+                                      header: {
+                                        ...config.header,
+                                        align: "horizontal",
+                                      },
+                                    })
+                                  }
+                                  className={clsx(
+                                    "flex w-full items-center justify-center rounded-lg py-2.5 text-center text-sm font-medium capitalize leading-5 space-x-1 ",
+                                    "ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2 dark:ring-transparent",
+                                    config.header.align === "horizontal"
+                                      ? "bg-white text-blue-700 dark:text-blue-500 shadow dark:bg-zinc-900"
+                                      : "text-gray-700 hover:bg-white/[0.12] hover:text-gray-600 dark:hover:text-zinc-200 dark:text-zinc-300"
+                                  )}
+                                >
+                                  <h1 className="hidden sm:block">
+                                    Horizontal
+                                  </h1>
+                                </button>
+                                <button
+                                  onClick={() =>
+                                    updateConfig({
+                                      header: {
+                                        ...config.header,
+                                        align: "vertical",
+                                      },
+                                    })
+                                  }
+                                  className={clsx(
+                                    "flex w-full items-center justify-center rounded-lg py-2.5 text-center text-sm font-medium capitalize leading-5 ",
+                                    "ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2 dark:ring-transparent",
+                                    config.header.align === "vertical"
+                                      ? "bg-white text-blue-700 dark:text-blue-500 shadow dark:bg-zinc-900"
+                                      : "text-gray-700 hover:bg-white/[0.12] hover:text-gray-600 dark:hover:text-zinc-200 dark:text-zinc-300"
+                                  )}
+                                >
+                                  <h1 className="hidden sm:block">Vertical</h1>
+                                </button>
+                              </div>
+                            </div>
+
+                            <div className=" space-y-2">
+                              <label className="font-medium text-zinc-300">
+                                Color
+                              </label>
+                              <div className="flex justify-between items-center">
+                                <ColorPicker
+                                  type="rgba"
+                                  color={config.header.content.color}
+                                  setColor={(val) =>
+                                    updateConfig({
+                                      header: {
+                                        ...config.header,
+                                        content: {
+                                          ...config.header.content,
+                                          color: val,
+                                        },
+                                      },
+                                    })
+                                  }
+                                />
+
+                                <button
+                                  onClick={() => {
+                                    updateConfig({
+                                      header: {
+                                        ...config.header,
+                                        content: {
+                                          ...config.header.content,
+                                          color: "rgba(0, 0, 0, 1)",
+                                        },
+                                      },
+                                    });
+                                  }}
+                                  className="flex items-center justify-center space-x-2 border border-zinc-800 text-zinc-200 bg-zinc-900 hover:bg-zinc-800 bg-opacity-25 hover:bg-opacity-25 transition-all cursor-pointer bg p-2 rounded-lg"
+                                >
+                                  <RefreshIcon className="h-4 w-4" />
+                                </button>
+                              </div>
+                            </div>
+                            <Toggle
+                              enabled={config.header.content.bold}
+                              setEnabled={(value) =>
+                                updateConfig({
+                                  header: {
+                                    ...config.header,
+                                    content: {
+                                      ...config.header.content,
+                                      bold: value,
+                                    },
+                                  },
+                                })
+                              }
+                            >
+                              <p className="font-medium text-zinc-300 whitespace-nowrap">
+                                Bold
+                              </p>
+                            </Toggle>
+                            <Toggle
+                              enabled={config.header.content.italic}
+                              setEnabled={(value) =>
+                                updateConfig({
+                                  header: {
+                                    ...config.header,
+                                    content: {
+                                      ...config.header.content,
+                                      italic: value,
+                                    },
+                                  },
+                                })
+                              }
+                            >
+                              <p className="font-medium text-zinc-300 whitespace-nowrap">
+                                Italic
+                              </p>
+                            </Toggle>
+                            <RangeSlider
+                              value={config.header.content.size}
+                              set={(val) =>
+                                updateConfig({
+                                  header: {
+                                    ...config.header,
+                                    content: {
+                                      ...config.header.content,
+                                      size: val,
+                                    },
+                                  },
+                                })
+                              }
+                              min={0}
+                              max={10}
+                            >
+                              <div className="flex space-x-2 items-center">
+                                <p className=" font-medium text-zinc-300 whitespace-nowrap">
+                                  Size
+                                </p>
+                                <button
+                                  className="hover:text-zinc-400 transition-colors"
+                                  onClick={() => {
+                                    updateConfig({
+                                      header: {
+                                        ...config.header,
+                                        content: {
+                                          ...config.header.content,
+                                          size: 1,
+                                        },
+                                      },
+                                    });
+                                  }}
+                                >
+                                  <RefreshIcon className="h-4" />
+                                </button>
+                              </div>
+                            </RangeSlider>
+                            <RangeSlider
+                              value={config.header.content.padding}
+                              set={(val) =>
+                                updateConfig({
+                                  header: {
+                                    ...config.header,
+                                    content: {
+                                      ...config.header.content,
+                                      padding: val,
+                                    },
+                                  },
+                                })
+                              }
+                              min={-5}
+                              max={15}
+                            >
+                              <div className="flex space-x-2 items-center">
+                                <p className=" font-medium text-zinc-300 whitespace-nowrap">
+                                  Padding
+                                </p>
+                                <button
+                                  className="hover:text-zinc-400 transition-colors"
+                                  onClick={() => {
+                                    updateConfig({
+                                      header: {
+                                        ...config.header,
+                                        content: {
+                                          ...config.header.content,
+                                          padding: 1,
+                                        },
+                                      },
+                                    });
+                                  }}
+                                >
+                                  <RefreshIcon className="h-4" />
+                                </button>
+                              </div>
+                            </RangeSlider>
+                            <RangeSlider
+                              value={config.header.content.translateX}
+                              set={(val) =>
+                                updateConfig({
+                                  header: {
+                                    ...config.header,
+                                    content: {
+                                      ...config.header.content,
+                                      translateX: val,
+                                    },
+                                  },
+                                })
+                              }
+                              min={-1}
+                              max={1}
+                            >
+                              <div className="flex space-x-2 items-center">
+                                <p className=" font-medium text-zinc-300 whitespace-nowrap">
+                                  translateX
+                                </p>
+                                <button
+                                  className="hover:text-zinc-400 transition-colors"
+                                  onClick={() => {
+                                    updateConfig({
+                                      header: {
+                                        ...config.header,
+                                        content: {
+                                          ...config.header.content,
+                                          translateX: 0,
+                                        },
+                                      },
+                                    });
+                                  }}
+                                >
+                                  <RefreshIcon className="h-4" />
+                                </button>
+                              </div>
+                            </RangeSlider>
                           </>
                         );
                       case "shadow":

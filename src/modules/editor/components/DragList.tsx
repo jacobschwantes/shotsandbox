@@ -1,4 +1,4 @@
-import { ImageDoc } from "@customTypes/EditorConfigs";
+import { ImageDoc } from "@customTypes/configs";
 import { UploadIcon, XIcon } from "@heroicons/react/outline";
 import { Reorder, useDragControls, useMotionValue } from "framer-motion";
 import React from "react";

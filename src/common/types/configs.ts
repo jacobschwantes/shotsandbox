@@ -21,6 +21,21 @@ export type PositionConfig = {
   x: number;
   y: number;
 };
+export type HeaderConfig = {
+  show: boolean;
+  anchored: boolean;
+  align: "horizontal" | "vertical";
+  content: {
+    title: string;
+    subtitle: string;
+    color: string;
+    bold: boolean;
+    italic: boolean;
+    size: number;
+    padding: number;
+    translateX: number;
+  };
+};
 export type SizeConfig = {
   scale: number;
   dimensions: {
@@ -57,6 +72,7 @@ export type Config = {
   id: string;
   name: string;
   size: SizeConfig;
+  header: HeaderConfig;
   orientation: OrientationConfig;
   position: PositionConfig;
   border: BorderConfig;
