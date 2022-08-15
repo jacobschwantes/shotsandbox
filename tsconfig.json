@@ -5,6 +5,7 @@
     "baseUrl": "./",
     "paths": {
       "@components/*": ["src/common/components/*"],
+      "@hooks/*": ["src/common/hooks/*"],
       "@styles/*": ["src/common/styles/*"],
       "@layouts/*": ["src/common/layouts/*"],
       "@customTypes/*": ["src/common/types/*"],

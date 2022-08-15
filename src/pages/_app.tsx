@@ -6,7 +6,7 @@ import {
 } from "react-firebase-hooks/auth";
 import { ToastContainer, toast } from "react-toastify";
 import { getAuth, signOut } from "firebase/auth";
-import { firebaseApp } from "../modules/auth/firebase/clientApp";
+import { firebaseApp } from "../modules/auth/firebase/client";
 import Login from "@modules/auth/login";
 import { useRouter } from "next/router";
 import AppLayout from "@layouts/AppLayout";

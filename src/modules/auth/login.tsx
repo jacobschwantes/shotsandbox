@@ -10,8 +10,8 @@ import {
   createUserWithEmailAndPassword,
 } from "firebase/auth";
 
-import { firebaseApp } from "./firebase/clientApp";
-import { handleAuthError } from "./utils/firebaseAuthErrors";
+import { firebaseApp } from "./firebase/client";
+import { handleAuthError } from "./utils/errors";
 import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
 const auth = getAuth(firebaseApp);
 type Tab = {

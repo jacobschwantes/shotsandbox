@@ -1,6 +1,6 @@
 import { withAuth } from "@utils/middlewares";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { firestore } from "@utils/firebase-admin";
+import { firestore } from "@modules/auth/firebase/admin";
 import { values, groupBy } from "lodash";
 import { DateTime, Interval } from "luxon";
 type ResData = {

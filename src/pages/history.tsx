@@ -1,17 +1,11 @@
 import { NextPage } from "next";
-import { addDoc, collection } from "firebase/firestore";
-import { db, firebaseApp } from "@modules/auth/firebase/clientApp";
-import { getAuth } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/solid";
-import { Card, LineChart, Spinner } from "@components/index";
-import { EmojiSadIcon, RefreshIcon } from "@heroicons/react/outline";
+import { RefreshIcon } from "@heroicons/react/outline";
 import clsx from "clsx";
-import { useUsage, useLogs } from "@utils/swr/hooks";
+import { useLogs } from "@hooks/swr";
 import { useSWRConfig } from "swr";
 import { Table, Modal } from "@components/index";
-import { useIdToken } from "src/common/hooks/auth";
-import { DateTime } from "luxon";
 const getInterval = (data) => {
   if (!data) return 0; 
   if (data.logs && data.logs.some((item) => item.status === "processing")) return 6000;

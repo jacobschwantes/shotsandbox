@@ -1,6 +1,6 @@
 import { withAuth } from "@utils/middlewares";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { firestore } from "@utils/firebase-admin";
+import { firestore } from "@modules/auth/firebase/admin";
 type Data = {
   message: string;
 };

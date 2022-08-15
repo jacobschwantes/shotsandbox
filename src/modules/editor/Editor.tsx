@@ -2,13 +2,10 @@ import type { NextPage } from "next";
 import Image from "next/image";
 import { useEffect, useState, useRef, useCallback } from "react";
 import clsx from "clsx";
-import { toPng, toJpeg, toBlob } from "html-to-image";
-import { FastAverageColor } from "fast-average-color";
-import Toolbar, { PreviewToolbar } from "./components/Toolbar";
-import ColorPicker from "./components/ColorPicker";
+import { Toolbar } from "./components/Frames";
 import { motion, AnimatePresence } from "framer-motion";
-import List from "./components/DragList";
 import { uniqueId } from "lodash";
+import { copyImageToClipboard, downloadJpg, downloadPng } from "./utils/export";
 import {
   BookmarkAltIcon,
   CollectionIcon,
@@ -23,51 +20,37 @@ import {
   TemplateIcon,
   DuplicateIcon,
   ChevronDownIcon,
-  TrashIcon,
   AnnotationIcon,
-  SwitchHorizontalIcon,
 } from "@heroicons/react/solid";
 import { toast } from "react-toastify";
+import { ChevronUpIcon, RefreshIcon } from "@heroicons/react/outline";
+import type { ImageDoc, Config } from "@customTypes/configs";
 import {
-  CameraIcon,
-  ChevronUpIcon,
-  RefreshIcon,
-  UploadIcon,
-} from "@heroicons/react/outline";
-import { RangeSlider } from "./components/RangeSlider";
-import type {
-  ImageDoc,
-  ShadowConfig,
-  FrameConfig,
-  Config,
-} from "@customTypes/configs";
-import Toggle from "./components/Toggle";
-import Tooltip from "@components/Tooltip";
-import Popover from "./components/Popover";
+  shadowPresets,
+  templates,
+  colorPresets,
+  gradientPresets,
+  framePresets,
+  defaultConfig,
+  dimensionPresets,
+} from "./presets";
+import { Tooltip, Popover } from "@components/index";
 import { Disclosure } from "@headlessui/react";
-import GradientList from "./components/GradientList";
-import ScreenshotModal from "./components/ScreenshotModal";
-const generateColorHex = () => {
-  return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
-};
-const fac = new FastAverageColor();
-const getColor = () => {
-  const index = Math.floor(Math.random() * images.length);
-  fac
-    .getColorAsync(images[index], { ignoredColor: [255, 0, 100, 255, 5] })
-    .then((color) => {
-      return color.hex;
-    })
-    .catch((e) => {
-      console.log(e);
-    });
-};
-const images = [
-  "response.jpeg",
-  "response2.jpeg",
-  "response3.jpeg",
-  "response5.jpeg",
-];
+import {
+  Background,
+  Border,
+  Frames,
+  Header,
+  Images,
+  Position,
+  Presets,
+  Rotation,
+  Shadow,
+  ScreenshotModal,
+  List
+} from "./components/index";
+import { useWindowSize } from "@hooks/window";
+
 const generalNavigation = [
   {
     id: 1,
@@ -127,941 +110,93 @@ const generalNavigation = [
     name: "Border",
     icon: BookmarkAltIcon,
   },
-];
-function useWindowSize(ref: React.RefObject<HTMLDivElement>) {
-  // Initialize state with undefined width/height so server and client renders match
-  // Learn more here: https://joshwcomeau.com/react/the-perils-of-rehydration/
-  const [windowSize, setWindowSize] = useState({
-    width: ref.current?.getBoundingClientRect().width ?? 0,
-    height: ref.current?.getBoundingClientRect().height ?? 0,
-  });
-  useEffect(() => {
-    // Handler to call on window resize
-    function handleResize() {
-      // Set window width/height to state
-      const dimensions = ref.current?.getBoundingClientRect();
-      setWindowSize({
-        width: dimensions?.width ?? 0,
-        height: dimensions?.height ?? 0,
-      });
-    }
-    // Add event listener
-    window.addEventListener("resize", handleResize);
-    // Call handler right away so state gets updated with initial window size
-    handleResize();
-    // Remove event listener on cleanup
-    return () => window.removeEventListener("resize", handleResize);
-  }, []); // Empty array ensures that effect is only run on mount
-  return windowSize;
-}
-
-const presets: Config[] = [
   {
-    id: "config1",
-    preview: "preview_123.png",
-    name: "default",
-    size: {
-      scale: 1,
-      dimensions: {
-        aspectRatio: "16 / 9",
-        width: 1920,
-        height: 1080,
-      },
-    },
-    orientation: {
-      rotateX: 45,
-      rotateY: 0,
-      rotateZ: 0,
-      perspective: 3000,
-    },
-    position: {
-      x: 0,
-      y: 0.14,
-    },
-    background: {
-      type: "gradient",
-      color: "#252525",
-      gradient: {
-        stops: [
-          {
-            color: "#000000",
-            id: 1,
-          },
-          {
-            color: "#0c0c0c",
-            id: 2,
-          },
-          {
-            color: "#0b0b0b",
-            id: 3,
-          },
-          {
-            color: "#000000",
-            id: 4,
-          },
-        ],
-        direction: 90,
-      },
-    },
-    shadow: {
-      color: "rgba(255, 255, 255, 0)",
-      type: "2xl",
-      previewSize: "0px 10px 20px",
-      size: "0px 100px 200px",
-    },
-    border: {
-      radius: 2,
-      width: 0,
-      color: "rgba(0, 0, 0, 1)",
-    },
-    header: {
-      show: true,
-      anchored: false,
-      align: "vertical",
-      content: {
-        title: "The best image editing tool for founders",
-        subtitle: "Turn boring screenshots into stunning graphics",
-        color: "rgba(255, 255, 255, 1)",
-        bold: true,
-        italic: false,
-        size: 3.87,
-        padding: -4.36,
-        translateX: 0,
-      },
-    },
-    frame: {
-      show: true,
-      dark: true,
-      opacity: 0.3,
-      buttons: {
-        show: true,
-        dark: true,
-        solid: false,
-      },
-      searchBar: {
-        show: true,
-      },
-    },
-  },
-  {
-    id: "config2",
-    preview: "preset_2.png",
-    position: {
-      x: 0.02,
-      y: -0.05,
-    },
-
-    orientation: {
-      rotateX: 45,
-      rotateY: 11.48,
-      rotateZ: -23.65,
-      perspective: 3000,
-    },
-    background: {
-      color: "#000000",
-      type: "gradient",
-      gradient: {
-        stops: [
-          { color: "#cd96b3", id: "sdf454sdf" },
-          { color: "#bda6f0", id: "sdf454sdf" },
-        ],
-        direction: 70,
-      },
-    },
-    size: {
-      scale: 0.9,
-      dimensions: {
-        aspectRatio: "16 / 9",
-        width: 1920,
-        height: 1080,
-      },
-    },
-
-    shadow: {
-      color: "rgba(255, 255, 255, 0)",
-      type: "2xl",
-      previewSize: "0px 10px 20px",
-      size: "0px 100px 200px",
-    },
-    border: {
-      radius: 2,
-      width: 0,
-      color: "rgba(0, 0, 0, 1)",
-    },
-    header: {
-      show: false,
-      anchored: false,
-      align: "vertical",
-      content: {
-        title: "The best image editing tool for founders",
-        subtitle: "Turn boring screenshots into stunning graphics",
-        color: "rgba(255, 255, 255, 1)",
-        bold: true,
-        italic: false,
-        size: 3.87,
-        padding: -4.36,
-        translateX: 0,
-      },
-    },
-    frame: {
-      show: true,
-      dark: false,
-      opacity: 0.3,
-      buttons: {
-        show: true,
-        dark: true,
-        solid: false,
-      },
-      searchBar: {
-        show: true,
-      },
-    },
-  },
-  {
-    id: "config3",
-    preview: "preset_1.png",
-    position: {
-      x: 0.2,
-      y: 0.14,
-    },
-
-    orientation: {
-      rotateX: 45,
-      rotateY: 8.26,
-      rotateZ: -19.38,
-      perspective: 3000,
-    },
-    background: {
-      color: "#000000",
-      type: "gradient",
-      gradient: {
-        stops: [
-          { color: "#cd96b3", id: "sdf454sdf" },
-          { color: "#bda6f0", id: "sdf454sdf" },
-        ],
-        direction: 70,
-      },
-    },
-    size: {
-      scale: 1.2,
-      dimensions: {
-        aspectRatio: "16 / 9",
-        width: 1920,
-        height: 1080,
-      },
-    },
-
-    shadow: {
-      color: "rgba(255, 255, 255, 0)",
-      type: "2xl",
-      previewSize: "0px 10px 20px",
-      size: "0px 100px 200px",
-    },
-    border: {
-      radius: 2,
-      width: 0,
-      color: "rgba(0, 0, 0, 1)",
-    },
-    header: {
-      show: false,
-      anchored: false,
-      align: "vertical",
-      content: {
-        title: "The best image editing tool for founders",
-        subtitle: "Turn boring screenshots into stunning graphics",
-        color: "rgba(255, 255, 255, 1)",
-        bold: true,
-        italic: false,
-        size: 3.87,
-        padding: -4.36,
-        translateX: 0,
-      },
-    },
-    frame: {
-      show: true,
-      dark: false,
-      opacity: 0.3,
-      buttons: {
-        show: true,
-        dark: true,
-        solid: false,
-      },
-      searchBar: {
-        show: true,
-      },
-    },
+    id: 11,
+    name: "Watermark",
+    icon: (props) => (
+      <svg fill="currentColor" {...props} viewBox="0 0 700 700">
+        <defs>
+          <symbol id="x" overflow="visible">
+            <path d="m18.766-1.125c-0.96875 0.5-1.9805 0.875-3.0312 1.125-1.043 0.25781-2.1367 0.39062-3.2812 0.39062-3.3984 0-6.0898-0.94531-8.0781-2.8438-1.9922-1.9062-2.9844-4.4844-2.9844-7.7344 0-3.2578 0.99219-5.8359 2.9844-7.7344 1.9883-1.9062 4.6797-2.8594 8.0781-2.8594 1.1445 0 2.2383 0.13281 3.2812 0.39062 1.0508 0.25 2.0625 0.625 3.0312 1.125v4.2188c-0.98047-0.65625-1.9453-1.1406-2.8906-1.4531-0.94922-0.3125-1.9492-0.46875-3-0.46875-1.875 0-3.3516 0.60547-4.4219 1.8125-1.0742 1.1992-1.6094 2.8555-1.6094 4.9688 0 2.1055 0.53516 3.7617 1.6094 4.9688 1.0703 1.1992 2.5469 1.7969 4.4219 1.7969 1.0508 0 2.0508-0.14844 3-0.45312 0.94531-0.3125 1.9102-0.80078 2.8906-1.4688z" />
+          </symbol>
+          <symbol id="c" overflow="visible">
+            <path d="m13.734-11.141c-0.4375-0.19531-0.87109-0.34375-1.2969-0.4375-0.41797-0.10156-0.83984-0.15625-1.2656-0.15625-1.2617 0-2.2305 0.40625-2.9062 1.2188-0.67969 0.80469-1.0156 1.9531-1.0156 3.4531v7.0625h-4.8906v-15.312h4.8906v2.5156c0.625-1 1.3438-1.7266 2.1562-2.1875 0.82031-0.46875 1.8008-0.70312 2.9375-0.70312 0.16406 0 0.34375 0.011719 0.53125 0.03125 0.19531 0.011719 0.47656 0.039062 0.84375 0.078125z" />
+          </symbol>
+          <symbol id="a" overflow="visible">
+            <path d="m17.641-7.7031v1.4062h-11.453c0.125 1.1484 0.53906 2.0078 1.25 2.5781 0.70703 0.57422 1.7031 0.85938 2.9844 0.85938 1.0312 0 2.082-0.14844 3.1562-0.45312 1.082-0.3125 2.1914-0.77344 3.3281-1.3906v3.7656c-1.1562 0.4375-2.3125 0.76562-3.4688 0.98438-1.1562 0.22656-2.3125 0.34375-3.4688 0.34375-2.7734 0-4.9297-0.70312-6.4688-2.1094-1.5312-1.4062-2.2969-3.3789-2.2969-5.9219 0-2.5 0.75391-4.4609 2.2656-5.8906 1.5078-1.4375 3.582-2.1562 6.2188-2.1562 2.4062 0 4.332 0.73047 5.7812 2.1875 1.4453 1.4492 2.1719 3.3828 2.1719 5.7969zm-5.0312-1.625c0-0.92578-0.27344-1.6719-0.8125-2.2344-0.54297-0.57031-1.25-0.85938-2.125-0.85938-0.94922 0-1.7188 0.26562-2.3125 0.79688s-0.96484 1.2969-1.1094 2.2969z" />
+          </symbol>
+          <symbol id="e" overflow="visible">
+            <path d="m9.2188-6.8906c-1.0234 0-1.793 0.17188-2.3125 0.51562-0.51172 0.34375-0.76562 0.85547-0.76562 1.5312 0 0.625 0.20703 1.1172 0.625 1.4688 0.41406 0.34375 0.98828 0.51562 1.7188 0.51562 0.92578 0 1.7031-0.32812 2.3281-0.98438 0.63281-0.66406 0.95312-1.4922 0.95312-2.4844v-0.5625zm7.4688-1.8438v8.7344h-4.9219v-2.2656c-0.65625 0.92969-1.3984 1.6055-2.2188 2.0312-0.82422 0.41406-1.8242 0.625-3 0.625-1.5859 0-2.8711-0.45703-3.8594-1.375-0.99219-0.92578-1.4844-2.1289-1.4844-3.6094 0-1.7891 0.61328-3.1016 1.8438-3.9375 1.2383-0.84375 3.1797-1.2656 5.8281-1.2656h2.8906v-0.39062c0-0.76953-0.30859-1.332-0.92188-1.6875-0.61719-0.36328-1.5703-0.54688-2.8594-0.54688-1.0547 0-2.0312 0.10547-2.9375 0.3125-0.89844 0.21094-1.7305 0.52344-2.5 0.9375v-3.7344c1.0391-0.25 2.0859-0.44141 3.1406-0.57812 1.0625-0.13281 2.125-0.20312 3.1875-0.20312 2.7578 0 4.75 0.54688 5.9688 1.6406 1.2266 1.0859 1.8438 2.8555 1.8438 5.3125z" />
+          </symbol>
+          <symbol id="b" overflow="visible">
+            <path d="m7.7031-19.656v4.3438h5.0469v3.5h-5.0469v6.5c0 0.71094 0.14062 1.1875 0.42188 1.4375s0.83594 0.375 1.6719 0.375h2.5156v3.5h-4.1875c-1.9375 0-3.3125-0.39844-4.125-1.2031-0.80469-0.8125-1.2031-2.1797-1.2031-4.1094v-6.5h-2.4219v-3.5h2.4219v-4.3438z" />
+          </symbol>
+          <symbol id="k" overflow="visible">
+            <path d="m12.766-13.078v-8.2031h4.9219v21.281h-4.9219v-2.2188c-0.66797 0.90625-1.4062 1.5703-2.2188 1.9844s-1.7578 0.625-2.8281 0.625c-1.8867 0-3.4336-0.75-4.6406-2.25-1.2109-1.5-1.8125-3.4258-1.8125-5.7812 0-2.3633 0.60156-4.2969 1.8125-5.7969 1.207-1.5 2.7539-2.25 4.6406-2.25 1.0625 0 2 0.21484 2.8125 0.64062 0.82031 0.42969 1.5664 1.0859 2.2344 1.9688zm-3.2188 9.9219c1.0391 0 1.8359-0.37891 2.3906-1.1406 0.55078-0.76953 0.82812-1.8828 0.82812-3.3438 0-1.457-0.27734-2.5664-0.82812-3.3281-0.55469-0.76953-1.3516-1.1562-2.3906-1.1562-1.043 0-1.8398 0.38672-2.3906 1.1562-0.55469 0.76172-0.82812 1.8711-0.82812 3.3281 0 1.4609 0.27344 2.5742 0.82812 3.3438 0.55078 0.76172 1.3477 1.1406 2.3906 1.1406z" />
+          </symbol>
+          <symbol id="j" overflow="visible">
+            <path d="m10.5-3.1562c1.0508 0 1.8516-0.37891 2.4062-1.1406 0.55078-0.76953 0.82812-1.8828 0.82812-3.3438 0-1.457-0.27734-2.5664-0.82812-3.3281-0.55469-0.76953-1.3555-1.1562-2.4062-1.1562-1.0547 0-1.8594 0.38672-2.4219 1.1562-0.55469 0.77344-0.82812 1.8828-0.82812 3.3281 0 1.4492 0.27344 2.5586 0.82812 3.3281 0.5625 0.77344 1.3672 1.1562 2.4219 1.1562zm-3.25-9.9219c0.67578-0.88281 1.4219-1.5391 2.2344-1.9688 0.82031-0.42578 1.7656-0.64062 2.8281-0.64062 1.8945 0 3.4453 0.75 4.6562 2.25 1.207 1.5 1.8125 3.4336 1.8125 5.7969 0 2.3555-0.60547 4.2812-1.8125 5.7812-1.2109 1.5-2.7617 2.25-4.6562 2.25-1.0625 0-2.0078-0.21094-2.8281-0.625-0.8125-0.42578-1.5586-1.0859-2.2344-1.9844v2.2188h-4.8906v-21.281h4.8906z" />
+          </symbol>
+          <symbol id="i" overflow="visible">
+            <path d="m0.34375-15.312h4.8906l4.125 10.391 3.5-10.391h4.8906l-6.4375 16.766c-0.64844 1.6953-1.4023 2.8828-2.2656 3.5625-0.86719 0.6875-2 1.0312-3.4062 1.0312h-2.8438v-3.2188h1.5312c0.83203 0 1.4375-0.13672 1.8125-0.40625 0.38281-0.26172 0.67969-0.73047 0.89062-1.4062l0.14062-0.42188z" />
+          </symbol>
+          <symbol id="h" overflow="visible">
+            <path d="m2.5781-20.406h5.25v18.422c0 2.5391-0.69531 4.4414-2.0781 5.7031-1.375 1.2578-3.4609 1.8906-6.25 1.8906h-1.0781v-3.9844h0.82812c1.0938 0 1.9219-0.30859 2.4844-0.92188 0.5625-0.60547 0.84375-1.5 0.84375-2.6875z" />
+          </symbol>
+          <symbol id="g" overflow="visible">
+            <path d="m2.1875-5.9688v-9.3438h4.9219v1.5312c0 0.83594-0.007813 1.875-0.015625 3.125-0.011719 1.25-0.015625 2.0859-0.015625 2.5 0 1.2422 0.03125 2.1328 0.09375 2.6719 0.070313 0.54297 0.17969 0.93359 0.32812 1.1719 0.20703 0.32422 0.47266 0.57422 0.79688 0.75 0.32031 0.16797 0.69141 0.25 1.1094 0.25 1.0195 0 1.8203-0.39062 2.4062-1.1719 0.58203-0.78125 0.875-1.8672 0.875-3.2656v-7.5625h4.8906v15.312h-4.8906v-2.2188c-0.74219 0.89844-1.5234 1.5586-2.3438 1.9844-0.82422 0.41406-1.7344 0.625-2.7344 0.625-1.7617 0-3.1055-0.53906-4.0312-1.625-0.92969-1.082-1.3906-2.6602-1.3906-4.7344z" />
+          </symbol>
+          <symbol id="w" overflow="visible">
+            <path d="m14.312-14.828v3.7188c-1.043-0.4375-2.0547-0.76562-3.0312-0.98438-0.98047-0.21875-1.9023-0.32812-2.7656-0.32812-0.92969 0-1.6211 0.11719-2.0781 0.34375-0.44922 0.23047-0.67188 0.58984-0.67188 1.0781 0 0.38672 0.17188 0.68359 0.51562 0.89062 0.34375 0.21094 0.95703 0.36719 1.8438 0.46875l0.85938 0.125c2.5078 0.32422 4.1953 0.85156 5.0625 1.5781 0.86328 0.73047 1.2969 1.8711 1.2969 3.4219 0 1.6367-0.60547 2.8672-1.8125 3.6875-1.1992 0.8125-2.9922 1.2188-5.375 1.2188-1.0234 0-2.0742-0.078125-3.1562-0.23438-1.0742-0.15625-2.1797-0.39453-3.3125-0.71875v-3.7188c0.96875 0.48047 1.9609 0.83984 2.9844 1.0781 1.0312 0.23047 2.0781 0.34375 3.1406 0.34375 0.95703 0 1.6758-0.12891 2.1562-0.39062 0.47656-0.26953 0.71875-0.66406 0.71875-1.1875 0-0.4375-0.16797-0.75781-0.5-0.96875-0.33594-0.21875-0.99609-0.38281-1.9844-0.5l-0.85938-0.10938c-2.1797-0.26953-3.7031-0.77344-4.5781-1.5156-0.875-0.73828-1.3125-1.8594-1.3125-3.3594 0-1.625 0.55078-2.8281 1.6562-3.6094 1.1133-0.78906 2.8203-1.1875 5.125-1.1875 0.89453 0 1.8359 0.074219 2.8281 0.21875 1 0.13672 2.082 0.35156 3.25 0.64062z" />
+          </symbol>
+          <symbol id="v" overflow="visible">
+            <path d="m2.3594-15.312h4.8906v15.312h-4.8906zm0-5.9688h4.8906v4h-4.8906z" />
+          </symbol>
+          <symbol id="f" overflow="visible">
+            <path d="m17.75-9.3281v9.3281h-4.9219v-7.1406c0-1.3203-0.03125-2.2344-0.09375-2.7344s-0.16797-0.86719-0.3125-1.1094c-0.1875-0.3125-0.44922-0.55469-0.78125-0.73438-0.32422-0.17578-0.69531-0.26562-1.1094-0.26562-1.0234 0-1.8242 0.39844-2.4062 1.1875-0.58594 0.78125-0.875 1.8711-0.875 3.2656v7.5312h-4.8906v-15.312h4.8906v2.2344c0.73828-0.88281 1.5195-1.5391 2.3438-1.9688 0.83203-0.42578 1.75-0.64062 2.75-0.64062 1.7695 0 3.1133 0.54688 4.0312 1.6406 0.91406 1.0859 1.375 2.6562 1.375 4.7188z" />
+          </symbol>
+          <symbol id="u" overflow="visible">
+            <path d="m10.75-12.516c0.82031 0 1.4453-0.17969 1.875-0.54688 0.4375-0.36328 0.65625-0.89844 0.65625-1.6094 0-0.69531-0.21875-1.2266-0.65625-1.5938-0.42969-0.375-1.0547-0.5625-1.875-0.5625h-2.9219v4.3125zm0.17188 8.9375c1.0625 0 1.8594-0.22266 2.3906-0.67188 0.53125-0.44531 0.79688-1.125 0.79688-2.0312 0-0.88281-0.26562-1.5469-0.79688-1.9844-0.52344-0.4375-1.3203-0.65625-2.3906-0.65625h-3.0938v5.3438zm4.8906-7.3438c1.1328 0.32422 2.0078 0.92969 2.625 1.8125 0.625 0.88672 0.9375 1.9688 0.9375 3.25 0 1.9688-0.66797 3.4375-2 4.4062-1.3359 0.96875-3.3555 1.4531-6.0625 1.4531h-8.7344v-20.406h7.8906c2.832 0 4.8828 0.42969 6.1562 1.2812 1.2812 0.85547 1.9219 2.2266 1.9219 4.1094 0 1-0.23438 1.8516-0.70312 2.5469-0.46875 0.6875-1.1484 1.2031-2.0312 1.5469z" />
+          </symbol>
+          <symbol id="t" overflow="visible">
+            <path d="m2.3594-21.281h4.8906v21.281h-4.8906z" />
+          </symbol>
+          <symbol id="s" overflow="visible">
+            <path d="m2.3594-21.281h4.8906v11.594l5.625-5.625h5.6875l-7.4688 7.0312 8.0625 8.2812h-5.9375l-5.9688-6.3906v6.3906h-4.8906z" />
+          </symbol>
+          <symbol id="r" overflow="visible">
+            <path d="m12.422-21.281v3.2188h-2.7031c-0.6875 0-1.1719 0.125-1.4531 0.375-0.27344 0.25-0.40625 0.6875-0.40625 1.3125v1.0625h4.1875v3.5h-4.1875v11.812h-4.8906v-11.812h-2.4375v-3.5h2.4375v-1.0625c0-1.6641 0.46094-2.8984 1.3906-3.7031 0.92578-0.80078 2.3672-1.2031 4.3281-1.2031z" />
+          </symbol>
+          <symbol id="d" overflow="visible">
+            <path d="m9.6406-12.188c-1.0859 0-1.9141 0.39062-2.4844 1.1719-0.57422 0.78125-0.85938 1.9062-0.85938 3.375s0.28516 2.5938 0.85938 3.375c0.57031 0.77344 1.3984 1.1562 2.4844 1.1562 1.0625 0 1.875-0.38281 2.4375-1.1562 0.57031-0.78125 0.85938-1.9062 0.85938-3.375s-0.28906-2.5938-0.85938-3.375c-0.5625-0.78125-1.375-1.1719-2.4375-1.1719zm0-3.5c2.6328 0 4.6914 0.71484 6.1719 2.1406 1.4766 1.418 2.2188 3.3867 2.2188 5.9062 0 2.5117-0.74219 4.4805-2.2188 5.9062-1.4805 1.418-3.5391 2.125-6.1719 2.125-2.6484 0-4.7148-0.70703-6.2031-2.125-1.4922-1.4258-2.2344-3.3945-2.2344-5.9062 0-2.5195 0.74219-4.4883 2.2344-5.9062 1.4883-1.4258 3.5547-2.1406 6.2031-2.1406z" />
+          </symbol>
+          <symbol id="q" overflow="visible">
+            <path d="m16.547-12.766c0.61328-0.94531 1.3477-1.6719 2.2031-2.1719 0.85156-0.5 1.7891-0.75 2.8125-0.75 1.7578 0 3.0977 0.54688 4.0156 1.6406 0.92578 1.0859 1.3906 2.6562 1.3906 4.7188v9.3281h-4.9219v-7.9844-0.35938c0.007813-0.13281 0.015625-0.32031 0.015625-0.5625 0-1.082-0.16406-1.8633-0.48438-2.3438-0.3125-0.48828-0.82422-0.73438-1.5312-0.73438-0.92969 0-1.6484 0.38672-2.1562 1.1562-0.51172 0.76172-0.77344 1.8672-0.78125 3.3125v7.5156h-4.9219v-7.9844c0-1.6953-0.14844-2.7852-0.4375-3.2656-0.29297-0.48828-0.8125-0.73438-1.5625-0.73438-0.9375 0-1.6641 0.38672-2.1719 1.1562-0.51172 0.76172-0.76562 1.8594-0.76562 3.2969v7.5312h-4.9219v-15.312h4.9219v2.2344c0.60156-0.86328 1.2891-1.5156 2.0625-1.9531 0.78125-0.4375 1.6406-0.65625 2.5781-0.65625 1.0625 0 2 0.25781 2.8125 0.76562 0.8125 0.51172 1.4258 1.2305 1.8438 2.1562z" />
+          </symbol>
+          <symbol id="p" overflow="visible">
+            <path d="m17.75-9.3281v9.3281h-4.9219v-7.1094c0-1.3438-0.03125-2.2656-0.09375-2.7656s-0.16797-0.86719-0.3125-1.1094c-0.1875-0.3125-0.44922-0.55469-0.78125-0.73438-0.32422-0.17578-0.69531-0.26562-1.1094-0.26562-1.0234 0-1.8242 0.39844-2.4062 1.1875-0.58594 0.78125-0.875 1.8711-0.875 3.2656v7.5312h-4.8906v-21.281h4.8906v8.2031c0.73828-0.88281 1.5195-1.5391 2.3438-1.9688 0.83203-0.42578 1.75-0.64062 2.75-0.64062 1.7695 0 3.1133 0.54688 4.0312 1.6406 0.91406 1.0859 1.375 2.6562 1.375 4.7188z" />
+          </symbol>
+          <symbol id="o" overflow="visible">
+            <path d="m2.5781-20.406h5.875l7.4219 14v-14h4.9844v20.406h-5.875l-7.4219-14v14h-4.9844z" />
+          </symbol>
+          <symbol id="n" overflow="visible">
+            <path d="m2.5781-20.406h8.7344c2.5938 0 4.582 0.57812 5.9688 1.7344 1.3945 1.1484 2.0938 2.7891 2.0938 4.9219 0 2.1367-0.69922 3.7812-2.0938 4.9375-1.3867 1.1562-3.375 1.7344-5.9688 1.7344h-3.4844v7.0781h-5.25zm5.25 3.8125v5.7031h2.9219c1.0195 0 1.8047-0.25 2.3594-0.75 0.5625-0.5 0.84375-1.2031 0.84375-2.1094 0-0.91406-0.28125-1.6172-0.84375-2.1094-0.55469-0.48828-1.3398-0.73438-2.3594-0.73438z" />
+          </symbol>
+          <symbol id="m" overflow="visible">
+            <path d="m2.3594-15.312h4.8906v15.031c0 2.0508-0.49609 3.6172-1.4844 4.7031-0.98047 1.082-2.4062 1.625-4.2812 1.625h-2.4219v-3.2188h0.85938c0.92578 0 1.5625-0.21094 1.9062-0.625 0.35156-0.41797 0.53125-1.2461 0.53125-2.4844zm0-5.9688h4.8906v4h-4.8906z" />
+          </symbol>
+          <symbol id="l" overflow="visible">
+            <path d="m14.719-14.828v3.9844c-0.65625-0.45703-1.3242-0.79688-2-1.0156-0.66797-0.21875-1.3594-0.32812-2.0781-0.32812-1.3672 0-2.4336 0.40234-3.2031 1.2031-0.76172 0.79297-1.1406 1.9062-1.1406 3.3438 0 1.4297 0.37891 2.543 1.1406 3.3438 0.76953 0.79297 1.8359 1.1875 3.2031 1.1875 0.75781 0 1.4844-0.10938 2.1719-0.32812 0.6875-0.22656 1.3203-0.56641 1.9062-1.0156v4c-0.76172 0.28125-1.5391 0.48828-2.3281 0.625-0.78125 0.14453-1.5742 0.21875-2.375 0.21875-2.7617 0-4.9219-0.70703-6.4844-2.125-1.5547-1.4141-2.3281-3.3828-2.3281-5.9062 0-2.5312 0.77344-4.5039 2.3281-5.9219 1.5625-1.4141 3.7227-2.125 6.4844-2.125 0.80078 0 1.5938 0.074219 2.375 0.21875 0.78125 0.13672 1.5547 0.35156 2.3281 0.64062z" />
+          </symbol>
+        </defs>
+        <g>
+          <path d="m136.47 500.53h427.22c10.148 0.03125 19.891-3.9805 27.078-11.145 7.1875-7.168 11.227-16.898 11.227-27.047v-364.67c0-10.129-4.0234-19.844-11.188-27.008-7.1602-7.1602-16.875-11.184-27.004-11.184h-427.34c-10.129 0-19.844 4.0234-27.008 11.184-7.1602 7.1641-11.184 16.879-11.184 27.008v364.67c0 10.129 4.0234 19.844 11.184 27.008 7.1641 7.1602 16.879 11.184 27.008 11.184zm240.07-186.93c0-3.8281 1.5234-7.4961 4.2344-10.199 2.7148-2.6992 6.3867-4.2109 10.215-4.1953h161.22c3.8281-0.015625 7.5039 1.4961 10.215 4.1953 2.7109 2.7031 4.2344 6.3711 4.2344 10.199v137.76c0.015626 3.8359-1.5039 7.5195-4.2148 10.234-2.7148 2.7109-6.3984 4.2305-10.234 4.2148h-161.22c-3.8359 0.015625-7.5195-1.5039-10.234-4.2148-2.7109-2.7148-4.2305-6.3984-4.2148-10.234z" />
+        </g>
+      </svg>
+    ),
   },
 ];
 
-const framePresets: { type: string; config: FrameConfig }[] = [
-  {
-    type: "Transparent",
-    config: {
-      show: true,
-      dark: false,
-      opacity: 0.3,
-      buttons: {
-        show: true,
-        dark: true,
-        solid: true,
-      },
-      searchBar: {
-        show: true,
-      },
-    },
-  },
-  {
-    type: "Dark",
-    config: {
-      show: true,
-      dark: true,
-      opacity: 1,
-      buttons: {
-        show: true,
-        dark: true,
-        solid: true,
-      },
-      searchBar: {
-        show: true,
-      },
-    },
-  },
-  {
-    type: "Light, dark buttons",
-    config: {
-      show: true,
-      dark: false,
-      opacity: 1,
-      buttons: {
-        show: true,
-        dark: true,
-        solid: true,
-      },
-      searchBar: {
-        show: true,
-      },
-    },
-  },
-  {
-    type: "Light, no search bar",
-    config: {
-      show: true,
-      dark: false,
-      opacity: 1,
-      buttons: {
-        show: true,
-        dark: false,
-        solid: true,
-      },
-      searchBar: {
-        show: false,
-      },
-    },
-  },
-  {
-    type: "Light, empty buttons",
-    config: {
-      show: true,
-      dark: false,
-      opacity: 1,
-      buttons: {
-        show: true,
-        dark: false,
-        solid: false,
-      },
-      searchBar: {
-        show: true,
-      },
-    },
-  },
-];
-
-const gradientPresets = [
-  {
-    stops: [
-      { color: "#00ff87", id: 1 },
-      { color: "#60efff", id: 2 },
-    ],
-    direction: 90,
-  },
-  {
-    stops: [
-      { color: "#0061ff", id: 1 },
-      { color: "#60efff", id: 2 },
-    ],
-    direction: 90,
-  },
-  {
-    stops: [
-      { color: "#ff1b6b", id: 1 },
-      { color: "#45caff", id: 2 },
-    ],
-    direction: 90,
-  },
-  {
-    stops: [
-      { color: "#40c9ff", id: 1 },
-      { color: "#e81cff", id: 2 },
-    ],
-    direction: 90,
-  },
-  {
-    stops: [
-      { color: "#ff930f", id: 1 },
-      { color: "#fff95b", id: 2 },
-    ],
-    direction: 90,
-  },
-  {
-    stops: [
-      { color: "#ff0f7b", id: 1 },
-      { color: "#f89b29", id: 2 },
-    ],
-    direction: 90,
-  },
-  {
-    stops: [
-      { color: "#bf0fff", id: 1 },
-      { color: "#cbff49", id: 2 },
-    ],
-    direction: 90,
-  },
-  {
-    stops: [
-      { color: "#696eff", id: 1 },
-      { color: "#f8acff", id: 2 },
-    ],
-    direction: 90,
-  },
-  {
-    stops: [
-      { color: "#ff5858", id: 1 },
-      { color: "#ffc8c8", id: 2 },
-    ],
-    direction: 90,
-  },
-  {
-    stops: [
-      { color: "#595cff", id: 1 },
-      { color: "#c6f8ff", id: 2 },
-    ],
-    direction: 90,
-  },
-  {
-    stops: [
-      { color: "#f9c58d", id: 1 },
-      { color: "#f492f0", id: 2 },
-    ],
-    direction: 90,
-  },
-  {
-    stops: [
-      { color: "#84ffc9", id: 1 },
-      { color: "#aab2ff", id: 2 },
-      { color: "#eca0ff", id: 3 },
-    ],
-    direction: 90,
-  },
-  {
-    stops: [
-      { color: "#f492f0", id: 1 },
-      { color: "#a18dce", id: 2 },
-    ],
-    direction: 90,
-  },
-  {
-    stops: [
-      { color: "#f6d5f7", id: 1 },
-      { color: "#fbe9d7", id: 2 },
-    ],
-    direction: 90,
-  },
-  {
-    stops: [
-      { color: "#e9b7ce", id: 1 },
-      { color: "#d3f3f1", id: 2 },
-    ],
-    direction: 90,
-  },
-  {
-    stops: [
-      { color: "#1dbde6", id: 1 },
-      { color: "#f1515e", id: 2 },
-    ],
-    direction: 90,
-  },
-  {
-    stops: [
-      { color: "#57ebde", id: 1 },
-      { color: "#aefb2a", id: 2 },
-    ],
-    direction: 90,
-  },
-  {
-    stops: [
-      { color: "#f4f269", id: 1 },
-      { color: "#5cb270", id: 2 },
-    ],
-    direction: 90,
-  },
-  {
-    stops: [
-      { color: "#b597f6", id: 1 },
-      { color: "#96c6ea", id: 2 },
-    ],
-    direction: 90,
-  },
-  {
-    stops: [
-      { color: "#f6cfbe", id: 1 },
-      { color: "#b9dcf2", id: 2 },
-    ],
-    direction: 90,
-  },
-  {
-    stops: [
-      { color: "#d397fa", id: 1 },
-      { color: "#8364e8", id: 2 },
-    ],
-    direction: 90,
-  },
-  {
-    stops: [
-      { color: "#ffcb6b", id: 1 },
-      { color: "#3d8bff", id: 2 },
-    ],
-    direction: 90,
-  },
-  {
-    stops: [
-      { color: "#95f9c3", id: 1 },
-      { color: "#0b3866", id: 2 },
-    ],
-    direction: 90,
-  },
-  {
-    stops: [
-      { color: "#83f5e5", id: 1 },
-      { color: "#e761bd", id: 2 },
-    ],
-    direction: 90,
-  },
-  {
-    stops: [
-      { color: "#e8bdf9", id: 1 },
-      { color: "#d8ded6", id: 2 },
-    ],
-    direction: 90,
-  },
-  {
-    stops: [
-      { color: "#6d90b9", id: 1 },
-      { color: "#bbc7dc", id: 2 },
-    ],
-    direction: 90,
-  },
-  {
-    stops: [
-      { color: "#bc1b68", id: 1 },
-      { color: "#d3989b", id: 2 },
-    ],
-    direction: 90,
-  },
-  {
-    stops: [
-      { color: "#f28367", id: 1 },
-      { color: "#ff5282", id: 2 },
-    ],
-    direction: 90,
-  },
-  {
-    stops: [
-      { color: "#e91fa8", id: 1 },
-      { color: "#b9dfee", id: 2 },
-    ],
-    direction: 90,
-  },
-  {
-    stops: [
-      { color: "#cad0ff", id: 1 },
-      { color: "#e3e3e3", id: 2 },
-    ],
-    direction: 90,
-  },
-  {
-    stops: [
-      { color: "#dd83ad", id: 1 },
-      { color: "#c3e1fc", id: 2 },
-    ],
-    direction: 90,
-  },
-  {
-    stops: [
-      { color: "#c7b3cc", id: 1 },
-      { color: "#268ab2", id: 2 },
-    ],
-    direction: 90,
-  },
-  {
-    stops: [
-      { color: "#c9def4", id: 1 },
-      { color: "#f5ccd4", id: 2 },
-      { color: "#b8a4c9", id: 3 },
-    ],
-    direction: 90,
-  },
-  {
-    stops: [
-      { color: "#caefd7", id: 1 },
-      { color: "#f5bfd7", id: 2 },
-      { color: "#abc9e9", id: 3 },
-    ],
-    direction: 90,
-  },
-  {
-    stops: [
-      { color: "#58efec", id: 1 },
-      { color: "#e85c90", id: 2 },
-      { color: "#fcc9ba", id: 3 },
-    ],
-    direction: 90,
-  },
-  {
-    stops: [
-      { color: "#f9e7bb", id: 1 },
-      { color: "#e97cbb", id: 2 },
-      { color: "#3d47d9", id: 3 },
-    ],
-    direction: 90,
-  },
-  {
-    stops: [
-      { color: "#45a0ea", id: 1 },
-      { color: "#eca9bb", id: 2 },
-      { color: "#f9658e", id: 3 },
-    ],
-    direction: 90,
-  },
-  {
-    stops: [
-      { color: "#f4e784", id: 1 },
-      { color: "#f24389", id: 2 },
-      { color: "#a478f1", id: 3 },
-    ],
-    direction: 90,
-  },
-  {
-    stops: [
-      { color: "#5de0f0", id: 1 },
-      { color: "#f7a6f5", id: 2 },
-      { color: "#e64f6f", id: 3 },
-    ],
-    direction: 90,
-  },
-  {
-    stops: [
-      { color: "#a4e9f9", id: 1 },
-      { color: "#c5aef2", id: 2 },
-      { color: "#8578ea", id: 3 },
-    ],
-    direction: 90,
-  },
-  {
-    stops: [
-      { color: "#fff1bf", id: 1 },
-      { color: "#ec458d", id: 2 },
-      { color: "#474ed7", id: 3 },
-    ],
-    direction: 90,
-  },
-  {
-    stops: [
-      { color: "#d3eef4", id: 1 },
-      { color: "#f1eec8", id: 2 },
-      { color: "#f3a46c", id: 3 },
-    ],
-    direction: 90,
-  },
-  {
-    stops: [
-      { color: "#0e0725", id: 1 },
-      { color: "#5c03bc", id: 2 },
-      { color: "#e536ab", id: 3 },
-      { color: "#f4e5f0", id: 4 },
-    ],
-    direction: 90,
-  },
-  {
-    stops: [
-      { color: "#000000", id: 1 },
-      { color: "#1c1a1a", id: 2 },
-      { color: "#1c1a1a", id: 3 },
-      { color: "#000000", id: 4 },
-    ],
-    direction: 90,
-  },
-];
-const solidColorPresets = [
-  { color: "#FFFFFF" },
-  { color: "#000000" },
-  { color: "#FF0000" },
-  { color: "#FF9D00" },
-  { color: "#32FF00" },
-  { color: "#00FFD0" },
-  { color: "#00E7FF" },
-  { color: "#00ABFF" },
-  { color: "#002CFF" },
-  { color: "#5F00FF" },
-  { color: "#AD00FF" },
-  { color: "#FF00F3" },
-  { color: "#FF005E" },
-  { color: "#d5d5d5" },
-  { color: "#4582a5" },
-  { color: "#32353a" },
-  { color: "#0c0f14" },
-  { color: "#8f86f6" },
-  { color: "#f6a486" },
-  { color: "#86caf6" },
-  { color: "#a3e6c6" },
-];
-
-const shadowPresets: ShadowConfig[] = [
-  {
-    type: "none",
-    previewSize: "0px 0px 0px",
-    size: "0px 0px 0px",
-  },
-  {
-    type: "xs",
-    previewSize: "0px 0.5px 1px",
-    size: "0px 5px 10px",
-  },
-  {
-    type: "sm",
-    previewSize: "0px 1.25px 2.5px",
-    size: "0px 12.5px 25px",
-  },
-  {
-    type: "lg",
-    previewSize: "0px 2.5px 5px",
-    size: "0px 25px 50px",
-  },
-  {
-    type: "xl",
-    previewSize: "0px 5px 10px",
-    size: "0px 50px 100px",
-  },
-  {
-    type: "2xl",
-    previewSize: "0px 10px 20px",
-    size: "0px 100px 200px",
-  },
-];
-const defaultConfig: Config = {
-  id: "config1",
-  name: "default",
-  size: {
-    scale: 0.8,
-    dimensions: {
-      aspectRatio: "16 / 9",
-      width: 1920,
-      height: 1080,
-    },
-  },
-  orientation: {
-    rotateX: 0,
-    rotateY: 0,
-    rotateZ: 0,
-    perspective: 3000,
-  },
-  position: {
-    x: 0,
-    y: 0,
-  },
-  background: {
-    type: "gradient",
-    color: "#252525",
-    gradient: {
-      stops: [
-        { color: "#cd96b3", id: "664" },
-        { color: "#bda6f0", id: "356" },
-      ],
-      direction: 70,
-    },
-  },
-  shadow: {
-    color: "rgba(17, 12, 46, 0.15)",
-    type: "xl",
-    previewSize: "0px 5px 10px",
-    size: "0px 50px 100px",
-  },
-  border: {
-    radius: 2,
-    width: 0,
-    color: "rgba(0, 0, 0, 1)",
-  },
-  header: {
-    show: false,
-    anchored: false,
-    align: "vertical",
-    content: {
-      title: "The best image editing tool for founders",
-      subtitle: "Turn boring screenshots into stunning graphics",
-      color: "rgba(255, 255, 255, 1)",
-      bold: true,
-      italic: false,
-      size: 3.5,
-      padding: 5,
-      translateX: 0,
-    },
-  },
-  frame: {
-    show: true,
-    dark: false,
-    opacity: 0.3,
-    buttons: {
-      show: true,
-      dark: true,
-      solid: true,
-    },
-    searchBar: {
-      show: true,
-    },
-  },
-};
-
-const dimensionPresets = [
-  {
-    name: "twitter",
-    icon: () => (
-      <svg
-        fill="currentColor"
-        viewBox="0 0 24 24"
-        className="text-white h-5 w-5 bg-blue-500 rounded p-0.5 mr-2 "
-      >
-        <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" />
-      </svg>
-    ),
-    dimensions: [
-      { name: "open graph", width: 1200, height: 630 },
-      { name: "cover photo", width: 1500, height: 500 },
-      { name: "image", width: 2400, height: 1350 },
-    ],
-  },
-  {
-    name: "facebook",
-    icon: () => (
-      <svg
-        fill="currentColor"
-        viewBox="0 0 24 24"
-        className="text-white h-5 w-5 bg-blue-600 rounded p-0.5 mr-2 "
-      >
-        <path
-          fillRule="evenodd"
-          d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"
-          clipRule="evenodd"
-        />
-      </svg>
-    ),
-    dimensions: [
-      { name: "news feed", width: 1200, height: 1200 },
-      { name: "story", width: 1080, height: 1920 },
-      { name: "cover", width: 830, height: 312 },
-      { name: "event", width: 1336, height: 700 },
-      { name: "open graph", width: 1200, height: 630 },
-    ],
-  },
-  {
-    name: "instagram",
-    icon: () => (
-      <svg
-        fill="currentColor"
-        viewBox="0 0 24 24"
-        className="text-white h-5 w-5 bg-pink-500 rounded p-0.5 mr-2"
-      >
-        <path
-          fillRule="evenodd"
-          d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z"
-          clipRule="evenodd"
-        />
-      </svg>
-    ),
-    dimensions: [
-      { name: "feed", width: 1200, height: 1200 },
-      { name: "story", width: 1080, height: 1920 },
-    ],
-  },
-  {
-    name: "dribbble",
-    icon: () => (
-      <svg
-        fill="currentColor"
-        viewBox="0 0 24 24"
-        className="text-white h-5 w-5 bg-pink-400 rounded p-0.5 mr-2"
-      >
-        <path
-          fillRule="evenodd"
-          d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10c5.51 0 10-4.48 10-10S17.51 2 12 2zm6.605 4.61a8.502 8.502 0 011.93 5.314c-.281-.054-3.101-.629-5.943-.271-.065-.141-.12-.293-.184-.445a25.416 25.416 0 00-.564-1.236c3.145-1.28 4.577-3.124 4.761-3.362zM12 3.475c2.17 0 4.154.813 5.662 2.148-.152.216-1.443 1.941-4.48 3.08-1.399-2.57-2.95-4.675-3.189-5A8.687 8.687 0 0112 3.475zm-3.633.803a53.896 53.896 0 013.167 4.935c-3.992 1.063-7.517 1.04-7.896 1.04a8.581 8.581 0 014.729-5.975zM3.453 12.01v-.26c.37.01 4.512.065 8.775-1.215.25.477.477.965.694 1.453-.109.033-.228.065-.336.098-4.404 1.42-6.747 5.303-6.942 5.629a8.522 8.522 0 01-2.19-5.705zM12 20.547a8.482 8.482 0 01-5.239-1.8c.152-.315 1.888-3.656 6.703-5.337.022-.01.033-.01.054-.022a35.318 35.318 0 011.823 6.475 8.4 8.4 0 01-3.341.684zm4.761-1.465c-.086-.52-.542-3.015-1.659-6.084 2.679-.423 5.022.271 5.314.369a8.468 8.468 0 01-3.655 5.715z"
-          clipRule="evenodd"
-        />
-      </svg>
-    ),
-    dimensions: [{ name: "shot", width: 2800, height: 2100 }],
-  },
-  {
-    name: "linkedin",
-    icon: () => (
-      <svg
-        fill="currentColor"
-        viewBox="0 0 24 24"
-        className="text-white h-5 w-5 bg-blue-500 rounded p-1 mr-2"
-      >
-        <path d="M4.98 3.5c0 1.381-1.11 2.5-2.48 2.5s-2.48-1.119-2.48-2.5c0-1.38 1.11-2.5 2.48-2.5s2.48 1.12 2.48 2.5zm.02 4.5h-5v16h5v-16zm7.982 0h-4.968v16h4.969v-8.399c0-4.67 6.029-5.052 6.029 0v8.399h4.988v-10.131c0-7.88-8.922-7.593-11.018-3.714v-2.155z" />
-      </svg>
-    ),
-    dimensions: [
-      { name: "feed", width: 1200, height: 1200 },
-      { name: "cover", width: 792, height: 198 },
-      { name: "story", width: 1080, height: 1920 },
-    ],
-  },
-  {
-    name: "product hunt",
-    icon: () => (
-      <svg
-        fill="currentColor"
-        className="text-white h-5 w-5 bg-orange-500 rounded mr-2"
-        viewBox="0 0 140 140"
-      >
-        <path
-          d="M112.011 70C112.011 93.2043 93.2155 112 70.0112 112C46.8069 112 28.008 93.2075 28.008 70C28.008 46.7925 46.8037 28 70.008 28C93.2123 28 112.008 46.7957 112.008 70"
-          fill="white"
-        ></path>
-        <path
-          d="M75.6099 70H63.7087V57.4333H75.6099C79.0747 57.4333 81.9125 60.2678 81.9125 63.7358C81.9125 67.2038 79.0779 70.0384 75.6099 70.0384V70ZM75.6099 49.0384H55.3074V91.0384H63.7087V78.4397H75.6099C83.7297 78.4397 90.3106 71.8588 90.3106 63.739C90.3106 55.6193 83.7297 49.0384 75.6099 49.0384Z"
-          fill="#DA552F"
-        ></path>
-      </svg>
-    ),
-    dimensions: [
-      { name: "thumbnail", width: 240, height: 240 },
-      { name: "gallery", width: 1270, height: 760 },
-    ],
-  },
-  {
-    name: "github",
-    icon: () => (
-      <svg
-        fill="currentColor"
-        viewBox="0 0 24 24"
-        className="text-white h-5 w-5 bg-black rounded p-1 mr-2"
-      >
-        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
-      </svg>
-    ),
-    dimensions: [{ name: "readme header", width: 1618, height: 556 }],
-  },
-];
 const Editor: NextPage = () => {
   const [imageStack, setImageStack] = useState([
     {
@@ -1123,7 +258,6 @@ const Editor: NextPage = () => {
           }
         )
       );
-
     setIsLoading(false);
   };
 
@@ -1161,62 +295,6 @@ const Editor: NextPage = () => {
     const filteredArr = imageStack.filter((item) => item.id !== id);
     setImageStack(filteredArr);
   };
-  // const downloadWebp = (elementRef) => {
-  //   toBlob(elementRef, {
-  //     canvasWidth: 2560,
-  //     canvasHeight: 1440,
-  //     pixelRatio: 1,
-  //   })
-  //     .then((dataUrl) => {
-  //       sharp(dataUrl, {effort: 8}).webp();
-  //       const link = document.createElement("a");
-  //       link.download = "my-image-name.png";
-  //       link.href = dataUrl;
-  //       link.click();
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // }
-  const downloadPng = (elementRef) => {
-    toPng(elementRef, {
-      canvasWidth: config.size.dimensions.width,
-      canvasHeight: config.size.dimensions.height,
-      pixelRatio: 1,
-      style: {
-        borderRadius: "0px",
-      },
-    })
-      .then((dataUrl) => {
-        const link = document.createElement("a");
-        link.download = "my-image-name.png";
-        link.href = dataUrl;
-        link.click();
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-  const downloadJpg = (elementRef) => {
-    toJpeg(elementRef, {
-      canvasWidth: config.size.dimensions.width,
-      canvasHeight: config.size.dimensions.height,
-      style: {
-        borderRadius: "0px",
-      },
-      pixelRatio: 1,
-    })
-      .then((dataUrl) => {
-        const link = document.createElement("a");
-        link.download = "my-image-name.jpg";
-        link.href = dataUrl;
-        link.click();
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
   const getImage = useCallback(
     (format: string) => {
       if (ref.current === null) {
@@ -1234,31 +312,22 @@ const Editor: NextPage = () => {
       } else {
         switch (format) {
           case "png":
-            downloadPng(ref.current);
+            downloadPng(ref.current, {
+              width: config.size.dimensions.width,
+              height: config.size.dimensions.height,
+            });
             break;
           case "jpg":
-            downloadJpg(ref.current);
+            downloadJpg(ref.current, {
+              width: config.size.dimensions.width,
+              height: config.size.dimensions.height,
+            });
             break;
           case "copy":
-            toBlob(ref.current, {
-              canvasWidth: config.size.dimensions.width,
-              canvasHeight: config.size.dimensions.height,
-              pixelRatio: 1,
-              style: {
-                borderRadius: "0px",
-              },
-            })
-              .then((dataUrl) => {
-                navigator.clipboard.write([
-                  new ClipboardItem({
-                    "image/png": dataUrl,
-                  }),
-                ]);
-                toast("copied to clipboard", { type: "success" });
-              })
-              .catch((err) => {
-                console.log(err);
-              });
+            copyImageToClipboard(ref.current, {
+              width: config.size.dimensions.width,
+              height: config.size.dimensions.height,
+            });
             break;
           default:
             return;
@@ -1268,9 +337,6 @@ const Editor: NextPage = () => {
     [ref, showWatermark, config]
   );
   useEffect(() => {
-    console.log(config);
-    console.log(history);
-
     if (history[historyIdx] !== config) {
       if (history.length === 10) {
         setHistory([...history.splice(-1)]);
@@ -1289,23 +355,21 @@ const Editor: NextPage = () => {
   const updateConfig = (newConfig: Partial<Config>) => {
     console.log(historyIdx);
     if (historyIdx > 0) {
-      console.log("removing");
       const newHistory = history.filter((item, index) => index >= historyIdx);
       setHistory(newHistory);
     }
-
     setConfig({
       ...config,
       ...newConfig,
     });
   };
-  function reduce(numerator, denominator) {
-    var gcd = function gcd(a, b) {
+  const getAspectRatio = (numerator: number, denominator: number) => {
+    const gcd = (a: number, b: number): number => {
       return b ? gcd(b, a % b) : a;
     };
-    gcd = gcd(numerator, denominator);
-    return [numerator / gcd, denominator / gcd];
-  }
+    const result = gcd(numerator, denominator);
+    return [numerator / result, denominator / result];
+  };
 
   return (
     <div className="h-screen w-screen bg-black flex flex-col overflow-hidden">
@@ -1352,9 +416,10 @@ const Editor: NextPage = () => {
                                   size: {
                                     ...config.size,
                                     dimensions: {
-                                      aspectRatio: reduce(width, height).join(
-                                        " / "
-                                      ),
+                                      aspectRatio: getAspectRatio(
+                                        width,
+                                        height
+                                      ).join(" / "),
                                       width,
                                       height,
                                     },
@@ -1394,8 +459,8 @@ const Editor: NextPage = () => {
                               dimensions: {
                                 ...config.size.dimensions,
                                 width: parseInt(e.target.value),
-                                aspectRatio: reduce(
-                                  e.target.value,
+                                aspectRatio: getAspectRatio(
+                                  parseInt(e.target.value),
                                   config.size.dimensions.height
                                 ).join(" / "),
                               },
@@ -1428,9 +493,9 @@ const Editor: NextPage = () => {
                               dimensions: {
                                 ...config.size.dimensions,
                                 height: parseInt(e.target.value),
-                                aspectRatio: reduce(
+                                aspectRatio: getAspectRatio(
                                   config.size.dimensions.width,
-                                  e.target.value
+                                  parseInt(e.target.value)
                                 ).join(" / "),
                               },
                             },
@@ -1859,34 +924,11 @@ const Editor: NextPage = () => {
                       case "images":
                         return (
                           <>
-                            <div className=" space-y-2">
-                              <button
-                                onClick={() => setModalOpen(!modalOpen)}
-                                className="w-full flex items-center justify-center space-x-3 border border-zinc-800 text-zinc-200 bg-zinc-900 hover:bg-zinc-800 bg-opacity-25 hover:bg-opacity-25 transition-all cursor-pointer bg py-2 rounded-lg"
-                              >
-                                <CameraIcon className="h-5 w-5" />
-                                <span className="font-medium text-base">
-                                  Screenshot
-                                </span>
-                              </button>
-                              <div className="">
-                                <label
-                                  htmlFor="file-input"
-                                  className="flex items-center justify-center space-x-3 border border-blue-600 text-blue-500 bg-blue-900 bg-opacity-25 hover:bg-opacity-30 transition-all cursor-pointer bg py-2 rounded-lg"
-                                >
-                                  <UploadIcon className="h-5 w-5" />
-                                  <span className="font-medium text-base">
-                                    Upload
-                                  </span>
-                                </label>
-                                <input
-                                  onChange={addImage}
-                                  type="file"
-                                  id={"file-input"}
-                                  className=" hidden"
-                                />
-                              </div>
-                            </div>
+                            <Images
+                              modalOpen={modalOpen}
+                              setModalOpen={setModalOpen}
+                              addImage={addImage}
+                            />
                             <List
                               removeImage={removeImage}
                               replaceImage={replaceImage}
@@ -1897,1329 +939,57 @@ const Editor: NextPage = () => {
                         );
                       case "presets":
                         return (
-                          <>
-                            {presets.map((config) => (
-                              <button
-                                onClick={() => {
-                                  updateConfig(config);
-                                }}
-                                className="border rounded-xl border-zinc-900 overflow-hidden"
-                              >
-                                <img src={config.preview}></img>
-                              </button>
-                            ))}
-            
-                          </>
+                          <Presets
+                            updateConfig={updateConfig}
+                            presets={templates}
+                          />
                         );
                       case "position":
                         return (
-                          <div className="space-y-6">
-                            <div className="overflow-hidden border border-zinc-800 rounded-xl relative min-w-[230px] min-h-[200px]">
-                              <button
-                                onClick={() => {
-                                  updateConfig({
-                                    position: {
-                                      x: 0.5,
-                                      y: -0.5,
-                                    },
-                                  });
-                                }}
-                                className=" h-12 aspect-video border border-zinc-800 hover:border-blue-500 transition-all duration-300 rounded-lg absolute -right-1 -top-1 "
-                              />
-                              <button
-                                onClick={() => {
-                                  updateConfig({
-                                    position: {
-                                      x: -0.5,
-                                      y: -0.5,
-                                    },
-                                  });
-                                }}
-                                className=" h-12 aspect-video border border-zinc-800 hover:border-blue-500 transition-all duration-300  rounded-lg absolute -left-1 -top-1 "
-                              />
-                              <button
-                                onClick={() => {
-                                  updateConfig({
-                                    position: {
-                                      x: 0.5,
-                                      y: 0.5,
-                                    },
-                                  });
-                                }}
-                                className=" h-12 aspect-video border border-zinc-800 hover:border-blue-500 transition-all duration-300 rounded-lg absolute -right-1 -bottom-1 "
-                              />
-                              <button
-                                onClick={() => {
-                                  updateConfig({
-                                    position: {
-                                      x: -0.5,
-                                      y: 0.5,
-                                    },
-                                  });
-                                }}
-                                className=" h-12 aspect-video border border-zinc-800 hover:border-blue-500 transition-all duration-300 rounded-lg absolute -left-1 -bottom-1 "
-                              />
-                              <button
-                                onClick={() => {
-                                  updateConfig({
-                                    position: {
-                                      x: 0,
-                                      y: 0.5,
-                                    },
-                                  });
-                                }}
-                                className=" h-12 aspect-video border border-zinc-800 hover:border-blue-500 transition-all duration-300 rounded-lg absolute left-1/2 -bottom-1 -translate-x-1/2 "
-                              />
-                              <button
-                                onClick={() => {
-                                  updateConfig({
-                                    position: {
-                                      x: 0,
-                                      y: 0,
-                                    },
-                                  });
-                                }}
-                                className=" h-12 aspect-video border border-zinc-800 hover:border-blue-500 transition-all duration-300 rounded-lg absolute left-1/2 bottom-1/2 -translate-x-1/2 translate-y-1/2 "
-                              />
-                              <button
-                                onClick={() => {
-                                  updateConfig({
-                                    position: {
-                                      x: 0,
-                                      y: -0.5,
-                                    },
-                                  });
-                                }}
-                                className=" h-12 aspect-video border border-zinc-800 hover:border-blue-500 transition-all duration-300 rounded-lg absolute left-1/2 -top-1 -translate-x-1/2 "
-                              />
-                              <button
-                                onClick={() => {
-                                  updateConfig({
-                                    position: {
-                                      x: -0.5,
-                                      y: -0,
-                                    },
-                                  });
-                                }}
-                                className=" h-12 aspect-video border border-zinc-800 hover:border-blue-500 transition-all duration-300 rounded-lg absolute -left-1 bottom-1/2  translate-y-1/2 "
-                              />
-                              <button
-                                onClick={() => {
-                                  updateConfig({
-                                    position: {
-                                      x: 0.5,
-                                      y: 0,
-                                    },
-                                  });
-                                }}
-                                className=" h-12 aspect-video border border-zinc-800 hover:border-blue-500 transition-all duration-300 rounded-lg absolute -right-1 bottom-1/2  translate-y-1/2 "
-                              />
-                            </div>
-
-                            <RangeSlider
-                              value={config.position.x}
-                              set={(val) =>
-                                updateConfig({
-                                  position: { ...config.position, x: val },
-                                })
-                              }
-                            >
-                              <div className="flex space-x-2 items-center">
-                                <p className=" font-medium text-zinc-300">X</p>
-                                <button
-                                  className="hover:text-zinc-400 transition-colors"
-                                  onClick={() => {
-                                    updateConfig({
-                                      position: { ...config.position, x: 0 },
-                                    });
-                                  }}
-                                >
-                                  <RefreshIcon className="h-4" />
-                                </button>
-                              </div>
-                            </RangeSlider>
-                            <RangeSlider
-                              value={config.position.y}
-                              set={(val) =>
-                                updateConfig({
-                                  position: { ...config.position, y: val },
-                                })
-                              }
-                            >
-                              <div className="flex space-x-2 items-center">
-                                <p className=" font-medium text-zinc-300">Y</p>
-                                <button
-                                  className="hover:text-zinc-400 transition-colors"
-                                  onClick={() => {
-                                    updateConfig({
-                                      position: { ...config.position, y: 0 },
-                                    });
-                                  }}
-                                >
-                                  <RefreshIcon className="h-4" />
-                                </button>
-                              </div>
-                            </RangeSlider>
-
-                            <RangeSlider
-                              value={config.size.scale}
-                              set={(val) =>
-                                updateConfig({
-                                  size: {
-                                    ...config.size,
-                                    scale: val,
-                                  },
-                                })
-                              }
-                              min={0.5}
-                              max={1.5}
-                            >
-                              <div className="flex space-x-2 items-center">
-                                <p className=" font-medium text-zinc-300">
-                                  Scale
-                                </p>
-                                <button
-                                  className="hover:text-zinc-400 transition-colors"
-                                  onClick={() => {
-                                    updateConfig({
-                                      size: {
-                                        ...config.size,
-                                        scale: 0.8,
-                                      },
-                                    });
-                                  }}
-                                >
-                                  <RefreshIcon className="h-4" />
-                                </button>
-                              </div>
-                            </RangeSlider>
-                            <button
-                              onClick={() => {
-                                updateConfig({
-                                  position: {
-                                    x: 0,
-                                    y: 0,
-                                  },
-                                  size: {
-                                    ...config.size,
-                                    scale: 0.8,
-                                  },
-                                });
-                              }}
-                              className="flex items-center justify-center space-x-2 border border-zinc-800 text-zinc-200 bg-zinc-900 hover:bg-zinc-800 bg-opacity-25 hover:bg-opacity-25 transition-all cursor-pointer bg py-2 px-4 rounded-lg"
-                            >
-                              <RefreshIcon className="h-4 w-4" />
-                              <span>Reset</span>
-                            </button>
-                          </div>
+                          <Position
+                            updateConfig={updateConfig}
+                            config={config}
+                          />
                         );
                       case "frames":
                         return (
-                          <>
-                            <div className="space-y-3">
-                              <h2 className="font-medium text-zinc-200 text-base">
-                                Toolbar
-                              </h2>
-                              <RangeSlider
-                                min={0.3}
-                                max={1}
-                                value={config.frame.opacity}
-                                set={(value) =>
-                                  updateConfig({
-                                    frame: {
-                                      ...config.frame,
-                                      opacity: value,
-                                    },
-                                  })
-                                }
-                              >
-                                <div className="flex space-x-2 items-center">
-                                  <p className=" font-medium text-zinc-300">
-                                    Opacity
-                                  </p>
-                                  <button
-                                    className="hover:text-zinc-400 transition-colors"
-                                    onClick={() => {
-                                      updateConfig({
-                                        frame: {
-                                          ...config.frame,
-                                          opacity: 1,
-                                        },
-                                      });
-                                    }}
-                                  >
-                                    <RefreshIcon className="h-4" />
-                                  </button>
-                                </div>
-                              </RangeSlider>
-                              <Toggle
-                                enabled={config.frame.show}
-                                setEnabled={(value) =>
-                                  updateConfig({
-                                    frame: {
-                                      ...config.frame,
-                                      show: value,
-                                    },
-                                  })
-                                }
-                              >
-                                <p className="font-medium text-zinc-300 whitespace-nowrap">
-                                  Show
-                                </p>
-                              </Toggle>
-                              <Toggle
-                                enabled={config.frame.dark}
-                                setEnabled={(value) =>
-                                  updateConfig({
-                                    frame: {
-                                      ...config.frame,
-                                      dark: value,
-                                    },
-                                  })
-                                }
-                              >
-                                <p className="font-medium text-zinc-300 whitespace-nowrap">
-                                  Dark
-                                </p>
-                              </Toggle>
-                            </div>
-
-                            <div className="space-y-3">
-                              <h2 className="font-medium text-zinc-200 text-base">
-                                Buttons
-                              </h2>
-                              <Toggle
-                                enabled={config.frame.buttons.solid}
-                                setEnabled={(value) =>
-                                  updateConfig({
-                                    frame: {
-                                      ...config.frame,
-                                      buttons: {
-                                        ...config.frame.buttons,
-                                        solid: value,
-                                      },
-                                    },
-                                  })
-                                }
-                              >
-                                <p className="font-medium text-zinc-300 whitespace-nowrap">
-                                  Solid
-                                </p>
-                              </Toggle>
-                              <Toggle
-                                enabled={config.frame.buttons.dark}
-                                setEnabled={(value) =>
-                                  updateConfig({
-                                    frame: {
-                                      ...config.frame,
-                                      buttons: {
-                                        ...config.frame.buttons,
-                                        dark: value,
-                                      },
-                                    },
-                                  })
-                                }
-                              >
-                                <p className="font-medium text-zinc-300 whitespace-nowrap">
-                                  Dark
-                                </p>
-                              </Toggle>
-                            </div>
-                            <div className="space-y-3">
-                              <h2 className="font-medium text-zinc-200 text-base">
-                                Search Bar
-                              </h2>
-                              <Toggle
-                                enabled={config.frame.searchBar.show}
-                                setEnabled={(value) =>
-                                  updateConfig({
-                                    frame: {
-                                      ...config.frame,
-                                      searchBar: {
-                                        ...config.frame.searchBar,
-                                        show: value,
-                                      },
-                                    },
-                                  })
-                                }
-                              >
-                                <p className="font-medium text-zinc-300 whitespace-nowrap">
-                                  Show
-                                </p>
-                              </Toggle>
-                            </div>
-                            <div className="space-y-3">
-                              <h2 className="font-medium text-zinc-200 text-base">
-                                Presets
-                              </h2>
-                              <div className="space-y-3">
-                                {framePresets.map((item) => (
-                                  <button
-                                    onClick={() =>
-                                      updateConfig({
-                                        frame: {
-                                          ...item.config,
-                                        },
-                                      })
-                                    }
-                                    className={clsx(
-                                      item.config === config.frame &&
-                                        "border-blue-600",
-                                      "p-5 rounded-lg bg-gradient-to-tr bg-zinc-900 border border-zinc-800 hover:border-blue-600 transition-all duration-300 w-full"
-                                    )}
-                                  >
-                                    <div className=" rounded-t-md overflow-hidden relative h-5">
-                                      <PreviewToolbar options={item.config} />
-                                    </div>
-                                  </button>
-                                ))}
-                              </div>
-                            </div>
-
-                            {/* <div className="grid grid-cols-2 gap-3">
-                            {framePresets.map((item) => (
-                              <div style={{
-                                background: `linear-gradient(70deg, ${gradientStop1}, ${gradientStop2})`,
-                              }} className="p-6 rounded-lg overflow-hidden aspect-square">
-                                <div className="rounded-lg overflow-hidden relative aspect-video h-[1080px] w-[1920pc]">
-                                  <Toolbar options={item.config} />
-                                  <img
-                                    className="flex-1 mt-11"
-                                    src={item.preview}
-                                  ></img>
-                                </div>
-                              </div>
-                            ))}
-                          </div> */}
-                          </>
+                          <Frames
+                            updateConfig={updateConfig}
+                            config={config}
+                            presets={framePresets}
+                          />
                         );
                       case "header":
                         return (
-                          <>
-                            <Toggle
-                              enabled={config.header.show}
-                              setEnabled={(value) =>
-                                updateConfig({
-                                  header: {
-                                    ...config.header,
-                                    show: value,
-                                  },
-                                })
-                              }
-                            >
-                              <p className="font-medium text-zinc-300 whitespace-nowrap">
-                                Show
-                              </p>
-                            </Toggle>
-                            <Toggle
-                              enabled={config.header.anchored}
-                              setEnabled={(value) =>
-                                updateConfig({
-                                  header: {
-                                    ...config.header,
-                                    anchored: value,
-                                  },
-                                })
-                              }
-                            >
-                              <p className="font-medium text-zinc-300 whitespace-nowrap">
-                                Anchored
-                              </p>
-                            </Toggle>
-                            <div className="space-y-2">
-                              <h1 className="block text-sm font-medium text-zinc-100 ">
-                                Title
-                              </h1>
-                              <input
-                                value={config.header.content.title}
-                                onChange={(e) =>
-                                  updateConfig({
-                                    header: {
-                                      ...config.header,
-                                      content: {
-                                        ...config.header.content,
-                                        title: e.target.value,
-                                      },
-                                    },
-                                  })
-                                }
-                                placeholder="An all-in-on tool fo..."
-                                type="text"
-                                className="appearance-none form-input focus:outline-none flex w-full justify-between items-center space-x-2 border border-zinc-800 hover:border-blue-500 text-zinc-200 bg-zinc-900 hover:bg-blue-900 bg-opacity-25 hover:bg-opacity-25 transition-all cursor-pointer bg py-2 px-4 rounded-lg"
-                              />
-                            </div>
-                            <div className="space-y-2">
-                              <h1 className="block text-sm font-medium text-zinc-100 ">
-                                Subtitle
-                              </h1>
-                              <input
-                                value={config.header.content.subtitle}
-                                onChange={(e) =>
-                                  updateConfig({
-                                    header: {
-                                      ...config.header,
-                                      content: {
-                                        ...config.header.content,
-                                        subtitle: e.target.value,
-                                      },
-                                    },
-                                  })
-                                }
-                                placeholder="Amazing features for..."
-                                type="text"
-                                className="appearance-none form-input focus:outline-none flex w-full justify-between items-center space-x-2 border border-zinc-800 hover:border-blue-500 text-zinc-200 bg-zinc-900 hover:bg-blue-900 bg-opacity-25 hover:bg-opacity-25 transition-all cursor-pointer bg py-2 px-4 rounded-lg"
-                              />
-                            </div>
-                            <div className="space-y-2">
-                              <h1 className="block text-sm font-medium text-zinc-100 ">
-                                Align
-                              </h1>
-                              <div className="flex space-x-2 rounded-xl bg-gray-100 dark:bg-black dark:border dark:border-zinc-900 p-1 max-w-4xl ">
-                                <button
-                                  onClick={() =>
-                                    updateConfig({
-                                      header: {
-                                        ...config.header,
-                                        align: "horizontal",
-                                      },
-                                    })
-                                  }
-                                  className={clsx(
-                                    "flex w-full items-center justify-center rounded-lg py-2.5 text-center text-sm font-medium capitalize leading-5 space-x-1 ",
-                                    "ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2 dark:ring-transparent",
-                                    config.header.align === "horizontal"
-                                      ? "bg-white text-blue-700 dark:text-blue-500 shadow dark:bg-zinc-900"
-                                      : "text-gray-700 hover:bg-white/[0.12] hover:text-gray-600 dark:hover:text-zinc-200 dark:text-zinc-300"
-                                  )}
-                                >
-                                  <h1 className="hidden sm:block">
-                                    Horizontal
-                                  </h1>
-                                </button>
-                                <button
-                                  onClick={() =>
-                                    updateConfig({
-                                      header: {
-                                        ...config.header,
-                                        align: "vertical",
-                                      },
-                                    })
-                                  }
-                                  className={clsx(
-                                    "flex w-full items-center justify-center rounded-lg py-2.5 text-center text-sm font-medium capitalize leading-5 ",
-                                    "ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2 dark:ring-transparent",
-                                    config.header.align === "vertical"
-                                      ? "bg-white text-blue-700 dark:text-blue-500 shadow dark:bg-zinc-900"
-                                      : "text-gray-700 hover:bg-white/[0.12] hover:text-gray-600 dark:hover:text-zinc-200 dark:text-zinc-300"
-                                  )}
-                                >
-                                  <h1 className="hidden sm:block">Vertical</h1>
-                                </button>
-                              </div>
-                            </div>
-
-                            <div className=" space-y-2">
-                              <label className="font-medium text-zinc-300">
-                                Color
-                              </label>
-                              <div className="flex justify-between items-center">
-                                <ColorPicker
-                                  type="rgba"
-                                  color={config.header.content.color}
-                                  setColor={(val) =>
-                                    updateConfig({
-                                      header: {
-                                        ...config.header,
-                                        content: {
-                                          ...config.header.content,
-                                          color: val,
-                                        },
-                                      },
-                                    })
-                                  }
-                                />
-
-                                <button
-                                  onClick={() => {
-                                    updateConfig({
-                                      header: {
-                                        ...config.header,
-                                        content: {
-                                          ...config.header.content,
-                                          color: "rgba(0, 0, 0, 1)",
-                                        },
-                                      },
-                                    });
-                                  }}
-                                  className="flex items-center justify-center space-x-2 border border-zinc-800 text-zinc-200 bg-zinc-900 hover:bg-zinc-800 bg-opacity-25 hover:bg-opacity-25 transition-all cursor-pointer bg p-2 rounded-lg"
-                                >
-                                  <RefreshIcon className="h-4 w-4" />
-                                </button>
-                              </div>
-                            </div>
-                            <Toggle
-                              enabled={config.header.content.bold}
-                              setEnabled={(value) =>
-                                updateConfig({
-                                  header: {
-                                    ...config.header,
-                                    content: {
-                                      ...config.header.content,
-                                      bold: value,
-                                    },
-                                  },
-                                })
-                              }
-                            >
-                              <p className="font-medium text-zinc-300 whitespace-nowrap">
-                                Bold
-                              </p>
-                            </Toggle>
-                            <Toggle
-                              enabled={config.header.content.italic}
-                              setEnabled={(value) =>
-                                updateConfig({
-                                  header: {
-                                    ...config.header,
-                                    content: {
-                                      ...config.header.content,
-                                      italic: value,
-                                    },
-                                  },
-                                })
-                              }
-                            >
-                              <p className="font-medium text-zinc-300 whitespace-nowrap">
-                                Italic
-                              </p>
-                            </Toggle>
-                            <RangeSlider
-                              value={config.header.content.size}
-                              set={(val) =>
-                                updateConfig({
-                                  header: {
-                                    ...config.header,
-                                    content: {
-                                      ...config.header.content,
-                                      size: val,
-                                    },
-                                  },
-                                })
-                              }
-                              min={0}
-                              max={10}
-                            >
-                              <div className="flex space-x-2 items-center">
-                                <p className=" font-medium text-zinc-300 whitespace-nowrap">
-                                  Size
-                                </p>
-                                <button
-                                  className="hover:text-zinc-400 transition-colors"
-                                  onClick={() => {
-                                    updateConfig({
-                                      header: {
-                                        ...config.header,
-                                        content: {
-                                          ...config.header.content,
-                                          size: 1,
-                                        },
-                                      },
-                                    });
-                                  }}
-                                >
-                                  <RefreshIcon className="h-4" />
-                                </button>
-                              </div>
-                            </RangeSlider>
-                            <RangeSlider
-                              value={config.header.content.padding}
-                              set={(val) =>
-                                updateConfig({
-                                  header: {
-                                    ...config.header,
-                                    content: {
-                                      ...config.header.content,
-                                      padding: val,
-                                    },
-                                  },
-                                })
-                              }
-                              min={-5}
-                              max={15}
-                            >
-                              <div className="flex space-x-2 items-center">
-                                <p className=" font-medium text-zinc-300 whitespace-nowrap">
-                                  Padding
-                                </p>
-                                <button
-                                  className="hover:text-zinc-400 transition-colors"
-                                  onClick={() => {
-                                    updateConfig({
-                                      header: {
-                                        ...config.header,
-                                        content: {
-                                          ...config.header.content,
-                                          padding: 1,
-                                        },
-                                      },
-                                    });
-                                  }}
-                                >
-                                  <RefreshIcon className="h-4" />
-                                </button>
-                              </div>
-                            </RangeSlider>
-                            {!config.header.anchored && (
-                              <RangeSlider
-                                value={config.header.content.translateX}
-                                set={(val) =>
-                                  updateConfig({
-                                    header: {
-                                      ...config.header,
-                                      content: {
-                                        ...config.header.content,
-                                        translateX: val,
-                                      },
-                                    },
-                                  })
-                                }
-                                min={-1}
-                                max={1}
-                              >
-                                <div className="flex space-x-2 items-center">
-                                  <p className=" font-medium text-zinc-300 whitespace-nowrap">
-                                    translateX
-                                  </p>
-                                  <button
-                                    className="hover:text-zinc-400 transition-colors"
-                                    onClick={() => {
-                                      updateConfig({
-                                        header: {
-                                          ...config.header,
-                                          content: {
-                                            ...config.header.content,
-                                            translateX: 0,
-                                          },
-                                        },
-                                      });
-                                    }}
-                                  >
-                                    <RefreshIcon className="h-4" />
-                                  </button>
-                                </div>
-                              </RangeSlider>
-                            )}
-                          </>
+                          <Header config={config} updateConfig={updateConfig} />
                         );
                       case "shadow":
                         return (
-                          <>
-                            <div className=" space-y-2">
-                              <label className="font-medium text-zinc-300">
-                                Color
-                              </label>
-                              <div className="flex justify-between items-center">
-                                <ColorPicker
-                                  type="rgba"
-                                  color={config.shadow.color}
-                                  setColor={(val) => {
-                                    updateConfig({
-                                      shadow: {
-                                        ...config.shadow,
-                                        color: val,
-                                      },
-                                    });
-                                  }}
-                                />
-
-                                <button
-                                  onClick={() => {
-                                    updateConfig({
-                                      shadow: {
-                                        ...config.shadow,
-                                        color: "rgba(17, 12, 46, 0.2)",
-                                      },
-                                    });
-                                  }}
-                                  className="flex items-center justify-center space-x-2 border border-zinc-800 text-zinc-200 bg-zinc-900 hover:bg-zinc-800 bg-opacity-25 hover:bg-opacity-25 transition-all cursor-pointer bg p-2 rounded-lg"
-                                >
-                                  <RefreshIcon className="h-4 w-4" />
-                                </button>
-                              </div>
-                            </div>
-                            <div className="space-y-2">
-                              <label className="font-medium text-zinc-300">
-                                Size
-                              </label>
-                              <div className="grid grid-cols-2 gap-5">
-                                {shadowPresets.map((item) => (
-                                  <div className="space-y-2">
-                                    <button
-                                      onClick={() =>
-                                        updateConfig({
-                                          shadow: {
-                                            ...config.shadow,
-                                            ...item,
-                                          },
-                                        })
-                                      }
-                                      className={clsx(
-                                        config.shadow.type === item.type
-                                          ? "outline-blue-500"
-                                          : "outline-zinc-800",
-                                        "rounded-lg  bg-zinc-100 p-7 w-full outline  hover:outline-blue-500 transition-all duration-300"
-                                      )}
-                                    >
-                                      <div
-                                        style={{
-                                          boxShadow: `${item.previewSize} ${config.shadow.color}`,
-                                        }}
-                                        className="bg-white p-5 rounded-lg aspect-square"
-                                      ></div>
-                                    </button>
-                                    <p className="text-xs font-medium uppercase text-zinc-400">
-                                      {item.type}
-                                    </p>
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-                          </>
+                          <Shadow
+                            config={config}
+                            updateConfig={updateConfig}
+                            presets={shadowPresets}
+                          />
                         );
                       case "3d":
                         return (
-                          <>
-                            <RangeSlider
-                              value={config.orientation.perspective}
-                              set={(val) =>
-                                updateConfig({
-                                  orientation: {
-                                    ...config.orientation,
-                                    perspective: val,
-                                  },
-                                })
-                              }
-                              min={400}
-                              max={3000}
-                            >
-                              <div className="flex space-x-2 items-center">
-                                <p className=" font-medium text-zinc-300 whitespace-nowrap">
-                                  Perspective
-                                </p>
-                                <button
-                                  className="hover:text-zinc-400 transition-colors"
-                                  onClick={() => {
-                                    updateConfig({
-                                      orientation: {
-                                        ...config.orientation,
-                                        perspective: 3000,
-                                      },
-                                    });
-                                  }}
-                                >
-                                  <RefreshIcon className="h-4" />
-                                </button>
-                              </div>
-                            </RangeSlider>
-                            <RangeSlider
-                              value={config.orientation.rotateX}
-                              set={(val) =>
-                                updateConfig({
-                                  orientation: {
-                                    ...config.orientation,
-                                    rotateX: val,
-                                  },
-                                })
-                              }
-                              min={-45}
-                              max={45}
-                            >
-                              <div className="flex space-x-2 items-center">
-                                <p className=" font-medium text-zinc-300 whitespace-nowrap">
-                                  Rotate X
-                                </p>
-                                <button
-                                  className="hover:text-zinc-400 transition-colors"
-                                  onClick={() => {
-                                    updateConfig({
-                                      orientation: {
-                                        ...config.orientation,
-                                        rotateX: 0,
-                                      },
-                                    });
-                                  }}
-                                >
-                                  <RefreshIcon className="h-4" />
-                                </button>
-                              </div>
-                            </RangeSlider>
-                            <RangeSlider
-                              value={config.orientation.rotateY}
-                              set={(val) =>
-                                updateConfig({
-                                  orientation: {
-                                    ...config.orientation,
-                                    rotateY: val,
-                                  },
-                                })
-                              }
-                              min={-45}
-                              max={45}
-                            >
-                              <div className="flex space-x-2 items-center">
-                                <p className=" font-medium text-zinc-300 whitespace-nowrap">
-                                  Rotate Y
-                                </p>
-                                <button
-                                  className="hover:text-zinc-400 transition-colors"
-                                  onClick={() => {
-                                    updateConfig({
-                                      orientation: {
-                                        ...config.orientation,
-                                        rotateY: 0,
-                                      },
-                                    });
-                                  }}
-                                >
-                                  <RefreshIcon className="h-4" />
-                                </button>
-                              </div>
-                            </RangeSlider>
-                            <RangeSlider
-                              value={config.orientation.rotateZ}
-                              set={(val) =>
-                                updateConfig({
-                                  orientation: {
-                                    ...config.orientation,
-                                    rotateZ: val,
-                                  },
-                                })
-                              }
-                              min={-45}
-                              max={45}
-                            >
-                              <div className="flex space-x-2 items-center">
-                                <p className=" font-medium whitespace-nowrap text-zinc-300">
-                                  Rotate Z
-                                </p>
-                                <button
-                                  className="hover:text-zinc-400 transition-colors"
-                                  onClick={() => {
-                                    updateConfig({
-                                      orientation: {
-                                        ...config.orientation,
-                                        rotateZ: 0,
-                                      },
-                                    });
-                                  }}
-                                >
-                                  <RefreshIcon className="h-4" />
-                                </button>
-                              </div>
-                            </RangeSlider>
-                            <RangeSlider
-                              value={config.size.scale}
-                              set={(val) =>
-                                updateConfig({
-                                  size: {
-                                    ...config.size,
-                                    scale: val,
-                                  },
-                                })
-                              }
-                              min={0.5}
-                              max={1.5}
-                            >
-                              <div className="flex space-x-2 items-center">
-                                <p className=" font-medium text-zinc-300">
-                                  Scale
-                                </p>
-                                <button
-                                  className="hover:text-zinc-400 transition-colors"
-                                  onClick={() => {
-                                    updateConfig({
-                                      size: {
-                                        ...config.size,
-                                        scale: 0.8,
-                                      },
-                                    });
-                                  }}
-                                >
-                                  <RefreshIcon className="h-4" />
-                                </button>
-                              </div>
-                            </RangeSlider>
-                            <div className="space-y-2">
-                              <p className=" font-medium text-zinc-300">
-                                Presets
-                              </p>
-                              <div className="grid grid-cols-2 gap-5">
-                                <button
-                                  onClick={() => {
-                                    updateConfig({
-                                      size: {
-                                        ...config.size,
-                                        scale: 0.9,
-                                      },
-                                      position: {
-                                        x: 0,
-                                        y: 0,
-                                      },
-                                      orientation: {
-                                        rotateX: 45,
-                                        rotateY: 0,
-                                        rotateZ: 0,
-                                        perspective: 3000,
-                                      },
-                                    });
-                                  }}
-                                  style={{ perspective: "800px" }}
-                                  className="border  border-zinc-800 rounded-lg flex items-center justify-center p-4  hover:border-blue-500 transition-all duration-300"
-                                >
-                                  <div
-                                    style={{ transform: "rotateX(50deg)" }}
-                                    className="bg-zinc-600 rounded flex-1 aspect-video"
-                                  ></div>
-                                </button>
-                                <button
-                                  onClick={() => {
-                                    updateConfig({
-                                      size: {
-                                        ...config.size,
-                                        scale: 0.9,
-                                      },
-                                      position: {
-                                        x: 0,
-                                        y: 0,
-                                      },
-                                      orientation: {
-                                        rotateX: 45,
-                                        rotateY: 10,
-                                        rotateZ: -35,
-                                        perspective: 3000,
-                                      },
-                                    });
-                                  }}
-                                  style={{ perspective: "800px" }}
-                                  className="border  border-zinc-800 rounded-lg flex items-center justify-center p-4  hover:border-blue-500 transition-all duration-300"
-                                >
-                                  <div
-                                    style={{
-                                      transform:
-                                        "rotateZ(-25deg) rotateY(30deg) rotateX(40deg)",
-                                    }}
-                                    className="bg-zinc-600 rounded flex-1 aspect-video  "
-                                  ></div>
-                                </button>
-                              </div>
-                            </div>
-                            <button
-                              onClick={() => {
-                                updateConfig({
-                                  size: {
-                                    ...config.size,
-                                    scale: 0.8,
-                                  },
-                                  position: {
-                                    x: 0,
-                                    y: 0,
-                                  },
-                                  orientation: {
-                                    rotateX: 0,
-                                    rotateY: 0,
-                                    rotateZ: 0,
-                                    perspective: 1500,
-                                  },
-                                });
-                              }}
-                              className="flex items-center justify-center space-x-2 border border-zinc-800 text-zinc-200 bg-zinc-900 hover:bg-zinc-800 bg-opacity-25 hover:bg-opacity-25 transition-all cursor-pointer bg py-2 px-4 rounded-lg"
-                            >
-                              <RefreshIcon className="h-4 w-4" />
-                              <span>Reset</span>
-                            </button>
-                          </>
+                          <Rotation
+                            config={config}
+                            updateConfig={updateConfig}
+                          />
                         );
                       case "background":
                         return (
-                          <>
-                            <div className="flex space-x-2 rounded-xl bg-gray-100 dark:bg-black dark:border dark:border-zinc-900 p-1 max-w-4xl ">
-                              <button
-                                onClick={() =>
-                                  updateConfig({
-                                    ...config,
-                                    background: {
-                                      ...config.background,
-                                      type: "gradient",
-                                    },
-                                  })
-                                }
-                                className={clsx(
-                                  "flex w-full items-center justify-center rounded-lg py-2.5 text-center text-sm font-medium capitalize leading-5 ",
-                                  "ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2 dark:ring-transparent",
-                                  config.background.type === "gradient"
-                                    ? "bg-white text-blue-700 dark:text-blue-500 shadow dark:bg-zinc-900"
-                                    : "text-gray-700 hover:bg-white/[0.12] hover:text-gray-600 dark:hover:text-zinc-200 dark:text-zinc-300"
-                                )}
-                              >
-                                <h1 className="hidden sm:block">gradient</h1>
-                              </button>
-                              <button
-                                onClick={() =>
-                                  updateConfig({
-                                    ...config,
-                                    background: {
-                                      ...config.background,
-                                      type: "solid",
-                                    },
-                                  })
-                                }
-                                className={clsx(
-                                  "flex w-full items-center justify-center rounded-lg py-2.5 text-center text-sm font-medium capitalize leading-5 ",
-                                  "ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2 dark:ring-transparent",
-                                  config.background.type === "solid"
-                                    ? "bg-white text-blue-700 dark:text-blue-500 shadow dark:bg-zinc-900"
-                                    : "text-gray-700 hover:bg-white/[0.12] hover:text-gray-600 dark:hover:text-zinc-200 dark:text-zinc-300"
-                                )}
-                              >
-                                <h1 className="hidden sm:block">solid</h1>
-                              </button>
-                            </div>
-                            {config.background.type === "gradient" ? (
-                              <>
-                                <RangeSlider
-                                  value={config.background.gradient.direction}
-                                  set={(val) =>
-                                    updateConfig({
-                                      background: {
-                                        ...config.background,
-                                        gradient: {
-                                          ...config.background.gradient,
-                                          direction: val,
-                                        },
-                                      },
-                                    })
-                                  }
-                                  min={0}
-                                  max={359}
-                                >
-                                  <div className="flex space-x-2 items-center">
-                                    <p className=" font-medium text-zinc-300">
-                                      Direction
-                                    </p>
-                                    <button
-                                      className="hover:text-zinc-400 transition-colors"
-                                      onClick={() => {
-                                        updateConfig({
-                                          background: {
-                                            ...config.background,
-                                            gradient: {
-                                              ...config.background.gradient,
-                                              direction: 90,
-                                            },
-                                          },
-                                        });
-                                      }}
-                                    >
-                                      <RefreshIcon className="h-4" />
-                                    </button>
-                                  </div>
-                                </RangeSlider>
-                                <div className=" space-y-7  ">
-                                  <label className="font-medium text-zinc-300">
-                                    Colors
-                                  </label>
-
-                                  <GradientList
-                                    list={config.background.gradient.stops}
-                                    setList={(newList) => {
-                                      updateConfig({
-                                        background: {
-                                          ...config.background,
-                                          gradient: {
-                                            ...config.background.gradient,
-                                            stops: newList,
-                                          },
-                                        },
-                                      });
-                                    }}
-                                  />
-                                </div>
-                                <div className="space-y-2">
-                                  <label className="font-medium text-zinc-300">
-                                    Presets
-                                  </label>
-                                  <div className="grid grid-cols-7 gap-2">
-                                    {gradientPresets.map(
-                                      ({ stops, direction }) => (
-                                        <button
-                                          style={{
-                                            background: `linear-gradient(${90}deg, ${stops
-                                              .map((item) => item.color)
-                                              .join(",")})`,
-                                          }}
-                                          onClick={() =>
-                                            updateConfig({
-                                              background: {
-                                                ...config.background,
-                                                gradient: {
-                                                  stops,
-                                                  direction,
-                                                },
-                                              },
-                                            })
-                                          }
-                                          className="aspect-square h-full rounded-full border border-zinc-600"
-                                        ></button>
-                                      )
-                                    )}
-                                  </div>
-                                </div>
-                              </>
-                            ) : (
-                              <>
-                                <div className="space-y-2">
-                                  <label className="font-medium text-zinc-300">
-                                    Color
-                                  </label>
-                                  <ColorPicker
-                                    type="hex"
-                                    color={config.background.color}
-                                    setColor={(val) => {
-                                      updateConfig({
-                                        background: {
-                                          ...config.background,
-                                          color: val,
-                                        },
-                                      });
-                                    }}
-                                  />
-                                </div>
-                                <div className="space-y-2">
-                                  <label className="font-medium text-zinc-300">
-                                    Presets
-                                  </label>
-                                  <div className="grid grid-cols-7 gap-2">
-                                    {solidColorPresets.map(({ color }) => (
-                                      <button
-                                        style={{ background: color }}
-                                        onClick={() =>
-                                          updateConfig({
-                                            background: {
-                                              ...config.background,
-                                              color,
-                                            },
-                                          })
-                                        }
-                                        className="aspect-square h-full rounded-full border border-zinc-600"
-                                      ></button>
-                                    ))}
-                                  </div>
-                                </div>
-                              </>
-                            )}
-                          </>
+                          <Background
+                            config={config}
+                            updateConfig={updateConfig}
+                            gradientPresets={gradientPresets}
+                            colorPresets={colorPresets}
+                          />
                         );
                       case "border":
                         return (
-                          <>
-                            <div className=" space-y-2">
-                              <label className="font-medium  text-zinc-300">
-                                Color
-                              </label>
-                              <div className="flex justify-between items-center">
-                                <ColorPicker
-                                  type="rgba"
-                                  color={config.border.color}
-                                  setColor={(val) =>
-                                    updateConfig({
-                                      border: {
-                                        ...config.border,
-                                        color: val,
-                                      },
-                                    })
-                                  }
-                                />
-
-                                <button
-                                  onClick={() => {
-                                    updateConfig({
-                                      border: {
-                                        ...config.border,
-                                        color: "rgba(0, 0, 0, 1)",
-                                      },
-                                    });
-                                  }}
-                                  className="flex items-center justify-center space-x-2 border border-zinc-800 text-zinc-200 bg-zinc-900 hover:bg-zinc-800 bg-opacity-25 hover:bg-opacity-25 transition-all cursor-pointer bg p-2 rounded-lg"
-                                >
-                                  <RefreshIcon className="h-4 w-4" />
-                                </button>
-                              </div>
-                            </div>
-                            <RangeSlider
-                              value={config.border.radius}
-                              set={(val) =>
-                                updateConfig({
-                                  border: {
-                                    ...config.border,
-                                    radius: val,
-                                  },
-                                })
-                              }
-                              min={0}
-                              max={4}
-                            >
-                              <div className="flex space-x-2 items-center">
-                                <p className=" font-medium text-zinc-300">
-                                  Border Radius
-                                </p>
-                                <button
-                                  className="hover:text-zinc-400 transition-colors"
-                                  onClick={() => {
-                                    updateConfig({
-                                      border: {
-                                        ...config.border,
-                                        radius: 0.5,
-                                      },
-                                    });
-                                  }}
-                                >
-                                  <RefreshIcon className="h-4" />
-                                </button>
-                              </div>
-                            </RangeSlider>
-                            <RangeSlider
-                              value={config.border.width}
-                              set={(val) =>
-                                updateConfig({
-                                  border: {
-                                    ...config.border,
-                                    width: val,
-                                  },
-                                })
-                              }
-                              min={0}
-                              max={10}
-                            >
-                              <div className="flex space-x-2 items-center">
-                                <p className=" font-medium text-zinc-300">
-                                  Border Width
-                                </p>
-                                <button
-                                  className="hover:text-zinc-400 transition-colors"
-                                  onClick={() => {
-                                    updateConfig({
-                                      border: {
-                                        ...config.border,
-                                        width: 0,
-                                      },
-                                    });
-                                  }}
-                                >
-                                  <RefreshIcon className="h-4" />
-                                </button>
-                              </div>
-                            </RangeSlider>
-                          </>
+                          <Border config={config} updateConfig={updateConfig} />
                         );
                       default:
                         return <></>;

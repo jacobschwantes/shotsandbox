@@ -1,4 +1,4 @@
-import { auth } from "@utils/firebase-admin";
+import { auth } from "@modules/auth/firebase/admin";
 import { NextApiRequest, NextApiResponse } from "next";
 export function withAuth(handler: any) {
   return async (req: NextApiRequest, res: NextApiResponse) => {

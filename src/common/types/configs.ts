@@ -3,12 +3,13 @@ export type ImageDoc = {
   fileName: string;
   src: string;
 };
+export type GradientConfig = {
+  stops: { color: string; id: string | number }[];
+  direction: number;
+};
 export type BackgroundConfig = {
   color: string;
-  gradient: {
-    stops: { color: string; id: string | number }[];
-    direction: number;
-  };
+  gradient: GradientConfig;
   type: "solid" | "gradient" | "transparent";
 };
 export type OrientationConfig = {

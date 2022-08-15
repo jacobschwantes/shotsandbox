@@ -7,4 +7,22 @@ import Table from "./Table";
 import LineChart from "./LineChart";
 import Modal from "./Modal";
 import Tooltip from "./Tooltip";
-export { Header, Navigation, Notifications, Spinner, Card, Table, LineChart, Modal, Tooltip };
+import Toggle from "./Toggle";
+import ColorPicker from "./ColorPicker";
+import Popover from "./Popover";
+import Range from "./Range";
+export {
+  Header,
+  Navigation,
+  Notifications,
+  Spinner,
+  Card,
+  Table,
+  LineChart,
+  Modal,
+  Tooltip,
+  Toggle,
+  ColorPicker,
+  Popover,
+  Range
+};

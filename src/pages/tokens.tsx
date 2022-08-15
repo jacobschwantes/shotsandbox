@@ -6,34 +6,24 @@ import {
   EyeOffIcon,
   DuplicateIcon,
   CheckIcon,
-  TrashIcon,
   RefreshIcon,
   LockClosedIcon,
   LockOpenIcon,
   CheckCircleIcon,
-  ClipboardCopyIcon,
   ClipboardCheckIcon,
   CogIcon,
-  ArrowLeftIcon,
 } from "@heroicons/react/outline";
 import { Dialog, Transition } from "@headlessui/react";
-import { debounce, isEqual } from "lodash";
-import { useEffect, useMemo, useState } from "react";
+import { isEqual } from "lodash";
+import { useEffect, useState } from "react";
 import clsx from "clsx";
 import Spinner from "@components/Spinner";
-import { useTokens, useToken } from "@utils/swr/hooks";
+import { useTokens, useToken } from "@hooks/swr";
 import { useSWRConfig } from "swr";
 import { RadioGroup } from "@headlessui/react";
-import { ComputePosition, inline } from "@floating-ui/core";
-import Tooltip from "@components/Tooltip";
-import { AnimatePresence, motion } from "framer-motion";
-import { getAuth } from "firebase/auth";
-import { firebaseApp, auth } from "@modules/auth/firebase/clientApp";
-import { useAuthState } from "react-firebase-hooks/auth";
 
 const Tokens: NextPage = (props) => {
   const { mutate } = useSWRConfig();
-  const [user, loading, error] = useAuthState(auth);
   const [showKeys, setShowKeys] = useState(false);
   const [copiedId, setCopiedId] = useState("");
   const [spin, setSpin] = useState(false);

@@ -8,7 +8,7 @@ import {
 } from "@heroicons/react/outline";
 import Link from "next/link";
 import { signOut, getAuth } from "firebase/auth";
-import { firebaseApp } from "@modules/auth/firebase/clientApp";
+import { firebaseApp } from "@modules/auth/firebase/client";
 import { useRouter } from "next/router";
 import clsx from "clsx";
 const auth = getAuth(firebaseApp);

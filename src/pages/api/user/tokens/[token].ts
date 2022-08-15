@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { withAuth } from "@utils/middlewares";
-import { firestore } from "@utils/firebase-admin";
+import { firestore } from "@modules/auth/firebase/admin";
 async function getCount(docRef: FirebaseFirestore.DocumentReference) {
   const querySnapshot = await docRef.collection("usage").get();
   const documents = querySnapshot.docs;

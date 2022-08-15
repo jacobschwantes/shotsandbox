@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { getAuth } from "firebase/auth";
-import { firebaseApp } from "@modules/auth/firebase/clientApp";
+import { firebaseApp } from "@modules/auth/firebase/client";
 const auth = getAuth(firebaseApp);
 export function useIdToken() {
   const [token, setToken] = useState('');

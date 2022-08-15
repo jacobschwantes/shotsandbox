@@ -1,11 +1,7 @@
 import { NextPage } from "next";
-import { addDoc, collection } from "firebase/firestore";
-import { db, firebaseApp } from "@modules/auth/firebase/clientApp";
-import { getAuth } from "firebase/auth";
 import { useState } from "react";
 import { QuestionMarkCircleIcon } from "@heroicons/react/solid";
 import SettingsLayout from "@layouts/SettingsLayout";
-import { useSendEmailVerification } from "react-firebase-hooks/auth";
 import Spinner from "@components/Spinner";
 import { toast } from "react-toastify";
 import { getFunctions, httpsCallable } from "firebase/functions";

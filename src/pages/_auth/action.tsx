@@ -1,5 +1,5 @@
 import { XIcon } from "@heroicons/react/solid";
-import { firebaseApp } from "@modules/auth/firebase/clientApp";
+import { firebaseApp } from "@modules/auth/firebase/client";
 import {
   getAuth,
   verifyPasswordResetCode,

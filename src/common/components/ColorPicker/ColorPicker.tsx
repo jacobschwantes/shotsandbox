@@ -1,11 +1,10 @@
 import { NextComponentType, NextPageContext } from "next";
-import Popover from "./Popover";
+import Popover from "../Popover/Popover";
 import {
   HexColorPicker,
   HexColorInput,
   RgbaStringColorPicker,
 } from "react-colorful";
-import React from "react";
 interface ColorPickerProps {
   color: string;
   setColor: (val: string) => void;
@@ -53,5 +52,4 @@ const ColorPicker: NextComponentType<NextPageContext, {}, ColorPickerProps> = ({
     </div>
   );
 };
-
 export default ColorPicker;

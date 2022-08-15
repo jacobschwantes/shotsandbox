@@ -1,8 +1,7 @@
 import { NextPage } from "next";
-import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/solid";
-import { Card, LineChart, Spinner } from "@components/index";
+import { LineChart } from "@components/index";
 import Link from "next/link";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import {
   EmojiSadIcon,
   RefreshIcon,
@@ -10,15 +9,11 @@ import {
   PaperAirplaneIcon,
 } from "@heroicons/react/outline";
 import clsx from "clsx";
-import { useUsage, useLogs } from "@utils/swr/hooks";
+import { useUsage } from "@hooks/swr";
 import { useSWRConfig } from "swr";
-import { Table } from "@components/index";
 import { DateTime } from "luxon";
-import { firebaseApp } from "@modules/auth/firebase/clientApp";
-import { getAuth } from "firebase/auth";
 
 const Dashboard: NextPage = (props) => {
-  const auth = getAuth(firebaseApp);
   const { mutate } = useSWRConfig();
   const [idToken, setIdToken] = useState(props.idToken);
   const [spin, setSpin] = useState(false);
