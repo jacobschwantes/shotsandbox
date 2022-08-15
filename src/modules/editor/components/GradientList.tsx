@@ -28,7 +28,7 @@ export default function GradientList({ list, setList }: ListProps) {
   return (
     <div className="relative w-full">
       <div
-        className="w-[95%] h-3 flex absolute left-1/2  -translate-x-1/2 top-1/2 -translate-y-1/2 z-0 "
+        className="w-[95%] h-3 flex absolute left-1/2  -translate-x-1/2 top-1/2 -translate-y-1/2 z-0 border border-zinc-700 "
         style={{
           background: `linear-gradient(${70}deg, ${list
             .map((item) => item.color)

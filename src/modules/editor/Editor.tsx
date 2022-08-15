@@ -155,6 +155,244 @@ function useWindowSize(ref: React.RefObject<HTMLDivElement>) {
   return windowSize;
 }
 
+const presets: Config[] = [
+  {
+    id: "config1",
+    preview: "preview_123.png",
+    name: "default",
+    size: {
+      scale: 1,
+      dimensions: {
+        aspectRatio: "16 / 9",
+        width: 1920,
+        height: 1080,
+      },
+    },
+    orientation: {
+      rotateX: 45,
+      rotateY: 0,
+      rotateZ: 0,
+      perspective: 3000,
+    },
+    position: {
+      x: 0,
+      y: 0.14,
+    },
+    background: {
+      type: "gradient",
+      color: "#252525",
+      gradient: {
+        stops: [
+          {
+            color: "#000000",
+            id: 1,
+          },
+          {
+            color: "#0c0c0c",
+            id: 2,
+          },
+          {
+            color: "#0b0b0b",
+            id: 3,
+          },
+          {
+            color: "#000000",
+            id: 4,
+          },
+        ],
+        direction: 90,
+      },
+    },
+    shadow: {
+      color: "rgba(255, 255, 255, 0)",
+      type: "2xl",
+      previewSize: "0px 10px 20px",
+      size: "0px 100px 200px",
+    },
+    border: {
+      radius: 2,
+      width: 0,
+      color: "rgba(0, 0, 0, 1)",
+    },
+    header: {
+      show: true,
+      anchored: false,
+      align: "vertical",
+      content: {
+        title: "The best image editing tool for founders",
+        subtitle: "Turn boring screenshots into stunning graphics",
+        color: "rgba(255, 255, 255, 1)",
+        bold: true,
+        italic: false,
+        size: 3.87,
+        padding: -4.36,
+        translateX: 0,
+      },
+    },
+    frame: {
+      show: true,
+      dark: true,
+      opacity: 0.3,
+      buttons: {
+        show: true,
+        dark: true,
+        solid: false,
+      },
+      searchBar: {
+        show: true,
+      },
+    },
+  },
+  {
+    id: "config2",
+    preview: "preset_2.png",
+    position: {
+      x: 0.02,
+      y: -0.05,
+    },
+
+    orientation: {
+      rotateX: 45,
+      rotateY: 11.48,
+      rotateZ: -23.65,
+      perspective: 3000,
+    },
+    background: {
+      color: "#000000",
+      type: "gradient",
+      gradient: {
+        stops: [
+          { color: "#cd96b3", id: "sdf454sdf" },
+          { color: "#bda6f0", id: "sdf454sdf" },
+        ],
+        direction: 70,
+      },
+    },
+    size: {
+      scale: 0.9,
+      dimensions: {
+        aspectRatio: "16 / 9",
+        width: 1920,
+        height: 1080,
+      },
+    },
+
+    shadow: {
+      color: "rgba(255, 255, 255, 0)",
+      type: "2xl",
+      previewSize: "0px 10px 20px",
+      size: "0px 100px 200px",
+    },
+    border: {
+      radius: 2,
+      width: 0,
+      color: "rgba(0, 0, 0, 1)",
+    },
+    header: {
+      show: false,
+      anchored: false,
+      align: "vertical",
+      content: {
+        title: "The best image editing tool for founders",
+        subtitle: "Turn boring screenshots into stunning graphics",
+        color: "rgba(255, 255, 255, 1)",
+        bold: true,
+        italic: false,
+        size: 3.87,
+        padding: -4.36,
+        translateX: 0,
+      },
+    },
+    frame: {
+      show: true,
+      dark: false,
+      opacity: 0.3,
+      buttons: {
+        show: true,
+        dark: true,
+        solid: false,
+      },
+      searchBar: {
+        show: true,
+      },
+    },
+  },
+  {
+    id: "config3",
+    preview: "preset_1.png",
+    position: {
+      x: 0.2,
+      y: 0.14,
+    },
+
+    orientation: {
+      rotateX: 45,
+      rotateY: 8.26,
+      rotateZ: -19.38,
+      perspective: 3000,
+    },
+    background: {
+      color: "#000000",
+      type: "gradient",
+      gradient: {
+        stops: [
+          { color: "#cd96b3", id: "sdf454sdf" },
+          { color: "#bda6f0", id: "sdf454sdf" },
+        ],
+        direction: 70,
+      },
+    },
+    size: {
+      scale: 1.2,
+      dimensions: {
+        aspectRatio: "16 / 9",
+        width: 1920,
+        height: 1080,
+      },
+    },
+
+    shadow: {
+      color: "rgba(255, 255, 255, 0)",
+      type: "2xl",
+      previewSize: "0px 10px 20px",
+      size: "0px 100px 200px",
+    },
+    border: {
+      radius: 2,
+      width: 0,
+      color: "rgba(0, 0, 0, 1)",
+    },
+    header: {
+      show: false,
+      anchored: false,
+      align: "vertical",
+      content: {
+        title: "The best image editing tool for founders",
+        subtitle: "Turn boring screenshots into stunning graphics",
+        color: "rgba(255, 255, 255, 1)",
+        bold: true,
+        italic: false,
+        size: 3.87,
+        padding: -4.36,
+        translateX: 0,
+      },
+    },
+    frame: {
+      show: true,
+      dark: false,
+      opacity: 0.3,
+      buttons: {
+        show: true,
+        dark: true,
+        solid: false,
+      },
+      searchBar: {
+        show: true,
+      },
+    },
+  },
+];
+
 const framePresets: { type: string; config: FrameConfig }[] = [
   {
     type: "Transparent",
@@ -550,6 +788,15 @@ const gradientPresets = [
       { color: "#5c03bc", id: 2 },
       { color: "#e536ab", id: 3 },
       { color: "#f4e5f0", id: 4 },
+    ],
+    direction: 90,
+  },
+  {
+    stops: [
+      { color: "#000000", id: 1 },
+      { color: "#1c1a1a", id: 2 },
+      { color: "#1c1a1a", id: 3 },
+      { color: "#000000", id: 4 },
     ],
     direction: 90,
   },
@@ -1071,6 +1318,9 @@ const Editor: NextPage = () => {
       <div className="p-5 flex justify-between absolute w-full bg-black">
         <h1 className="text-zinc-200">Editor</h1>
         <div className="flex space-x-2">
+          <button onClick={() => console.log(config)} className="text-white">
+            click me
+          </button>
           <Popover
             gap={10}
             placement="bottom-end"
@@ -1359,6 +1609,87 @@ const Editor: NextPage = () => {
                 layout >= index + 1 && config.header.anchored ? (
                   <motion.div
                     transition={{ type: "spring" }}
+                    key="container2"
+                    animate={{
+                      x: config.position.x * containerSize.width,
+                      y: config.position.y * containerSize.height,
+                      scale: config.size.scale,
+                      rotateX: config.orientation.rotateX,
+                      rotateY: config.orientation.rotateY,
+                      rotateZ: config.orientation.rotateZ,
+                      transformPerspective: config.orientation.perspective,
+                    }}
+                    className={clsx(
+                      config.header.align === "vertical"
+                        ? "flex-col"
+                        : "items-center",
+                      "relative flex flex-1 "
+                    )}
+                  >
+                    {config.header.show && (
+                      <div
+                        style={{ color: config.header.content.color }}
+                        className={clsx(
+                          config.header.content.italic && "italic",
+                          config.header.align === "horizontal"
+                            ? " max-w-xl text-left"
+                            : "text-center",
+                          "space-y-2"
+                        )}
+                      >
+                        <h1
+                          style={{
+                            fontSize: `${1.25 * config.header.content.size}rem`,
+                          }}
+                          className={clsx(
+                            config.header.content.bold && "font-bold",
+                            ""
+                          )}
+                        >
+                          {config.header.content.title}
+                        </h1>
+                        <p
+                          style={{
+                            fontSize: `${0.75 * config.header.content.size}rem`,
+                          }}
+                        >
+                          {config.header.content.subtitle}
+                        </p>
+                      </div>
+                    )}
+                    <div
+                      className="aspect-video relative flex flex-col flex-1 overflow-hidden "
+                      style={{
+                        boxShadow: `${config.shadow.color} ${config.shadow.size}`,
+                        borderRadius: `${config.border.radius}rem`,
+                        borderColor: config.border.color,
+                        borderWidth: `${config.border.width}px`,
+                        marginTop:
+                          !config.header.show ||
+                          config.header.align === "horizontal"
+                            ? 0
+                            : `${config.header.content.padding}rem`,
+                        marginLeft:
+                          !config.header.show ||
+                          config.header.align === "vertical"
+                            ? 0
+                            : `${config.header.content.padding}rem`,
+                      }}
+                    >
+                      {config.frame.show && <Toolbar options={config.frame} />}
+                      <div
+                        className={clsx(
+                          config.frame.show && "mt-[44px]",
+                          "relative flex-1 "
+                        )}
+                      >
+                        <Image priority layout="fill" src={url.src} />
+                      </div>
+                    </div>
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    transition={{ type: "spring" }}
                     key={index}
                     animate={{
                       x: config.position.x * containerSize.width,
@@ -1366,7 +1697,9 @@ const Editor: NextPage = () => {
                       scale: config.size.scale,
                     }}
                     className={clsx(
-                      config.header.align === "vertical" ? "flex-col" : "items-center",
+                      config.header.align === "vertical"
+                        ? "flex-col"
+                        : "items-center",
                       "relative flex flex-1"
                     )}
                   >
@@ -1379,7 +1712,10 @@ const Editor: NextPage = () => {
                         }}
                         style={{ color: config.header.content.color }}
                         className={clsx(
-                          config.header.content.italic && "italic", config.header.align === 'horizontal' ? ' max-w-xl text-left' : "text-center",
+                          config.header.content.italic && "italic",
+                          config.header.align === "horizontal"
+                            ? " max-w-xl text-left"
+                            : "text-center",
                           " space-y-2"
                         )}
                       >
@@ -1418,11 +1754,16 @@ const Editor: NextPage = () => {
                         borderRadius: `${config.border.radius}rem`,
                         borderColor: config.border.color,
                         borderWidth: `${config.border.width}px`,
-                        marginTop: !config.header.show || config.header.align === 'horizontal'
-                        ? 0 :`${config.header.content.padding}rem`,
-                        marginLeft: !config.header.show || config.header.align === 'vertical'
-                        ? 0 :`${config.header.content.padding}rem`
-                        
+                        marginTop:
+                          !config.header.show ||
+                          config.header.align === "horizontal"
+                            ? 0
+                            : `${config.header.content.padding}rem`,
+                        marginLeft:
+                          !config.header.show ||
+                          config.header.align === "vertical"
+                            ? 0
+                            : `${config.header.content.padding}rem`,
                       }}
                     >
                       {config.frame.show && <Toolbar options={config.frame} />}
@@ -1435,76 +1776,6 @@ const Editor: NextPage = () => {
                         <Image priority layout="fill" src={url.src} />
                       </div>
                     </motion.div>
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    transition={{ type: "spring" }}
-                    key="container2"
-                    animate={{
-                      x: config.position.x * containerSize.width,
-                      y: config.position.y * containerSize.height,
-                      scale: config.size.scale,
-                      rotateX: config.orientation.rotateX,
-                      rotateY: config.orientation.rotateY,
-                      rotateZ: config.orientation.rotateZ,
-                      transformPerspective: config.orientation.perspective,
-                    }}
-                    className={clsx(
-                      config.header.align === "vertical" ? "flex-col" : "items-center",
-                      "relative flex flex-1 "
-                    )}
-                  >
-                    {config.header.show && (
-                      <div
-                        style={{ color: config.header.content.color }}
-                        className={clsx(
-                          config.header.content.italic && "italic",config.header.align === 'horizontal' ? ' max-w-xl text-left' : "text-center",
-                          "space-y-2"
-                        )}
-                      >
-                        <h1
-                          style={{
-                            fontSize: `${1.25 * config.header.content.size}rem`,
-                          }}
-                          className={clsx(
-                            config.header.content.bold && "font-bold",
-                            ""
-                          )}
-                        >
-                          {config.header.content.title}
-                        </h1>
-                        <p
-                          style={{
-                            fontSize: `${0.75 * config.header.content.size}rem`,
-                          }}
-                        >
-                          {config.header.content.subtitle}
-                        </p>
-                      </div>
-                    )}
-                    <div
-                      className="aspect-video relative flex flex-col flex-1 overflow-hidden "
-                      style={{
-                        boxShadow: `${config.shadow.color} ${config.shadow.size}`,
-                        borderRadius: `${config.border.radius}rem`,
-                        borderColor: config.border.color,
-                        borderWidth: `${config.border.width}px`,
-                        marginTop: !config.header.show || config.header.align === 'horizontal'
-                        ? 0 :`${config.header.content.padding}rem`,
-                        marginLeft: !config.header.show || config.header.align === 'vertical'
-                        ? 0 :`${config.header.content.padding}rem`
-                      }}
-                    >
-                      {config.frame.show && <Toolbar options={config.frame} />}
-                      <div
-                        className={clsx(
-                          config.frame.show && "mt-[44px]",
-                          "relative flex-1 "
-                        )}
-                      >
-                        <Image priority layout="fill" src={url.src} />
-                      </div>
-                    </div>
                   </motion.div>
                 )
               )}
@@ -1627,68 +1898,17 @@ const Editor: NextPage = () => {
                       case "presets":
                         return (
                           <>
-                            <button
-                              onClick={() => {
-                                updateConfig({
-                                  position: {
-                                    x: 0.2,
-                                    y: 0.14,
-                                  },
-                                  size: { ...config.size, scale: 1.2 },
-                                  orientation: {
-                                    rotateX: 45,
-                                    rotateY: 8.26,
-                                    rotateZ: -19.38,
-                                    perspective: 3000,
-                                  },
-                                  background: {
-                                    color: "#000",
-                                    type: "gradient",
-                                    gradient: {
-                                      stops: [
-                                        { color: "#cd96b3", id: "sdf454sdf" },
-                                        { color: "#bda6f0", id: "sdf454sdf" },
-                                      ],
-                                      direction: 70,
-                                    },
-                                  },
-                                });
-                              }}
-                              className="border rounded-xl border-zinc-900 overflow-hidden"
-                            >
-                              <img src="preset_1.png"></img>
-                            </button>
-                            <button
-                              onClick={() => {
-                                updateConfig({
-                                  position: {
-                                    x: 0.02,
-                                    y: -0.05,
-                                  },
-                                  size: { ...config.size, scale: 0.9 },
-                                  orientation: {
-                                    rotateX: 45,
-                                    rotateY: 11.48,
-                                    rotateZ: -23.65,
-                                    perspective: 3000,
-                                  },
-                                  background: {
-                                    color: "000",
-                                    type: "gradient",
-                                    gradient: {
-                                      stops: [
-                                        { color: "#cd96b3", id: "sdf454sdf" },
-                                        { color: "#bda6f0", id: "sdf454sdf" },
-                                      ],
-                                      direction: 70,
-                                    },
-                                  },
-                                });
-                              }}
-                              className="border rounded-xl border-zinc-900 overflow-hidden"
-                            >
-                              <img src="preset_2.png"></img>
-                            </button>
+                            {presets.map((config) => (
+                              <button
+                                onClick={() => {
+                                  updateConfig(config);
+                                }}
+                                className="border rounded-xl border-zinc-900 overflow-hidden"
+                              >
+                                <img src={config.preview}></img>
+                              </button>
+                            ))}
+            
                           </>
                         );
                       case "position":
@@ -2349,44 +2569,46 @@ const Editor: NextPage = () => {
                                 </button>
                               </div>
                             </RangeSlider>
-                            <RangeSlider
-                              value={config.header.content.translateX}
-                              set={(val) =>
-                                updateConfig({
-                                  header: {
-                                    ...config.header,
-                                    content: {
-                                      ...config.header.content,
-                                      translateX: val,
-                                    },
-                                  },
-                                })
-                              }
-                              min={-1}
-                              max={1}
-                            >
-                              <div className="flex space-x-2 items-center">
-                                <p className=" font-medium text-zinc-300 whitespace-nowrap">
-                                  translateX
-                                </p>
-                                <button
-                                  className="hover:text-zinc-400 transition-colors"
-                                  onClick={() => {
-                                    updateConfig({
-                                      header: {
-                                        ...config.header,
-                                        content: {
-                                          ...config.header.content,
-                                          translateX: 0,
-                                        },
+                            {!config.header.anchored && (
+                              <RangeSlider
+                                value={config.header.content.translateX}
+                                set={(val) =>
+                                  updateConfig({
+                                    header: {
+                                      ...config.header,
+                                      content: {
+                                        ...config.header.content,
+                                        translateX: val,
                                       },
-                                    });
-                                  }}
-                                >
-                                  <RefreshIcon className="h-4" />
-                                </button>
-                              </div>
-                            </RangeSlider>
+                                    },
+                                  })
+                                }
+                                min={-1}
+                                max={1}
+                              >
+                                <div className="flex space-x-2 items-center">
+                                  <p className=" font-medium text-zinc-300 whitespace-nowrap">
+                                    translateX
+                                  </p>
+                                  <button
+                                    className="hover:text-zinc-400 transition-colors"
+                                    onClick={() => {
+                                      updateConfig({
+                                        header: {
+                                          ...config.header,
+                                          content: {
+                                            ...config.header.content,
+                                            translateX: 0,
+                                          },
+                                        },
+                                      });
+                                    }}
+                                  >
+                                    <RefreshIcon className="h-4" />
+                                  </button>
+                                </div>
+                              </RangeSlider>
+                            )}
                           </>
                         );
                       case "shadow":
