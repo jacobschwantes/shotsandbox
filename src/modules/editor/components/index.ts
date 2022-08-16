@@ -9,6 +9,7 @@ import Rotation from "./Rotation";
 import Shadow from "./Shadow";
 import ScreenshotModal from "./ScreenshotModal";
 import List from "./DragList";
+import Watermarks from "./Watermarks";
 export {
   Background,
   Border,
@@ -20,5 +21,6 @@ export {
   Rotation,
   Shadow,
   List,
-  ScreenshotModal
+  ScreenshotModal,
+  Watermarks
 };

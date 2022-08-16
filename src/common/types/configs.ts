@@ -56,6 +56,11 @@ export type ShadowConfig = {
   size: string;
   color: string;
 };
+export type WatermarkConfig = {
+  show: boolean;
+  theme: "light" | "dark";
+  placement: "top-right" | "top-left" | "bottom-left" | "bottom-right";
+};
 export type FrameConfig = {
   show: boolean;
   dark: boolean;
@@ -80,4 +85,5 @@ export type Config = {
   background: BackgroundConfig;
   shadow: ShadowConfig;
   frame: FrameConfig;
+  watermark: WatermarkConfig;
 };

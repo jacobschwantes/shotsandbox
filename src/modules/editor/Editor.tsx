@@ -23,7 +23,11 @@ import {
   AnnotationIcon,
 } from "@heroicons/react/solid";
 import { toast } from "react-toastify";
-import { ChevronUpIcon, RefreshIcon } from "@heroicons/react/outline";
+import {
+  CameraIcon,
+  ChevronUpIcon,
+  RefreshIcon,
+} from "@heroicons/react/outline";
 import type { ImageDoc, Config } from "@customTypes/configs";
 import {
   shadowPresets,
@@ -47,9 +51,11 @@ import {
   Rotation,
   Shadow,
   ScreenshotModal,
-  List
+  List,
+  Watermarks,
 } from "./components/index";
 import { useWindowSize } from "@hooks/window";
+import { Watermark } from "./components/Watermarks";
 
 const generalNavigation = [
   {
@@ -215,7 +221,7 @@ const Editor: NextPage = () => {
   const [showWatermark, setShowWatermark] = useState(true);
   const [removeBackground, setRemoveBackground] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-  const watermarkRef = useRef<HTMLDivElement>(null);
+  const watermarkRef = useRef<HTMLSpanElement>(null);
   const containerSize = useWindowSize(ref);
 
   const getScreenshot = async (options) => {
@@ -295,19 +301,42 @@ const Editor: NextPage = () => {
     const filteredArr = imageStack.filter((item) => item.id !== id);
     setImageStack(filteredArr);
   };
+  const checkWatermark = () => {
+    console.log(watermarkRef.current);
+    const acceptableClassLists: string[] = [];
+    const placements = [
+      "top-5 left-5",
+      "top-5 right-5",
+      "bottom-5 left-5",
+      "bottom-5 right-5",
+    ];
+    placements.forEach((item) => {
+      acceptableClassLists.push(
+        item +
+          " absolute bg-white px-3 py-2 rounded-xl border-2 border-zinc-200 shadow-xl z-10 flex space-x-1 items-center bg-opacity-80 text-black"
+      );
+      acceptableClassLists.push(
+        item +
+          " absolute bg-black px-3 py-2 rounded-xl border-2 border-zinc-600 shadow-xl z-10 flex space-x-1 items-center bg-opacity-80 text-zinc-300"
+      );
+    });
+    if (document.contains(watermarkRef.current)) {
+      if (
+        acceptableClassLists.some(
+          (item) =>
+            watermarkRef.current?.className.normalize() === item.normalize()
+        )
+      )
+        return false;
+      else return true;
+    } else return true;
+  };
   const getImage = useCallback(
     (format: string) => {
       if (ref.current === null) {
         return;
       }
-      if (
-        showWatermark &&
-        (!document.contains(watermarkRef.current) ||
-          !(
-            watermarkRef.current?.className.normalize() ===
-            "absolute bottom-5 right-5 bg-white p-2 rounded-2xl shadow-xl z-10".normalize()
-          ))
-      ) {
+      if (config.watermark.show && checkWatermark()) {
         toast("do not try to modify watermark", { type: "error" });
       } else {
         switch (format) {
@@ -558,26 +587,6 @@ const Editor: NextPage = () => {
                       htmlFor="show-watermark"
                       className="font-medium text-zinc-300"
                     >
-                      Show watermark
-                    </label>
-                  </div>
-
-                  <input
-                    checked={showWatermark}
-                    onChange={() => setShowWatermark(!showWatermark)}
-                    id="show-watermark"
-                    aria-describedby="show-watermark"
-                    name="show-watermark"
-                    type="checkbox"
-                    className="form-checkbox focus:ring-blue-600 focus:ring-offset-black h-4 w-4 text-blue-600 border-zinc-900 rounded bg-zinc-800"
-                  />
-                </div>
-                <div className="relative flex items-start">
-                  <div className="min-w-0 flex-1 text-sm">
-                    <label
-                      htmlFor="show-watermark"
-                      className="font-medium text-zinc-300"
-                    >
                       Remove background
                     </label>
                   </div>
@@ -655,13 +664,12 @@ const Editor: NextPage = () => {
               "overflow-hidden relative flex items-center justify-center max-h-full max-w-full rounded-3xl"
             )}
           >
-            {showWatermark && (
-              <span
+            {config.watermark.show && (
+              <Watermark
                 ref={watermarkRef}
-                className="absolute bottom-5 right-5 bg-white p-2 rounded-2xl shadow-xl z-10"
-              >
-                <h1 className="font-medium">SCREENSHOTIFY</h1>
-              </span>
+                placement={config.watermark.placement}
+                theme={config.watermark.theme}
+              />
             )}
 
             <div
@@ -676,9 +684,9 @@ const Editor: NextPage = () => {
                     transition={{ type: "spring" }}
                     key="container2"
                     animate={{
-                      x: config.position.x * containerSize.width,
-                      y: config.position.y * containerSize.height,
-                      scale: config.size.scale,
+                      x: (config.position.x / 100) * containerSize.width,
+                      y: (config.position.y / 100) * containerSize.height,
+                      scale: config.size.scale / 100,
                       rotateX: config.orientation.rotateX,
                       rotateY: config.orientation.rotateY,
                       rotateZ: config.orientation.rotateZ,
@@ -757,9 +765,9 @@ const Editor: NextPage = () => {
                     transition={{ type: "spring" }}
                     key={index}
                     animate={{
-                      x: config.position.x * containerSize.width,
-                      y: config.position.y * containerSize.height,
-                      scale: config.size.scale,
+                      x: (config.position.x / 100) * containerSize.width,
+                      y: (config.position.y / 100) * containerSize.height,
+                      scale: config.size.scale / 100,
                     }}
                     className={clsx(
                       config.header.align === "vertical"
@@ -772,7 +780,7 @@ const Editor: NextPage = () => {
                       <motion.div
                         animate={{
                           x:
-                            config.header.content.translateX *
+                            (config.header.content.translateX / 100) *
                             containerSize.width,
                         }}
                         style={{ color: config.header.content.color }}
@@ -990,6 +998,13 @@ const Editor: NextPage = () => {
                       case "border":
                         return (
                           <Border config={config} updateConfig={updateConfig} />
+                        );
+                      case "watermark":
+                        return (
+                          <Watermarks
+                            config={config}
+                            updateConfig={updateConfig}
+                          />
                         );
                       default:
                         return <></>;
