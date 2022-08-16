@@ -12,151 +12,153 @@ const Frames: NextComponentType<NextPageContext, {}, FramesProps> = ({
   config,
   updateConfig,
   presets,
-}) =>{
-  console.log(config)
-  
-  return (
-  <>
-    <div className="space-y-3">
-      <h2 className="font-medium text-zinc-200 text-base">Toolbar</h2>
-      <Range
-        min={0.3}
-        max={1}
-        value={config.frame.opacity}
-        set={(value) =>
-          updateConfig({
-            frame: {
-              ...config.frame,
-              opacity: value,
-            },
-          })
-        }
-      >
-        <div className="flex space-x-2 items-center">
-          <p className=" font-medium text-zinc-300">Opacity</p>
-          <button
-            className="hover:text-zinc-400 transition-colors"
-            onClick={() => {
-              updateConfig({
-                frame: {
-                  ...config.frame,
-                  opacity: 1,
-                },
-              });
-            }}
-          >
-            <RefreshIcon className="h-4" />
-          </button>
-        </div>
-      </Range>
-      <Toggle
-        enabled={config.frame.show}
-        setEnabled={(value) =>
-          updateConfig({
-            frame: {
-              ...config.frame,
-              show: value,
-            },
-          })
-        }
-      >
-        <p className="font-medium text-zinc-300 whitespace-nowrap">Show</p>
-      </Toggle>
-      <Toggle
-        enabled={config.frame.dark}
-        setEnabled={(value) =>
-          updateConfig({
-            frame: {
-              ...config.frame,
-              dark: value,
-            },
-          })
-        }
-      >
-        <p className="font-medium text-zinc-300 whitespace-nowrap">Dark</p>
-      </Toggle>
-    </div>
+}) => {
+  console.log(config);
 
-    <div className="space-y-3">
-      <h2 className="font-medium text-zinc-200 text-base">Buttons</h2>
-      <Toggle
-        enabled={config.frame.buttons.solid}
-        setEnabled={(value) =>
-          updateConfig({
-            frame: {
-              ...config.frame,
-              buttons: {
-                ...config.frame.buttons,
-                solid: value,
+  return (
+    <>
+      <div className="space-y-3">
+        <h2 className="font-medium text-zinc-200 text-base">Toolbar</h2>
+        <Range
+          step={0.01}
+          showValues={false}
+          min={0.3}
+          max={1}
+          value={config.frame.opacity}
+          set={(value) =>
+            updateConfig({
+              frame: {
+                ...config.frame,
+                opacity: value,
               },
-            },
-          })
-        }
-      >
-        <p className="font-medium text-zinc-300 whitespace-nowrap">Solid</p>
-      </Toggle>
-      <Toggle
-        enabled={config.frame.buttons.dark}
-        setEnabled={(value) =>
-          updateConfig({
-            frame: {
-              ...config.frame,
-              buttons: {
-                ...config.frame.buttons,
-                dark: value,
-              },
-            },
-          })
-        }
-      >
-        <p className="font-medium text-zinc-300 whitespace-nowrap">Dark</p>
-      </Toggle>
-    </div>
-    <div className="space-y-3">
-      <h2 className="font-medium text-zinc-200 text-base">Search Bar</h2>
-      <Toggle
-        enabled={config.frame.searchBar.show}
-        setEnabled={(value) =>
-          updateConfig({
-            frame: {
-              ...config.frame,
-              searchBar: {
-                ...config.frame.searchBar,
+            })
+          }
+        >
+          <div className="flex space-x-2 items-center">
+            <p className=" font-medium text-zinc-300">Opacity</p>
+            <button
+              className="hover:text-zinc-400 transition-colors"
+              onClick={() => {
+                updateConfig({
+                  frame: {
+                    ...config.frame,
+                    opacity: 1,
+                  },
+                });
+              }}
+            >
+              <RefreshIcon className="h-4" />
+            </button>
+          </div>
+        </Range>
+        <Toggle
+          enabled={config.frame.show}
+          setEnabled={(value) =>
+            updateConfig({
+              frame: {
+                ...config.frame,
                 show: value,
               },
-            },
-          })
-        }
-      >
-        <p className="font-medium text-zinc-300 whitespace-nowrap">Show</p>
-      </Toggle>
-    </div>
-    <div className="space-y-3">
-      <h2 className="font-medium text-zinc-200 text-base">Presets</h2>
-      <div className="space-y-3">
-        {presets.map((item) => (
-          <button
-            onClick={() =>
-              updateConfig({
-                frame: {
-                  ...item.config,
-                },
-              })
-            }
-            className={clsx(
-              item.config === config.frame && "border-blue-600",
-              "p-5 rounded-lg bg-gradient-to-tr bg-zinc-900 border border-zinc-800 hover:border-blue-600 transition-all duration-300 w-full"
-            )}
-          >
-            <div className=" rounded-t-md overflow-hidden relative h-5">
-              <PreviewToolbar options={item.config} />
-            </div>
-          </button>
-        ))}
+            })
+          }
+        >
+          <p className="font-medium text-zinc-300 whitespace-nowrap">Show</p>
+        </Toggle>
+        <Toggle
+          enabled={config.frame.dark}
+          setEnabled={(value) =>
+            updateConfig({
+              frame: {
+                ...config.frame,
+                dark: value,
+              },
+            })
+          }
+        >
+          <p className="font-medium text-zinc-300 whitespace-nowrap">Dark</p>
+        </Toggle>
       </div>
-    </div>
 
-    {/* <div className="grid grid-cols-2 gap-3">
+      <div className="space-y-3">
+        <h2 className="font-medium text-zinc-200 text-base">Buttons</h2>
+        <Toggle
+          enabled={config.frame.buttons.solid}
+          setEnabled={(value) =>
+            updateConfig({
+              frame: {
+                ...config.frame,
+                buttons: {
+                  ...config.frame.buttons,
+                  solid: value,
+                },
+              },
+            })
+          }
+        >
+          <p className="font-medium text-zinc-300 whitespace-nowrap">Solid</p>
+        </Toggle>
+        <Toggle
+          enabled={config.frame.buttons.dark}
+          setEnabled={(value) =>
+            updateConfig({
+              frame: {
+                ...config.frame,
+                buttons: {
+                  ...config.frame.buttons,
+                  dark: value,
+                },
+              },
+            })
+          }
+        >
+          <p className="font-medium text-zinc-300 whitespace-nowrap">Dark</p>
+        </Toggle>
+      </div>
+      <div className="space-y-3">
+        <h2 className="font-medium text-zinc-200 text-base">Search Bar</h2>
+        <Toggle
+          enabled={config.frame.searchBar.show}
+          setEnabled={(value) =>
+            updateConfig({
+              frame: {
+                ...config.frame,
+                searchBar: {
+                  ...config.frame.searchBar,
+                  show: value,
+                },
+              },
+            })
+          }
+        >
+          <p className="font-medium text-zinc-300 whitespace-nowrap">Show</p>
+        </Toggle>
+      </div>
+      <div className="space-y-3">
+        <h2 className="font-medium text-zinc-200 text-base">Presets</h2>
+        <div className="space-y-3">
+          {presets.map((item) => (
+            <button
+              onClick={() =>
+                updateConfig({
+                  frame: {
+                    ...item.config,
+                  },
+                })
+              }
+              className={clsx(
+                item.config === config.frame && "border-blue-600",
+                "p-5 rounded-lg bg-gradient-to-tr bg-zinc-900 border border-zinc-800 hover:border-blue-600 transition-all duration-300 w-full"
+              )}
+            >
+              <div className=" rounded-t-md overflow-hidden relative h-5">
+                <PreviewToolbar options={item.config} />
+              </div>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* <div className="grid grid-cols-2 gap-3">
     {framePresets.map((item) => (
       <div style={{
         background: `linear-gradient(70deg, ${gradientStop1}, ${gradientStop2})`,
@@ -171,8 +173,9 @@ const Frames: NextComponentType<NextPageContext, {}, FramesProps> = ({
       </div>
     ))}
   </div> */}
-  </>
-);}
+    </>
+  );
+};
 
 interface ToolbarProps {
   options: {
@@ -299,7 +302,5 @@ export const PreviewToolbar: NextComponentType<
     </div>
   );
 };
-
-
 
 export default Frames;

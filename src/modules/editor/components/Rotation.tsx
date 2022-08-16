@@ -12,6 +12,7 @@ const Rotation: NextComponentType<NextPageContext, {}, RotationProps> = ({
 }) => (
   <>
     <Range
+      showValues={false}
       value={config.orientation.perspective}
       set={(val) =>
         updateConfig({
@@ -44,6 +45,7 @@ const Rotation: NextComponentType<NextPageContext, {}, RotationProps> = ({
       </div>
     </Range>
     <Range
+      label="degree"
       value={config.orientation.rotateX}
       set={(val) =>
         updateConfig({
@@ -74,6 +76,7 @@ const Rotation: NextComponentType<NextPageContext, {}, RotationProps> = ({
       </div>
     </Range>
     <Range
+      label="degree"
       value={config.orientation.rotateY}
       set={(val) =>
         updateConfig({
@@ -104,6 +107,7 @@ const Rotation: NextComponentType<NextPageContext, {}, RotationProps> = ({
       </div>
     </Range>
     <Range
+      label="degree"
       value={config.orientation.rotateZ}
       set={(val) =>
         updateConfig({
@@ -134,6 +138,7 @@ const Rotation: NextComponentType<NextPageContext, {}, RotationProps> = ({
       </div>
     </Range>
     <Range
+      label="percent"
       value={config.size.scale}
       set={(val) =>
         updateConfig({
@@ -143,8 +148,8 @@ const Rotation: NextComponentType<NextPageContext, {}, RotationProps> = ({
           },
         })
       }
-      min={0.5}
-      max={1.5}
+      min={50}
+      max={150}
     >
       <div className="flex space-x-2 items-center">
         <p className=" font-medium text-zinc-300">Scale</p>
@@ -154,7 +159,7 @@ const Rotation: NextComponentType<NextPageContext, {}, RotationProps> = ({
             updateConfig({
               size: {
                 ...config.size,
-                scale: 0.8,
+                scale: 80,
               },
             });
           }}
@@ -171,7 +176,7 @@ const Rotation: NextComponentType<NextPageContext, {}, RotationProps> = ({
             updateConfig({
               size: {
                 ...config.size,
-                scale: 0.9,
+                scale: 90,
               },
               position: {
                 x: 0,
@@ -198,7 +203,7 @@ const Rotation: NextComponentType<NextPageContext, {}, RotationProps> = ({
             updateConfig({
               size: {
                 ...config.size,
-                scale: 0.9,
+                scale: 90,
               },
               position: {
                 x: 0,
@@ -229,7 +234,7 @@ const Rotation: NextComponentType<NextPageContext, {}, RotationProps> = ({
         updateConfig({
           size: {
             ...config.size,
-            scale: 0.8,
+            scale: 80,
           },
           position: {
             x: 0,
@@ -239,7 +244,7 @@ const Rotation: NextComponentType<NextPageContext, {}, RotationProps> = ({
             rotateX: 0,
             rotateY: 0,
             rotateZ: 0,
-            perspective: 1500,
+            perspective: 3000,
           },
         });
       }}

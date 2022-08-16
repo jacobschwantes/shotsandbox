@@ -43,6 +43,8 @@ const Border: NextComponentType<NextPageContext, {}, BorderProps> = ({
       </div>
     </div>
     <Range
+      step={0.1}
+      showValues={false}
       value={config.border.radius}
       set={(val) =>
         updateConfig({
@@ -73,6 +75,8 @@ const Border: NextComponentType<NextPageContext, {}, BorderProps> = ({
       </div>
     </Range>
     <Range
+      step={0.1}
+      showValues={false}
       value={config.border.width}
       set={(val) =>
         updateConfig({

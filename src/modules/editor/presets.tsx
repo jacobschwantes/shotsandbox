@@ -3,7 +3,7 @@ export const defaultConfig: Config = {
   id: "config1",
   name: "default",
   size: {
-    scale: 0.8,
+    scale: 80,
     dimensions: {
       aspectRatio: "16 / 9",
       width: 1920,
@@ -70,14 +70,19 @@ export const defaultConfig: Config = {
       show: true,
     },
   },
+  watermark: {
+    show: true,
+    placement: "bottom-right",
+    theme: "light",
+  },
 };
-export const templates: Config[] = [
+export const templates: Partial<Config>[] = [
   {
     id: "config1",
     preview: "preview_123.png",
     name: "default",
     size: {
-      scale: 1,
+      scale: 100,
       dimensions: {
         aspectRatio: "16 / 9",
         width: 1920,
@@ -92,7 +97,7 @@ export const templates: Config[] = [
     },
     position: {
       x: 0,
-      y: 0.14,
+      y: 14,
     },
     background: {
       type: "gradient",
@@ -163,8 +168,8 @@ export const templates: Config[] = [
     id: "config2",
     preview: "preset_2.png",
     position: {
-      x: 0.02,
-      y: -0.05,
+      x: 2,
+      y: -5,
     },
 
     orientation: {
@@ -185,7 +190,7 @@ export const templates: Config[] = [
       },
     },
     size: {
-      scale: 0.9,
+      scale: 90,
       dimensions: {
         aspectRatio: "16 / 9",
         width: 1920,
@@ -237,8 +242,8 @@ export const templates: Config[] = [
     id: "config3",
     preview: "preset_1.png",
     position: {
-      x: 0.2,
-      y: 0.14,
+      x: 20,
+      y: 14,
     },
 
     orientation: {
@@ -259,7 +264,7 @@ export const templates: Config[] = [
       },
     },
     size: {
-      scale: 1.2,
+      scale: 120,
       dimensions: {
         aspectRatio: "16 / 9",
         width: 1920,
@@ -311,7 +316,7 @@ export const templates: Config[] = [
     id: "config4",
     name: "default",
     size: {
-      scale: 1.1,
+      scale: 110,
       dimensions: {
         aspectRatio: "3 / 1",
         width: 1500,
@@ -325,8 +330,8 @@ export const templates: Config[] = [
       perspective: 1876.6,
     },
     position: {
-      x: -0.01,
-      y: -0.01,
+      x: -1,
+      y: -1,
     },
     background: {
       type: "gradient",

@@ -65,6 +65,7 @@ const Background: NextComponentType<NextPageContext, {}, BackgroundProps> = ({
     {config.background.type === "gradient" ? (
       <>
         <Range
+        label="degree"
           value={config.background.gradient.direction}
           set={(val) =>
             updateConfig({
@@ -211,7 +212,7 @@ function GradientList({ list, setList }: ListProps) {
   return (
     <div className="relative w-full">
       <div
-        className="w-[95%] h-3 flex absolute left-1/2  -translate-x-1/2 top-1/2 -translate-y-1/2 z-0 border border-zinc-700 "
+        className="w-[95%] h-4 flex absolute left-1/2  -translate-x-1/2 top-1/2 -translate-y-1/2 z-0 border-2 border-zinc-700 "
         style={{
           background: `linear-gradient(${70}deg, ${list
             .map((item) => item.color)
@@ -279,9 +280,9 @@ const Item = ({
       className="select-none"
     >
       <div className="flex flex-col items-center relative select-none ">
-        <div className="cursor-grab absolute select-none -top-5 rotate-90">
+        <div className="cursor-grab absolute select-none -top-4 rotate-90">
           <svg
-            className="h-5 w-5 text-zinc-400 select-none"
+            className="h-4 w-4 text-zinc-400 select-none"
             stroke="currentColor"
             fill="currentColor"
             onPointerDown={(event) => dragControls.start(event)}
@@ -294,10 +295,10 @@ const Item = ({
         {canDelete && (
           <Tooltip placement="bottom" label="remove">
             <button
-              className="absolute -bottom-5"
+              className="absolute -bottom-4"
               onClick={() => removeStop(item.id)}
             >
-              <XIcon className="h-5 w-5 text-zinc-400" />
+              <XIcon className="h-4 w-4 text-zinc-400" />
             </button>
           </Tooltip>
         )}

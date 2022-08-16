@@ -192,6 +192,8 @@ const Header: NextComponentType<NextPageContext, {}, HeaderProps> = ({
       <p className="font-medium text-zinc-300 whitespace-nowrap">Italic</p>
     </Toggle>
     <Range
+    step={0.01}
+    showValues={false}
       value={config.header.content.size}
       set={(val) =>
         updateConfig({
@@ -228,6 +230,8 @@ const Header: NextComponentType<NextPageContext, {}, HeaderProps> = ({
       </div>
     </Range>
     <Range
+    step={0.1}
+    showValues={false}
       value={config.header.content.padding}
       set={(val) =>
         updateConfig({
@@ -265,6 +269,7 @@ const Header: NextComponentType<NextPageContext, {}, HeaderProps> = ({
     </Range>
     {!config.header.anchored && (
       <Range
+      showValues={false}
         value={config.header.content.translateX}
         set={(val) =>
           updateConfig({
@@ -277,12 +282,12 @@ const Header: NextComponentType<NextPageContext, {}, HeaderProps> = ({
             },
           })
         }
-        min={-1}
-        max={1}
+        min={-100}
+        max={100}
       >
         <div className="flex space-x-2 items-center">
           <p className=" font-medium text-zinc-300 whitespace-nowrap">
-            translateX
+            X
           </p>
           <button
             className="hover:text-zinc-400 transition-colors"

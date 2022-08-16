@@ -16,8 +16,8 @@ const Position: NextComponentType<NextPageContext, {}, PositionProps> = ({
         onClick={() => {
           updateConfig({
             position: {
-              x: 0.5,
-              y: -0.5,
+              x: 50,
+              y: -50,
             },
           });
         }}
@@ -27,8 +27,8 @@ const Position: NextComponentType<NextPageContext, {}, PositionProps> = ({
         onClick={() => {
           updateConfig({
             position: {
-              x: -0.5,
-              y: -0.5,
+              x: -50,
+              y: -50,
             },
           });
         }}
@@ -38,8 +38,8 @@ const Position: NextComponentType<NextPageContext, {}, PositionProps> = ({
         onClick={() => {
           updateConfig({
             position: {
-              x: 0.5,
-              y: 0.5,
+              x: 50,
+              y: 50,
             },
           });
         }}
@@ -49,8 +49,8 @@ const Position: NextComponentType<NextPageContext, {}, PositionProps> = ({
         onClick={() => {
           updateConfig({
             position: {
-              x: -0.5,
-              y: 0.5,
+              x: -50,
+              y: 50,
             },
           });
         }}
@@ -61,7 +61,7 @@ const Position: NextComponentType<NextPageContext, {}, PositionProps> = ({
           updateConfig({
             position: {
               x: 0,
-              y: 0.5,
+              y: 50,
             },
           });
         }}
@@ -83,7 +83,7 @@ const Position: NextComponentType<NextPageContext, {}, PositionProps> = ({
           updateConfig({
             position: {
               x: 0,
-              y: -0.5,
+              y: -50,
             },
           });
         }}
@@ -93,8 +93,8 @@ const Position: NextComponentType<NextPageContext, {}, PositionProps> = ({
         onClick={() => {
           updateConfig({
             position: {
-              x: -0.5,
-              y: -0,
+              x: -50,
+              y: 0,
             },
           });
         }}
@@ -104,7 +104,7 @@ const Position: NextComponentType<NextPageContext, {}, PositionProps> = ({
         onClick={() => {
           updateConfig({
             position: {
-              x: 0.5,
+              x: 50,
               y: 0,
             },
           });
@@ -114,6 +114,9 @@ const Position: NextComponentType<NextPageContext, {}, PositionProps> = ({
     </div>
 
     <Range
+      min={-100}
+      max={100}
+      label="percent"
       value={config.position.x}
       set={(val) =>
         updateConfig({
@@ -136,6 +139,9 @@ const Position: NextComponentType<NextPageContext, {}, PositionProps> = ({
       </div>
     </Range>
     <Range
+      min={-100}
+      max={100}
+      label="percent"
       value={config.position.y}
       set={(val) =>
         updateConfig({
@@ -159,6 +165,7 @@ const Position: NextComponentType<NextPageContext, {}, PositionProps> = ({
     </Range>
 
     <Range
+    label="percent"
       value={config.size.scale}
       set={(val) =>
         updateConfig({
@@ -168,8 +175,8 @@ const Position: NextComponentType<NextPageContext, {}, PositionProps> = ({
           },
         })
       }
-      min={0.5}
-      max={1.5}
+      min={50}
+      max={150}
     >
       <div className="flex space-x-2 items-center">
         <p className=" font-medium text-zinc-300">Scale</p>
@@ -179,7 +186,7 @@ const Position: NextComponentType<NextPageContext, {}, PositionProps> = ({
             updateConfig({
               size: {
                 ...config.size,
-                scale: 0.8,
+                scale: 80,
               },
             });
           }}
@@ -197,7 +204,7 @@ const Position: NextComponentType<NextPageContext, {}, PositionProps> = ({
           },
           size: {
             ...config.size,
-            scale: 0.8,
+            scale: 80,
           },
         });
       }}
