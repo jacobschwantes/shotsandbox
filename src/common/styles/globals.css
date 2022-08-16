@@ -120,7 +120,7 @@
     width: 15px; /* Set a specific slider handle width */
     height: 15px; /* Slider handle height */
     border-radius: 100%;
-    background: lightgrey; /* Green background */
+    background: white; /* Green background */
     cursor: pointer; /* Cursor on hover */
   }
 
