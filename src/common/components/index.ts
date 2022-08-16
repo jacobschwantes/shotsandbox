@@ -11,6 +11,7 @@ import Toggle from "./Toggle";
 import ColorPicker from "./ColorPicker";
 import Popover from "./Popover";
 import Range from "./Range";
+import Tabs from "./Tabs";
 export {
   Header,
   Navigation,
@@ -24,5 +25,6 @@ export {
   Toggle,
   ColorPicker,
   Popover,
-  Range
+  Range,
+  Tabs
 };
