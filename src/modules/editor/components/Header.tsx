@@ -192,7 +192,7 @@ const Header: NextComponentType<NextPageContext, {}, HeaderProps> = ({
       <p className="font-medium text-zinc-300 whitespace-nowrap">Italic</p>
     </Toggle>
     <Range
-    step={0.01}
+    step={0.1}
     showValues={false}
       value={config.header.content.size}
       set={(val) =>
@@ -207,7 +207,7 @@ const Header: NextComponentType<NextPageContext, {}, HeaderProps> = ({
         })
       }
       min={0}
-      max={10}
+      max={150}
     >
       <div className="flex space-x-2 items-center">
         <p className=" font-medium text-zinc-300 whitespace-nowrap">Size</p>
@@ -219,7 +219,7 @@ const Header: NextComponentType<NextPageContext, {}, HeaderProps> = ({
                 ...config.header,
                 content: {
                   ...config.header.content,
-                  size: 1,
+                  size: 100,
                 },
               },
             });
