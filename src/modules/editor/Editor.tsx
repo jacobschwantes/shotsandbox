@@ -1,6 +1,12 @@
 import type { NextPage } from "next";
 import Image from "next/image";
-import { useEffect, useState, useRef, useCallback } from "react";
+import {
+  useEffect,
+  useState,
+  useRef,
+  useCallback,
+  HTMLAttributes,
+} from "react";
 import clsx from "clsx";
 import { Toolbar } from "./components/Frames";
 import { motion, AnimatePresence } from "framer-motion";
@@ -119,8 +125,12 @@ const generalNavigation = [
   {
     id: 11,
     name: "Watermark",
-    icon: (props) => (
-      <svg fill="currentColor" {...props} viewBox="0 0 700 700">
+    icon: (props: React.SVGProps<SVGElement>) => (
+      <svg
+        fill="currentColor"
+        className={props.className}
+        viewBox="0 0 700 700"
+      >
         <defs>
           <symbol id="x" overflow="visible">
             <path d="m18.766-1.125c-0.96875 0.5-1.9805 0.875-3.0312 1.125-1.043 0.25781-2.1367 0.39062-3.2812 0.39062-3.3984 0-6.0898-0.94531-8.0781-2.8438-1.9922-1.9062-2.9844-4.4844-2.9844-7.7344 0-3.2578 0.99219-5.8359 2.9844-7.7344 1.9883-1.9062 4.6797-2.8594 8.0781-2.8594 1.1445 0 2.2383 0.13281 3.2812 0.39062 1.0508 0.25 2.0625 0.625 3.0312 1.125v4.2188c-0.98047-0.65625-1.9453-1.1406-2.8906-1.4531-0.94922-0.3125-1.9492-0.46875-3-0.46875-1.875 0-3.3516 0.60547-4.4219 1.8125-1.0742 1.1992-1.6094 2.8555-1.6094 4.9688 0 2.1055 0.53516 3.7617 1.6094 4.9688 1.0703 1.1992 2.5469 1.7969 4.4219 1.7969 1.0508 0 2.0508-0.14844 3-0.45312 0.94531-0.3125 1.9102-0.80078 2.8906-1.4688z" />
@@ -224,7 +234,12 @@ const Editor: NextPage = () => {
   const watermarkRef = useRef<HTMLSpanElement>(null);
   const containerSize = useWindowSize(ref);
 
-  const getScreenshot = async (options) => {
+  const getScreenshot = async (options: {
+    url: string;
+    width: string;
+    height: string;
+    token: string;
+  }) => {
     setIsLoading(true);
     await fetch(
       `https://api.screenshotify.io/screenshot?url=${options.url}&width=${options.width}&height=${options.height}&token=${options.token}&json=true`,
@@ -637,7 +652,7 @@ const Editor: NextPage = () => {
         {/* Editor preview container */}
         <div
           className={clsx(
-            "flex-1  dark:bg-black light:grid-effect-light bg-gray-50 dark:grid-effect-dark p-20   "
+            "flex-1  dark:bg-black light:grid-effect-light bg-gray-50 dark:grid-effect-dark xl:p-20 p-5   "
           )}
         >
           <motion.div
@@ -672,187 +687,117 @@ const Editor: NextPage = () => {
               />
             )}
 
-            <div
-              className={clsx(
-                " absolute aspect-video container template7  ",
-                layout < 3 ? " flex items-center  " : "grid-cols-2 grid   "
-              )}
+            <motion.div
+              className={clsx(" w-full h-full ")}
+              style={{ scale: config.size.scale / 100 }}
             >
-              {imageStack.map((url, index) =>
-                layout >= index + 1 && config.header.anchored ? (
+              {imageStack.map((url, index) => (
+                <motion.div
+                  transition={{ type: "spring" }}
+                  key={index}
+                  animate={{
+                    x: (config.position.x / 100) * containerSize.width,
+                    y: (config.position.y / 100) * containerSize.height,
+                  }}
+                  className={clsx(
+                    config.header.align === "vertical"
+                      ? "flex-col"
+                      : "items-center",
+                    "relative flex flex-1"
+                  )}
+                >
+                  {/* header */}
+                  {config.header.show && (
+                    <motion.div
+                      animate={{
+                        x:
+                          (config.header.content.translateX / 100) *
+                          containerSize.width,
+                      }}
+                      style={{
+                        color: config.header.content.color,
+                        maxWidth:
+                          config.header.align === "horizontal"
+                            ? `${ref.current?.clientWidth ?? 1 * 0.35}px`
+                            : "100%",
+                      }}
+                      className={clsx(
+                        config.header.content.italic && "italic",
+                        config.header.align === "horizontal"
+                          ? " text-left"
+                          : "text-center",
+                        " space-y-2"
+                      )}
+                    >
+                      <h1
+                        style={{
+                          fontSize: `${
+                            ref.current?.clientWidth ?? 1 *
+                            0.04 *
+                            (config.header.content.size / 100)
+                          }px`,
+                        }}
+                        className={clsx(
+                          config.header.content.bold && "font-bold",
+                          ""
+                        )}
+                      >
+                        {config.header.content.title}
+                      </h1>
+                      <p
+                        style={{
+                          fontSize: `${
+                            ref.current?.clientWidth ?? 1 *
+                            0.02 *
+                            (config.header.content.size / 100)
+                          }px`,
+                        }}
+                      >
+                        {config.header.content.subtitle}
+                      </p>
+                    </motion.div>
+                  )}
+                  {/* image container */}
                   <motion.div
-                    transition={{ type: "spring" }}
-                    key="container2"
                     animate={{
-                      x: (config.position.x / 100) * containerSize.width,
-                      y: (config.position.y / 100) * containerSize.height,
-                      scale: config.size.scale / 100,
                       rotateX: config.orientation.rotateX,
                       rotateY: config.orientation.rotateY,
                       rotateZ: config.orientation.rotateZ,
                       transformPerspective: config.orientation.perspective,
                     }}
-                    className={clsx(
-                      config.header.align === "vertical"
-                        ? "flex-col"
-                        : "items-center",
-                      "relative flex flex-1 "
-                    )}
-                  >
-                    {config.header.show && (
-                      <div
-                        style={{ color: config.header.content.color }}
-                        className={clsx(
-                          config.header.content.italic && "italic",
-                          config.header.align === "horizontal"
-                            ? " max-w-xl text-left"
-                            : "text-center",
-                          "space-y-2"
-                        )}
-                      >
-                        <h1
-                          style={{
-                            fontSize: `${1.25 * config.header.content.size}rem`,
-                          }}
-                          className={clsx(
-                            config.header.content.bold && "font-bold",
-                            ""
-                          )}
-                        >
-                          {config.header.content.title}
-                        </h1>
-                        <p
-                          style={{
-                            fontSize: `${0.75 * config.header.content.size}rem`,
-                          }}
-                        >
-                          {config.header.content.subtitle}
-                        </p>
-                      </div>
-                    )}
-                    <div
-                      className="aspect-video relative flex flex-col flex-1 overflow-hidden "
-                      style={{
-                        boxShadow: `${config.shadow.color} ${config.shadow.size}`,
-                        borderRadius: `${config.border.radius}rem`,
-                        borderColor: config.border.color,
-                        borderWidth: `${config.border.width}px`,
-                        marginTop:
-                          !config.header.show ||
-                          config.header.align === "horizontal"
-                            ? 0
-                            : `${config.header.content.padding}rem`,
-                        marginLeft:
-                          !config.header.show ||
-                          config.header.align === "vertical"
-                            ? 0
-                            : `${config.header.content.padding}rem`,
-                      }}
-                    >
-                      {config.frame.show && <Toolbar options={config.frame} />}
-                      <div
-                        className={clsx(
-                          config.frame.show && "mt-[44px]",
-                          "relative flex-1 "
-                        )}
-                      >
-                        <Image priority layout="fill" src={url.src} />
-                      </div>
-                    </div>
-                  </motion.div>
-                ) : (
-                  <motion.div
                     transition={{ type: "spring" }}
                     key={index}
-                    animate={{
-                      x: (config.position.x / 100) * containerSize.width,
-                      y: (config.position.y / 100) * containerSize.height,
-                      scale: config.size.scale / 100,
+                    className="aspect-video relative flex flex-col flex-1 overflow-hidden "
+                    style={{
+                      boxShadow: `${config.shadow.color} ${config.shadow.size}`,
+                      borderRadius: `${config.border.radius}rem`,
+                      borderColor: config.border.color,
+                      borderWidth: `${config.border.width}px`,
+                      marginTop:
+                        !config.header.show ||
+                        config.header.align === "horizontal"
+                          ? 0
+                          : `${config.header.content.padding}rem`,
+                      marginLeft:
+                        !config.header.show ||
+                        config.header.align === "vertical"
+                          ? 0
+                          : `${config.header.content.padding}rem`,
                     }}
-                    className={clsx(
-                      config.header.align === "vertical"
-                        ? "flex-col"
-                        : "items-center",
-                      "relative flex flex-1"
-                    )}
                   >
-                    {config.header.show && (
-                      <motion.div
-                        animate={{
-                          x:
-                            (config.header.content.translateX / 100) *
-                            containerSize.width,
-                        }}
-                        style={{ color: config.header.content.color }}
-                        className={clsx(
-                          config.header.content.italic && "italic",
-                          config.header.align === "horizontal"
-                            ? " max-w-xl text-left"
-                            : "text-center",
-                          " space-y-2"
-                        )}
-                      >
-                        <h1
-                          style={{
-                            fontSize: `${1.25 * config.header.content.size}rem`,
-                          }}
-                          className={clsx(
-                            config.header.content.bold && "font-bold",
-                            ""
-                          )}
-                        >
-                          {config.header.content.title}
-                        </h1>
-                        <p
-                          style={{
-                            fontSize: `${0.75 * config.header.content.size}rem`,
-                          }}
-                        >
-                          {config.header.content.subtitle}
-                        </p>
-                      </motion.div>
-                    )}
-                    <motion.div
-                      animate={{
-                        rotateX: config.orientation.rotateX,
-                        rotateY: config.orientation.rotateY,
-                        rotateZ: config.orientation.rotateZ,
-                        transformPerspective: config.orientation.perspective,
-                      }}
-                      transition={{ type: "spring" }}
-                      key={index}
-                      className="aspect-video relative flex flex-col flex-1 overflow-hidden "
-                      style={{
-                        boxShadow: `${config.shadow.color} ${config.shadow.size}`,
-                        borderRadius: `${config.border.radius}rem`,
-                        borderColor: config.border.color,
-                        borderWidth: `${config.border.width}px`,
-                        marginTop:
-                          !config.header.show ||
-                          config.header.align === "horizontal"
-                            ? 0
-                            : `${config.header.content.padding}rem`,
-                        marginLeft:
-                          !config.header.show ||
-                          config.header.align === "vertical"
-                            ? 0
-                            : `${config.header.content.padding}rem`,
-                      }}
+                    {config.frame.show && <Toolbar options={config.frame} />}
+                    <div
+                      className={clsx(
+                        config.frame.show && "mt-[44px]",
+                        "relative flex-1 "
+                      )}
                     >
-                      {config.frame.show && <Toolbar options={config.frame} />}
-                      <div
-                        className={clsx(
-                          config.frame.show && "mt-[44px]",
-                          "relative flex-1 "
-                        )}
-                      >
-                        <Image priority layout="fill" src={url.src} />
-                      </div>
-                    </motion.div>
+                      <Image priority layout="fill" src={url.src} />
+                    </div>
                   </motion.div>
-                )
-              )}
-            </div>
+                </motion.div>
+              ))}
+            </motion.div>
           </motion.div>
         </div>
 
