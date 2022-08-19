@@ -11,7 +11,7 @@ interface RangeProps {
   min?: number;
   max?: number;
   step?: number;
-  showValues: boolean;
+  showValues?: boolean;
   label?: "degree" | "percent";
 }
 const Range: NextComponentType<NextPageContext, {}, RangeProps> = ({
@@ -38,19 +38,19 @@ const Range: NextComponentType<NextPageContext, {}, RangeProps> = ({
       onChange={(e) => set(parseFloat(e.target.value))}
     />
     {showValues && (
-      <div className={clsx(min < 0 && "mr-1", "flex justify-between text-zinc-300 text-xs mt-1")}>
-        <p>
+      <div className="text-zinc-400 text-xs mt-1 font-medium relative">
+        <span className="absolute left-0">
           {min}
           {label && String.fromCharCode(labels[label])}
-        </p>
-        <p>
+        </span>
+        <span className="text-sm text-zinc-100 absolute left-1/2 -translate-x-1/2" >
           {value}
           {label && String.fromCharCode(labels[label])}
-        </p>
-        <p>
+        </span>
+        <span className="absolute right-0">
           {max}
           {label && String.fromCharCode(labels[label])}
-        </p>
+        </span>
       </div>
     )}
   </div>
