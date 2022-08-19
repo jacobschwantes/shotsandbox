@@ -718,7 +718,9 @@ const Editor: NextPage = () => {
                         color: config.header.content.color,
                         maxWidth:
                           config.header.align === "horizontal"
-                            ? `${ref.current?.clientWidth ?? 1 * 0.35}px`
+                            ? ref.current?.clientWidth
+                              ? `${ref.current?.clientWidth * 0.35}px`
+                              : "30%"
                             : "100%",
                       }}
                       className={clsx(
@@ -731,11 +733,13 @@ const Editor: NextPage = () => {
                     >
                       <h1
                         style={{
-                          fontSize: `${
-                            ref.current?.clientWidth ?? 1 *
-                            0.04 *
-                            (config.header.content.size / 100)
-                          }px`,
+                          fontSize: ref.current?.clientWidth
+                            ? `${
+                                ref.current?.clientWidth *
+                                0.04 *
+                                (config.header.content.size / 100)
+                              }px`
+                            : "2rem",
                         }}
                         className={clsx(
                           config.header.content.bold && "font-bold",
@@ -746,11 +750,11 @@ const Editor: NextPage = () => {
                       </h1>
                       <p
                         style={{
-                          fontSize: `${
-                            ref.current?.clientWidth ?? 1 *
-                            0.02 *
-                            (config.header.content.size / 100)
-                          }px`,
+                          fontSize: ref.current?.clientWidth
+                            ? `${
+                                ref.current?.clientWidth * 0.02 * (config.header.content.size / 100)
+                              }px`
+                            : "1rem",
                         }}
                       >
                         {config.header.content.subtitle}
