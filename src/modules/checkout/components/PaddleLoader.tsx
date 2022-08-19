@@ -4,9 +4,8 @@ export default function PaddleLoader() {
     <Script
       src="https://cdn.paddle.com/paddle/paddle.js"
       onLoad={() => {
-        
-          window.Paddle.Environment.set("sandbox");
-
+        window.Paddle.Environment.set("sandbox");
+        //@ts-ignore
         window.Paddle.Setup({
           vendor: Number(process.env.NEXT_PUBLIC_PADDLE_VENDOR_ID),
         });

@@ -6,9 +6,14 @@ import Spinner from "@components/Spinner";
 import { toast } from "react-toastify";
 import { getFunctions, httpsCallable } from "firebase/functions";
 import { CheckCircleIcon } from "@heroicons/react/outline";
+import { User } from "firebase/auth";
 const functions = getFunctions();
 const resetPassword = httpsCallable(functions, "resetPassword");
-const Account: NextPage = (props) => {
+interface AccountProps {
+  idToken: string;
+  user: User;
+}
+const Account: NextPage<AccountProps> = (props) => {
   const [loading, setLoading] = useState(false);
   const handleResetPassword = () => {
     setLoading(true);

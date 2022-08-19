@@ -6,7 +6,7 @@ import clsx from "clsx";
 interface ShadowProps {
   config: Config;
   updateConfig: (newConfig: Partial<Config>) => void;
-  presets: ShadowConfig[];
+  presets: Partial<ShadowConfig>[];
 }
 const Shadow: NextComponentType<NextPageContext, {}, ShadowProps> = ({
   updateConfig,

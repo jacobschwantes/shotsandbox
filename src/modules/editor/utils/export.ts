@@ -1,6 +1,14 @@
 import { toPng, toJpeg, toBlob } from "html-to-image";
+import React from "react";
 import { toast } from "react-toastify";
-export const downloadPng = (elementRef, options) => {
+interface ExportOptions {
+  width: number;
+  height: number;
+}
+export const downloadPng = (
+  elementRef: HTMLElement,
+  options: ExportOptions
+) => {
   toPng(elementRef, {
     canvasWidth: options.width,
     canvasHeight: options.height,
@@ -19,7 +27,10 @@ export const downloadPng = (elementRef, options) => {
       console.log(err);
     });
 };
-export const downloadJpg = (elementRef, options) => {
+export const downloadJpg = (
+  elementRef: HTMLElement,
+  options: ExportOptions
+) => {
   toJpeg(elementRef, {
     canvasWidth: options.width,
     canvasHeight: options.height,
@@ -38,7 +49,10 @@ export const downloadJpg = (elementRef, options) => {
       console.log(err);
     });
 };
-export const copyImageToClipboard = (elementRef, options) => {
+export const copyImageToClipboard = (
+  elementRef: HTMLElement,
+  options: ExportOptions
+) => {
   toBlob(elementRef, {
     canvasWidth: options.width,
     canvasHeight: options.height,
@@ -48,11 +62,13 @@ export const copyImageToClipboard = (elementRef, options) => {
     },
   })
     .then((dataUrl) => {
-      navigator.clipboard.write([
-        new ClipboardItem({
-          "image/png": dataUrl,
-        }),
-      ]);
+      if (dataUrl) {
+        navigator.clipboard.write([
+          new ClipboardItem({
+            "image/png": dataUrl,
+          }),
+        ]);
+      }
       toast("copied to clipboard", { type: "success" });
     })
     .catch((err) => {

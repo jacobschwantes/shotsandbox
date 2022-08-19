@@ -1,7 +1,7 @@
 import { NextPage } from "next";
 import { LineChart } from "@components/index";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, SVGProps } from "react";
 import {
   EmojiSadIcon,
   RefreshIcon,
@@ -12,8 +12,13 @@ import clsx from "clsx";
 import { useUsage } from "@hooks/swr";
 import { useSWRConfig } from "swr";
 import { DateTime } from "luxon";
-
-const Dashboard: NextPage = (props) => {
+import { User } from "firebase/auth";
+import { NextComponentType, NextPageContext } from "next";
+interface DashboardProps {
+  idToken: string;
+  user: User;
+}
+const Dashboard: NextPage<DashboardProps> = (props) => {
   const { mutate } = useSWRConfig();
   const [idToken, setIdToken] = useState(props.idToken);
   const [spin, setSpin] = useState(false);
@@ -25,7 +30,7 @@ const Dashboard: NextPage = (props) => {
     if (isError) {
       props.user.getIdToken().then((result) => setIdToken(result));
     }
-  }, [isError]);
+  }, [isError, props.user]);
   const [data, setData] = useState("1w");
   return (
     <div className="space-y-4 p-5 overflow-y-auto h-full ">
@@ -105,8 +110,19 @@ const Dashboard: NextPage = (props) => {
     </div>
   );
 };
-
-function Stats(props) {
+interface StatsProps {
+  isLoading: boolean;
+  stats: {
+    icon: (props: SVGProps<SVGSVGElement>) => JSX.Element;
+    id: number;
+    name: string;
+    stat?: number | string;
+    href: string;
+    change: string;
+    changeType: string;
+  }[];
+}
+const Stats: NextComponentType<NextPageContext, {}, StatsProps> = (props) => {
   return (
     <div>
       {props.isLoading ? (
@@ -196,6 +212,6 @@ function Stats(props) {
       )}
     </div>
   );
-}
+};
 
 export default Dashboard;

@@ -2,12 +2,9 @@ import { NextComponentType, NextPage, NextPageContext } from "next";
 import { Spinner } from "@components/index";
 import { Dispatch, SetStateAction, useState, useEffect } from "react";
 import { EyeIcon, EyeOffIcon, UserIcon } from "@heroicons/react/solid";
-import Router from "next/router";
 import {
   getAuth,
   signInWithEmailAndPassword,
-  signOut,
-  createUserWithEmailAndPassword,
 } from "firebase/auth";
 
 import { firebaseApp } from "./firebase/client";
@@ -42,7 +39,6 @@ const Login: NextPage = () => {
 interface PasswordPageProps {
   setPassword: Dispatch<SetStateAction<string>>;
   setEmailValidated: Dispatch<SetStateAction<boolean>>;
-  setAuthenticated: Dispatch<SetStateAction<boolean>>;
   email: string;
   password: string;
 }
@@ -128,7 +124,7 @@ const PasswordPage: NextComponentType<
         type="submit"
         className="bg-blue-500 hover:bg-blue-400 w-full border border-blue-900 p-4 rounded-lg font-medium tracking-wide text-gray-900 flex items-center justify-center"
       >
-        {loading ? <Spinner color="text-gray-800" /> : "Continue"}
+        {loading ? <Spinner className="h-5 w-5" /> : "Continue"}
       </button>
     </form>
   );
@@ -136,6 +132,7 @@ const PasswordPage: NextComponentType<
 interface EmailPageProps {
   setEmail: Dispatch<SetStateAction<string>>;
   setEmailValidated: Dispatch<SetStateAction<boolean>>;
+  setLogin: Dispatch<SetStateAction<boolean>>;
   email: string;
 }
 const EmailPage: NextComponentType<NextPageContext, {}, EmailPageProps> = ({
@@ -185,7 +182,7 @@ const EmailPage: NextComponentType<NextPageContext, {}, EmailPageProps> = ({
           type="submit"
           className="bg-blue-500 hover:bg-blue-400 w-full border border-blue-900 p-4 rounded-lg font-medium tracking-wide text-gray-900 flex items-center justify-center"
         >
-          {loading ? <Spinner color="text-gray-800" /> : "Continue"}
+          {loading ? <Spinner className="h-5 w-5" /> : "Continue"}
         </button>
         <button
           onClick={() => setLogin(false)}
@@ -204,7 +201,9 @@ const EmailPage: NextComponentType<NextPageContext, {}, EmailPageProps> = ({
     </>
   );
 };
-interface LoginCardProps {}
+interface LoginCardProps {
+  setLogin: Dispatch<SetStateAction<boolean>>;
+}
 const LoginCard: NextComponentType<NextPageContext, {}, LoginCardProps> = ({
   setLogin,
 }) => {
@@ -237,14 +236,11 @@ const LoginCard: NextComponentType<NextPageContext, {}, LoginCardProps> = ({
 };
 
 interface SignUpPageProps {
-  setEmail: Dispatch<SetStateAction<string>>;
-  setEmailValidated: Dispatch<SetStateAction<boolean>>;
-  email: string;
+  setLogin: Dispatch<SetStateAction<boolean>>;
 }
 const SignUpPage: NextComponentType<NextPageContext, {}, SignUpPageProps> = ({
   setLogin,
 }) => {
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
@@ -365,12 +361,13 @@ const SignUpPage: NextComponentType<NextPageContext, {}, SignUpPageProps> = ({
 };
 
 export default Login;
+interface SignUpCardProps {
+  setLogin: Dispatch<SetStateAction<boolean>>;
+}
 
-const SignUpCard: NextComponentType<NextPageContext, {}, LoginCardProps> = ({
+const SignUpCard: NextComponentType<NextPageContext, {}, SignUpCardProps> = ({
   setLogin,
 }) => {
-  const [password, setPassword] = useState("");
-  const [email, setEmail] = useState("");
 
   return (
     <div className="border border-zinc-800 rounded-2xl p-10 max-w-lg w-full space-y-5">
@@ -379,10 +376,6 @@ const SignUpCard: NextComponentType<NextPageContext, {}, LoginCardProps> = ({
       </h1>
       <SignUpPage
         setLogin={setLogin}
-        setEmail={setEmail}
-        email={email}
-        password={password}
-        setPassword={setPassword}
       />
     </div>
   );

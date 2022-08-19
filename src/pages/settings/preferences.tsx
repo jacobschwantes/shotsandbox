@@ -28,9 +28,7 @@ const Account: NextPage = () => {
           <RadioGroup value={selectedTheme} onChange={setSelectedTheme}>
             <RadioGroup.Label className="text-sm">
               <h1 className="font-medium text-zinc-300">Theme</h1>
-              <p className="text-zinc-400">
-                Select UI theme preference
-              </p>
+              <p className="text-zinc-400">Select UI theme preference</p>
             </RadioGroup.Label>
 
             <div className="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-3 sm:gap-x-4">
@@ -85,6 +83,7 @@ const Account: NextPage = () => {
                                     <div className="flex flex-col space-y-2 w-1/5 p-2">
                                       {Array.from(Array(5)).map((item) => (
                                         <div
+                                          key={item}
                                           className={clsx(
                                             false
                                               ? "bg-zinc-800"
@@ -169,6 +168,7 @@ const Account: NextPage = () => {
                                   <div className="flex flex-col space-y-2 w-1/5 p-2">
                                     {Array.from(Array(5)).map((item) => (
                                       <div
+                                        key={item}
                                         className={clsx(
                                           true ? "bg-zinc-800" : "bg-zinc-200",
                                           "w-full h-1.5 rounded-full"
@@ -250,6 +250,7 @@ const Account: NextPage = () => {
                                 <div className="flex flex-col space-y-2 w-1/5 p-2">
                                   {Array.from(Array(5)).map((item) => (
                                     <div
+                                      key={item}
                                       className={clsx(
                                         theme.title === "Dark"
                                           ? "bg-zinc-800"

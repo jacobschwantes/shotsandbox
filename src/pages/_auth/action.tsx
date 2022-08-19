@@ -8,10 +8,12 @@ import {
 } from "firebase/auth";
 import { useRouter } from "next/router";
 import { useEffect, useState, useRef, SetStateAction, Dispatch } from "react";
-import { EyeIcon, EyeOffIcon} from "@heroicons/react/outline";
+import { EyeIcon, EyeOffIcon } from "@heroicons/react/outline";
 import { Spinner } from "@components/index";
 import { NextComponentType, NextPageContext } from "next";
 import { Tooltip } from "@components/index";
+import Image from "next/image";
+import Link from "next/link";
 const errorDictionary = {
   "auth/expired-action-code": {
     devCode: "Thrown if the password reset code has expired.",
@@ -101,12 +103,17 @@ export default function Page() {
       return;
     }
     console.log("running use effect");
-  }, [router.isReady]);
+  }, [router.isReady, auth, mode, oobCode, router]);
 
   if (loading) {
     return (
       <div className="flex h-screen w-screen items-center justify-center dark:bg-black  ">
-        <img src="/loading.svg"></img>
+        <Image
+          height={100}
+          width={100}
+          alt="loading animation"
+          src="/loading.svg"
+        />
       </div>
     );
   }
@@ -120,9 +127,9 @@ export default function Page() {
               screenshotify
             </h1>
             <Tooltip label="logout">
-              <a href="/">
+              <Link href="/">
                 <XIcon className="h-5 w-5 text-white" />
-              </a>
+              </Link>
             </Tooltip>
           </div>
           <div className=" space-y-4">
@@ -130,18 +137,16 @@ export default function Page() {
             <p className="text-zinc-400 font-medium text-sm">{error}</p>
           </div>
           <div className="space-y-3">
-            <a
-              href="/"
-              className="bg-blue-500 hover:bg-blue-400 w-full border border-blue-900 p-4 rounded-lg font-medium tracking-wide text-zinc-100 flex items-center justify-center"
-            >
-              Try again
-            </a>
-            <a
-              href="mailto:support@screenshotify.io"
-              className=" hover:bg-gray-900 hover:bg-opacity-30 w-full border border-zinc-800 p-4 rounded-lg font-medium tracking-wide text-gray-100 flex items-center justify-center"
-            >
-              Contact Support
-            </a>
+            <Link href="/">
+              <a className="bg-blue-500 hover:bg-blue-400 w-full border border-blue-900 p-4 rounded-lg font-medium tracking-wide text-zinc-100 flex items-center justify-center">
+                Try again
+              </a>
+            </Link>
+            <Link href="mailto:support@screenshotify.io">
+              <a className=" hover:bg-gray-900 hover:bg-opacity-30 w-full border border-zinc-800 p-4 rounded-lg font-medium tracking-wide text-gray-100 flex items-center justify-center">
+                Contact Support
+              </a>
+            </Link>
           </div>
         </div>
       </div>
@@ -160,12 +165,11 @@ export default function Page() {
             </p>
           </div>
           <div className="space-y-3">
-            <a
-              href="/"
-              className="bg-blue-500 hover:bg-blue-400 w-full border border-blue-900 p-4 rounded-lg font-medium tracking-wide text-zinc-100 flex items-center justify-center"
-            >
-              Log in
-            </a>
+            <Link href="/">
+              <a className="bg-blue-500 hover:bg-blue-400 w-full border border-blue-900 p-4 rounded-lg font-medium tracking-wide text-zinc-100 flex items-center justify-center">
+                Log in
+              </a>
+            </Link>
           </div>
         </div>
       </div>
@@ -188,13 +192,14 @@ export default function Page() {
                   Your password has been successfully reset.
                 </p>
               </div>
-              <a
-                href="/"
-                type="submit"
-                className="bg-blue-500 hover:bg-blue-400 w-full border border-blue-900 p-4 rounded-lg font-medium tracking-wide text-zinc-100 flex items-center justify-center"
-              >
-                Sign in
-              </a>
+              <Link href="/">
+                <a
+                  type="submit"
+                  className="bg-blue-500 hover:bg-blue-400 w-full border border-blue-900 p-4 rounded-lg font-medium tracking-wide text-zinc-100 flex items-center justify-center"
+                >
+                  Sign in
+                </a>
+              </Link>
             </div>
           ) : (
             <PasswordPage

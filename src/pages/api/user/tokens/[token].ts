@@ -45,9 +45,9 @@ const checkOptions = (options: TokenOptions) => {
   };
 
   const validate = (
-    object: TokenOptions,
+    object: any,
     schema: {
-      name: (value: string) => boolean;
+      name: (value: any) => boolean;
       quota: (value: number) => boolean | number;
       locked: (value: boolean) => boolean;
       quota_limit: (value: string) => string | boolean;

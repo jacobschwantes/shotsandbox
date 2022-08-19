@@ -3,9 +3,8 @@ import { Config } from "@customTypes/configs";
 import { NextPageContext, NextComponentType } from "next";
 import { useState } from "react";
 interface PresetsProps {
-  updateConfig: (newConfig: Config) => void;
-  presets: Config[];
-  selected: string;
+  updateConfig: (newConfig: Partial<Config>) => void;
+  presets: Partial<Config>[];
 }
 const Presets: NextComponentType<NextPageContext, {}, PresetsProps> = ({
   presets,

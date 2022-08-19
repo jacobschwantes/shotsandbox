@@ -2,16 +2,31 @@ import { withAuth } from "@utils/middlewares";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { firestore } from "@modules/auth/firebase/admin";
 const crypto = require("crypto");
+type ApiKey = {
+  locked: boolean;
+  name: string;
+  quota: number;
+  quota_limit: string;
+  userid: string;
+  key: string;
+};
 type Data = {
   message: string;
+  keys?: Partial<ApiKey>[];
+  error?: string;
+  key?: ApiKey
 };
 const generateKey = () => {
   const rand = crypto.randomBytes(20);
   const unique_id = rand.toString("hex");
   return unique_id;
 };
-
-async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
+interface ApiRequest extends NextApiRequest {
+  uid: string;
+  email: string;
+  email_verified: boolean;
+}
+async function handler(req: ApiRequest, res: NextApiResponse<Data>) {
   const tokensRef = firestore.collection("API_KEYS");
   const method = req.method;
   switch (method) {
@@ -20,7 +35,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
       if (snapshot.empty) {
         res.status(200).json({ message: "user has no api keys", keys: [] });
       } else {
-        const keys = [];
+        const keys: Partial<ApiKey>[] = [];
         snapshot.docs.forEach((doc) => {
           const data = doc.data();
           const key = doc.id;
@@ -39,7 +54,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
         const snapshot = await tokensRef.where("userid", "==", req.uid).get();
         if (snapshot.size < 5) {
           try {
-            const data = {
+            const keyData = {
               quota: 200,
               name: `token${Math.floor(Math.random() * 100)}`,
               userid: req.uid,
@@ -51,11 +66,11 @@ async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
             const userWriteRes = await firestore
               .collection("API_KEYS")
               .doc(newKey)
-              .set(data);
+              .set(keyData);
             res.status(200).json({
-              message: `${data.name} created`,
+              message: `${keyData.name} created`,
               key: {
-                ...data,
+                ...keyData,
                 ...{ key: newKey, usage: 0 },
               },
             });

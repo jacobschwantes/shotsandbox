@@ -1,4 +1,4 @@
-import { NextPage } from "next";
+import { NextComponentType, NextPage, NextPageContext } from "next";
 import { toast } from "react-toastify";
 import { useRef, Fragment } from "react";
 import {
@@ -21,8 +21,13 @@ import Spinner from "@components/Spinner";
 import { useTokens, useToken } from "@hooks/swr";
 import { useSWRConfig } from "swr";
 import { RadioGroup } from "@headlessui/react";
-
-const Tokens: NextPage = (props) => {
+import { User } from "firebase/auth";
+import { ApiKey } from "@customTypes/global";
+interface TokensProps {
+  idToken: string;
+  user: User;
+}
+const Tokens: NextPage<TokensProps> = (props) => {
   const { mutate } = useSWRConfig();
   const [showKeys, setShowKeys] = useState(false);
   const [copiedId, setCopiedId] = useState("");
@@ -48,9 +53,9 @@ const Tokens: NextPage = (props) => {
     if (isError) {
       props.user?.getIdToken().then((result) => setIdToken(result));
     }
-  }, [isError]);
+  }, [isError, props.user]);
 
-  const updateToken = async (key, options) => {
+  const updateToken = async (key: string, options: Partial<ApiKey>) => {
     await fetch(`/api/user/tokens/${key}`, {
       headers: {
         Authorization: `Bearer ${idToken}`,
@@ -108,12 +113,12 @@ const Tokens: NextPage = (props) => {
         else throw await res.json();
       })
       .then((data) => {
-        const newData = tokens.keys.filter((token) => {
+        const newData = tokens.keys.filter((token: ApiKey) => {
           return token.key !== key;
         });
 
         update({ ...{ keys: newData } });
-       
+
         toast(
           <div className="flex items-center space-x-3">
             <CheckCircleIcon className="h-6 w-6 text-blue-500" />
@@ -226,9 +231,9 @@ const Tokens: NextPage = (props) => {
       {isLoading && (
         // <Spinner color="blue" />
         <div className="space-y-5">
-          {Array.from(Array(5).keys()).map(() => {
+          {Array.from(Array(5).keys()).map((item) => {
             return (
-              <div className="space-y-3 max-w-xl w-full">
+              <div key={item} className="space-y-3 max-w-xl w-full">
                 <div className=" w-1/4 h-3 dark:bg-zinc-800  rounded-lg animate-pulse"></div>
                 <div className="h-14 w-[34rem] rounded-lg flex items-center justify-between p-5 overflow-hidden relative bg-white dark:bg-black border shadow-lg dark:shadow-none shadow-gray-100  border-gray-200 dark:border-zinc-900 before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:border-t before:border-rose-100/10 before:bg-gradient-to-r before:from-transparent before:via-rose-100/10 before:to-transparent">
                   <div className=" w-3/4 h-3 bg-zinc-800 rounded-lg "></div>
@@ -244,8 +249,8 @@ const Tokens: NextPage = (props) => {
       {tokens?.keys && (
         <div className="w-full">
           <div className="flex flex-col max-w-xl space-y-2 ">
-            {tokens.keys.map((item, index) => (
-              <div className={clsx("space-y-1 transition-all")}>
+            {tokens.keys.map((item: ApiKey, index: number) => (
+              <div key={item.name} className={clsx("space-y-1 transition-all")}>
                 <p className="dark:text-zinc-200">{item.name}</p>
 
                 <div className={"flex space-x-2"}>
@@ -279,10 +284,10 @@ const Tokens: NextPage = (props) => {
                               progressClassName: "toastProgressBlue",
                             }
                           );
-                          setCopiedId(index);
+                          setCopiedId(`${index}`);
                         }}
                       >
-                        {copiedId === index ? (
+                        {copiedId === `${index}` ? (
                           <CheckIcon className="h-6 text-blue-500" />
                         ) : (
                           <DuplicateIcon className="h-6 text-gray-400 dark:text-zinc-300 hover:text-blue-500 transition-colors" />
@@ -331,32 +336,36 @@ const settings = [
     description: "Token will be limited to token specific quota",
   },
 ];
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
+interface TokenPageProps {
+  token: ApiKey;
+  updateToken: (token: string, newToken: Partial<ApiKey>) => Promise<void>;
+  deleteToken: (token: string, name: string) => Promise<void>;
+  open: boolean;
+  setOpen: (setting: boolean) => void;
+  setSelectedToken: (token: string) => void;
 }
 
-function TokenPage({
+const TokenPage: NextComponentType<NextPageContext, {}, TokenPageProps> = ({
   token,
   updateToken,
   deleteToken,
   open,
   setOpen,
   setSelectedToken,
-}) {
+}) => {
   const [tokenOptions, setTokenOptions] = useState(token);
   const [updateLoading, setUpdateLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [error, setError] = useState("");
 
   const cancelButtonRef = useRef(null);
-  const eventHandler = (key, value) => {
-    setTokenOptions((prevState) => ({
+  const eventHandler = (key: string, value: any) => {
+    setTokenOptions((prevState: ApiKey) => ({
       ...prevState,
       [key]: value,
     }));
   };
-  const handleRegex = (name) => {
+  const handleRegex = (name: string) => {
     if (!/^[\w-]+$/.test(name)) {
       setError("Invalid name");
       return false;
@@ -434,8 +443,7 @@ function TokenPage({
                       <div className="flex justify-between">
                         <h1 className="text-zinc-200 font-medium ">Requests</h1>
                         <p className="text-zinc-400 font-medium text-sm">
-                          <span className="text-zinc-200 ">{token.usage}</span>{" "}
-                          /{" "}
+                          <span className="text-zinc-200 ">{token.usage}</span>/{" "}
                           {tokenOptions.quota_limit === "unlimited" ? (
                             <>&infin;</>
                           ) : (
@@ -482,7 +490,7 @@ function TokenPage({
                             key={setting.name}
                             value={setting.id}
                             className={({ checked }) =>
-                              classNames(
+                              clsx(
                                 settingIdx === 0
                                   ? "rounded-tl-md rounded-tr-md"
                                   : "",
@@ -499,7 +507,7 @@ function TokenPage({
                             {({ active, checked }) => (
                               <>
                                 <span
-                                  className={classNames(
+                                  className={clsx(
                                     checked
                                       ? "bg-blue-600 border-transparent"
                                       : "bg-white border-gray-300 dark:bg-black dark:border-zinc-800",
@@ -515,7 +523,7 @@ function TokenPage({
                                 <span className="ml-3 flex justify-between space-x-4 w-full">
                                   <RadioGroup.Label
                                     as="span"
-                                    className={classNames(
+                                    className={clsx(
                                       checked
                                         ? "text-blue-900 dark:text-blue-500"
                                         : "text-gray-900 dark:text-zinc-300",
@@ -526,7 +534,7 @@ function TokenPage({
                                   </RadioGroup.Label>
                                   <RadioGroup.Description
                                     as="span"
-                                    className={classNames(
+                                    className={clsx(
                                       checked
                                         ? "text-blue-700 dark:text-blue-500"
                                         : "text-gray-500 dark:text-zinc-400",
@@ -601,7 +609,6 @@ function TokenPage({
                             setDeleteLoading(false);
                             setOpen(false);
                             setTimeout(() => setSelectedToken(""), 300);
-                            
                           });
                         }}
                         type="button"
@@ -643,7 +650,8 @@ function TokenPage({
                                 .reduce((obj, key) => {
                                   return {
                                     ...obj,
-                                    [key]: tokenOptions[key],
+                                    [key]:
+                                      tokenOptions[key as keyof typeof token],
                                   };
                                 }, {});
 
@@ -679,6 +687,6 @@ function TokenPage({
       </Dialog>
     </Transition.Root>
   );
-}
+};
 
 export default Tokens;

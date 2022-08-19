@@ -6,21 +6,37 @@ import clsx from "clsx";
 import { useLogs } from "@hooks/swr";
 import { useSWRConfig } from "swr";
 import { Table, Modal } from "@components/index";
-const getInterval = (data) => {
-  if (!data) return 0; 
-  if (data.logs && data.logs.some((item) => item.status === "processing")) return 6000;
+import { User } from "firebase/auth";
+type Log = {
+  href: string;
+  id: number;
+  latency: number;
+  status: string;
+  timestamp: number;
+  token_name: string;
+  url: string;
+  error: string;
+};
+const getInterval = (data: { logs: Log[] }) => {
+  if (!data) return 0;
+  if (data.logs && data.logs.some((item) => item.status === "processing"))
+    return 6000;
   return 0;
 };
-const History: NextPage = (props) => {
+interface HistoryProps {
+  idToken: string;
+  user: User;
+}
+const History: NextPage<HistoryProps> = (props) => {
   const { mutate } = useSWRConfig();
   const [spin, setSpin] = useState(false);
   const [open, setOpen] = useState(false);
-  const [modalContent, setModalContent] = useState({});
+  const [modalContent, setModalContent] = useState({ message: "" });
   const [entriesCount, setEntriesCount] = useState(0);
   const [idToken, setIdToken] = useState(props.idToken);
   const batchSize = 10; // items per chunk
   const [active, setActive] = useState(1);
-  const { logs, isLoadingLogs, isErrorLogs} = useLogs(
+  const { logs, isLoadingLogs, isErrorLogs } = useLogs(
     idToken,
     `?limit=${batchSize}&page=${active}`,
     { refreshInterval: (data) => getInterval(data) }
@@ -35,10 +51,10 @@ const History: NextPage = (props) => {
   useEffect(() => {
     console.log("running side effect");
     props.user.getIdToken().then((result: string) => setIdToken(result));
-  }, [isErrorLogs]);
-type ModalOptions = {
-  message: string
-}
+  }, [isErrorLogs, props.user]);
+  type ModalOptions = {
+    message: string;
+  };
   const dispatchModal = (options: ModalOptions) => {
     setModalContent(options);
     setOpen(true);
@@ -95,8 +111,15 @@ type ModalOptions = {
     </div>
   );
 };
+interface PaginationProps {
+  active: number;
+  setActive: (page: number) => void;
+  pages: number;
+  batchSize: number;
+  size: number;
+}
 
-const Pagination = (props) => {
+const Pagination = (props: PaginationProps) => {
   return (
     <div className="flex items-center justify-between  bg-white px-4 py-3 sm:px-6 dark:bg-black">
       <div className="flex flex-1 justify-between sm:hidden">
@@ -172,6 +195,7 @@ const Pagination = (props) => {
                   .map((item, ind) => {
                     return (
                       <button
+                        key={ind}
                         className={
                           props.active === item
                             ? " relative z-10 inline-flex items-center border border-blue-500 dark:bg-blue-900 dark:text-blue-200  bg-blue-50 px-4 py-2 text-sm font-medium text-blue-600"
@@ -206,6 +230,7 @@ const Pagination = (props) => {
               Array.from(Array(props.pages)).map((item, ind) => {
                 return (
                   <button
+                    key={`pagination${ind}`}
                     className={
                       props.active === ind + 1
                         ? " relative z-10 inline-flex items-center border border-blue-500 dark:bg-blue-900 dark:text-blue-200  bg-blue-50 px-4 py-2 text-sm font-medium text-blue-600"

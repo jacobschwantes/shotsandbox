@@ -189,8 +189,8 @@ const Background: NextComponentType<NextPageContext, {}, BackgroundProps> = ({
 
 
 interface ListProps {
-  list: { color: string; id: string }[];
-  setList: (list: { color: string; id: string }[]) => void;
+  list: { color: string; id: number | string }[];
+  setList: (list: { color: string; id: number | string }[]) => void;
 }
 function GradientList({ list, setList }: ListProps) {
   const addStop = (index: number) => {
@@ -200,7 +200,7 @@ function GradientList({ list, setList }: ListProps) {
     newList.splice(index, 0, newItem);
     setList(newList);
   };
-  const removeStop = (id) => {
+  const removeStop = (id: string | number) => {
     const newList = list.filter((item) => item.id !== id);
     setList(newList);
   };
@@ -238,7 +238,7 @@ function GradientList({ list, setList }: ListProps) {
         onReorder={setList}
       >
         <AnimatePresence initial={false}>
-          {list.map((item: { color: string; id: string }, index: number) => (
+          {list.map((item: { color: string; id: string | number }, index: number) => (
             <Item
               changeColor={(newColor) => changeColor(index, newColor)}
               key={item.id}
@@ -253,9 +253,9 @@ function GradientList({ list, setList }: ListProps) {
   );
 }
 interface ItemProps {
-  item: { color: string; id: string };
+  item: { color: string; id: string | number };
   changeColor: (newColor: string) => void;
-  removeStop: (id: string) => void;
+  removeStop: (id: string | number) => void;
   canDelete: boolean;
 }
 const Item = ({
@@ -268,7 +268,7 @@ const Item = ({
   return (
     <Reorder.Item
       value={item}
-      id={item.id}
+      id={`${item.id}`}
       initial={{ opacity: 0 }}
       animate={{
         opacity: 1,
