@@ -150,7 +150,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   } else {
     return (
       <div className="flex h-screen w-screen items-center justify-center dark:bg-black  ">
-        <img src="/loading.svg"></img>
+        <Image alt="loading animation" height={100} width={100}  src="/loading.svg"/>
       </div>
     );
   }
