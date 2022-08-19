@@ -4,7 +4,7 @@ export type ImageDoc = {
   src: string;
 };
 export type GradientConfig = {
-  stops: { color: string; id: string | number }[];
+  stops: { color: string; id: number | string }[];
   direction: number;
 };
 export type BackgroundConfig = {
@@ -75,6 +75,7 @@ export type FrameConfig = {
   };
 };
 export type Config = {
+  preview?: string;
   id: string;
   name: string;
   size: SizeConfig;

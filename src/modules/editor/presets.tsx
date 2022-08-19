@@ -1,4 +1,4 @@
-import { Config, ShadowConfig } from "@customTypes/configs";
+import { Config, ShadowConfig, FrameConfig } from "@customTypes/configs";
 export const defaultConfig: Config = {
   id: "config1",
   name: "default",
@@ -79,10 +79,10 @@ export const defaultConfig: Config = {
 export const templates: Partial<Config>[] = [
   {
     id: "config1",
-    preview: "preview_123.png",
+    preview: "preset_1.png",
     name: "default",
     size: {
-      scale: 100,
+      scale: 93,
       dimensions: {
         aspectRatio: "16 / 9",
         width: 1920,
@@ -97,7 +97,7 @@ export const templates: Partial<Config>[] = [
     },
     position: {
       x: 0,
-      y: 14,
+      y: 10,
     },
     background: {
       type: "gradient",
@@ -145,7 +145,7 @@ export const templates: Partial<Config>[] = [
         color: "rgba(255, 255, 255, 1)",
         bold: true,
         italic: false,
-        size: 3.87,
+        size: 100,
         padding: -4.36,
         translateX: 0,
       },
@@ -163,6 +163,12 @@ export const templates: Partial<Config>[] = [
         show: true,
       },
     },
+    watermark: {
+      show: false,
+      placement: "bottom-right",
+      theme: "light",
+    },
+
   },
   {
     id: "config2",
@@ -190,7 +196,7 @@ export const templates: Partial<Config>[] = [
       },
     },
     size: {
-      scale: 90,
+      scale: 80,
       dimensions: {
         aspectRatio: "16 / 9",
         width: 1920,
@@ -316,7 +322,7 @@ export const templates: Partial<Config>[] = [
     id: "config4",
     name: "default",
     size: {
-      scale: 110,
+      scale: 77,
       dimensions: {
         aspectRatio: "3 / 1",
         width: 1500,
@@ -330,8 +336,8 @@ export const templates: Partial<Config>[] = [
       perspective: 1876.6,
     },
     position: {
-      x: -1,
-      y: -1,
+      x: 0,
+      y: -4,
     },
     background: {
       type: "gradient",
@@ -371,8 +377,8 @@ export const templates: Partial<Config>[] = [
         color: "rgba(255, 255, 255, 1)",
         bold: true,
         italic: false,
-        size: 3.04,
-        padding: 0.4,
+        size: 113.5,
+        padding: 2.1,
         translateX: 0,
       },
     },
@@ -388,6 +394,11 @@ export const templates: Partial<Config>[] = [
       searchBar: {
         show: true,
       },
+    },
+    watermark: {
+      show: false,
+      placement: "bottom-right",
+      theme: "light",
     },
     preview: "preset_4.png",
   },
@@ -931,6 +942,24 @@ export const gradientPresets = [
     ],
     direction: 90,
   },
+  {
+    stops: [
+      { color: "#ffffff", id: 1 },
+      { color: "#bda6f0", id: 2 },
+      { color: "#cd96b3", id: 3 },
+      { color: "#ffffff", id: 4 },
+    ],
+    direction: 90,
+  },
+  {
+    stops: [
+      { color: "#ffffff", id: 1 },
+      { color: "#a5d8f0", id: 2 },
+      { color: "#959dcc", id: 3 },
+      { color: "#ffffff", id: 4 },
+    ],
+    direction: 90,
+  },
 ];
 export const colorPresets = [
   "#FFFFFF",
@@ -956,7 +985,7 @@ export const colorPresets = [
   "#a3e6c6",
 ];
 
-export const shadowPresets: ShadowConfig[] = [
+export const shadowPresets: Partial<ShadowConfig>[] = [
   {
     type: "none",
     previewSize: "0px 0px 0px",
