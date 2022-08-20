@@ -244,7 +244,7 @@ const Tokens: NextPage<TokensProps> = (props) => {
           })}
         </div>
       )}
-      {isError && <div className="text-red-500">Error: {isError.message}</div>}
+      {/* {isError && <div className="text-red-500">Error: {isError.message}</div>} */}
 
       {tokens?.keys && (
         <div className="w-full">

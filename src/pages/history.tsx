@@ -87,11 +87,11 @@ const History: NextPage<HistoryProps> = (props) => {
         </div>
       </div>
 
-      {isErrorLogs && (
+      {/* {isErrorLogs && (
         <p className="text-red-400 font-medium">
           logs error: {isErrorLogs.message}
         </p>
-      )}
+      )} */}
       <Table
         logs={logs?.logs}
         isLoading={isLoadingLogs}
