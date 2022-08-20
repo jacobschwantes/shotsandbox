@@ -3,7 +3,6 @@ import {
   LogoutIcon,
   KeyIcon,
   ChartBarIcon,
-  AdjustmentsIcon,
   ArchiveIcon,
 } from "@heroicons/react/outline";
 import Link from "next/link";
@@ -23,12 +22,6 @@ export default function Navigation({ wideNav }: NavigationProps) {
       href: "/",
       icon: ChartBarIcon,
       current: router.asPath === "/",
-    },
-    {
-      name: "Projects",
-      href: "/editor",
-      icon: AdjustmentsIcon,
-      current: router.asPath.includes("editor"),
     },
     {
       name: "Tokens",

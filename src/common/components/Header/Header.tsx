@@ -2,6 +2,7 @@ import { Fragment } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Notifications } from "@components/index";
 import {
+  ArrowRightIcon,
   BellIcon,
   BookOpenIcon,
   ChipIcon,
@@ -26,11 +27,11 @@ export default function Header() {
     >
       {({ open }) => (
         <>
-          <div className=" px-2 sm:px-6 lg:px-6 ">
+          <div className="px-2">
             <div className="flex items-center justify-between h-16">
               <div className="flex items-center justify-between flex-1">
                 <Link href="/">
-                  <span className="hidden lg:flex  items-center justify-center space-x-2 dark:text-white ">
+                  <span className="hidden lg:flex items-end justify-center space-x-2 dark:text-white ">
                     <img
                       className=" h-7 mt-1.5 dark:bg-zinc-200 rounded-md p-0.5 "
                       src="logo.svg"
@@ -40,8 +41,14 @@ export default function Header() {
                   </span>
                 </Link>
                 <div className="hidden sm:block">
-                  <div className="flex space-x-4 z-20">
+                  <div className="flex space-x-4 z-20 items-center">
                     <Notifications />
+                    <Link href="/editor">
+                      <a className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:ring-offset-black">
+                        Editor
+                        <ArrowRightIcon className="h-5 w-5 ml-1" />
+                      </a>
+                    </Link>
                   </div>
                 </div>
               </div>
