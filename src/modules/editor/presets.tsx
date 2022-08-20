@@ -38,7 +38,7 @@ export const defaultConfig: Config = {
     size: "0px 50px 100px",
   },
   border: {
-    radius: 2,
+    radius: .8,
     width: 0,
     color: "rgba(0, 0, 0, 1)",
   },
@@ -131,7 +131,7 @@ export const templates: Partial<Config>[] = [
       size: "0px 100px 200px",
     },
     border: {
-      radius: 2,
+      radius: .8,
       width: 0,
       color: "rgba(0, 0, 0, 1)",
     },
@@ -211,7 +211,7 @@ export const templates: Partial<Config>[] = [
       size: "0px 100px 200px",
     },
     border: {
-      radius: 2,
+      radius: .8,
       width: 0,
       color: "rgba(0, 0, 0, 1)",
     },
@@ -285,7 +285,7 @@ export const templates: Partial<Config>[] = [
       size: "0px 100px 200px",
     },
     border: {
-      radius: 2,
+      radius: .8,
       width: 0,
       color: "rgba(0, 0, 0, 1)",
     },
@@ -363,7 +363,7 @@ export const templates: Partial<Config>[] = [
       size: "0px 100px 200px",
     },
     border: {
-      radius: 1.76,
+      radius: 1.5,
       width: 0,
       color: "rgba(0, 0, 0, 1)",
     },
@@ -959,6 +959,13 @@ export const gradientPresets = [
       { color: "#ffffff", id: 4 },
     ],
     direction: 90,
+  },
+  {
+    stops: [
+      { color: "#ede5de", id: 1 },
+      { color: "#e5f2f5", id: 2 },
+    ],
+    direction: 160,
   },
 ];
 export const colorPresets = [

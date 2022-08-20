@@ -129,6 +129,13 @@
     cursor: pointer; /* Cursor on hover */
   }
 }
+.toolbar-button-spaced > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 0;
+  margin-right: calc(var(--toolbar-spacing) * var(--tw-space-x-reverse));
+  margin-left: calc(
+    var(--toolbar-spacing) * calc(1 - var(--tw-space-x-reverse))
+  );
+}
 
 .toastProgressBlue {
   background: #1d4ed8 !important;

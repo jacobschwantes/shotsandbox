@@ -178,6 +178,8 @@ const Frames: NextComponentType<NextPageContext, {}, FramesProps> = ({
 };
 
 interface ToolbarProps {
+  width: number;
+  height: number;
   options: {
     show: boolean;
     dark: boolean;
@@ -195,50 +197,81 @@ interface ToolbarProps {
 
 export const Toolbar: NextComponentType<NextPageContext, {}, ToolbarProps> = ({
   options: { dark, buttons, searchBar, opacity },
+  width,
+  height,
 }) => {
   return (
-    <div className="w-full absolute top-0 z-10">
+    <div className="w-full z-10">
       <div
-        style={{ opacity }}
+        style={{
+          opacity,
+          paddingTop: `${0.015 * height}px`,
+          paddingBottom: `${0.015 * height}px`,
+          paddingLeft: `${0.025 * height}px`,
+          paddingRight: `${0.025 * height}px`,
+        }}
         className={clsx(
           dark ? "bg-zinc-700" : "bg-zinc-200 ",
-          "relative w-full py-3 px-8"
+          "relative w-full "
         )}
       >
         {searchBar.show && (
           <div
+            style={{
+              height: `${Math.ceil(0.025 * height)}px`,
+              borderRadius: `${Math.ceil(0.008 * height)}px`,
+            }}
             className={clsx(
               dark ? "bg-zinc-500" : "bg-zinc-400",
-              "absolute w-2/5 inset-0 m-auto h-5 rounded-md"
+              "absolute w-2/5 inset-0 m-auto"
             )}
           ></div>
         )}
-        <div className="flex space-x-3">
+        <div
+          style={
+            {
+              "--toolbar-spacing": `${Math.ceil(0.015 * height)}px`,
+            } as React.CSSProperties
+          }
+          className="flex toolbar-button-spaced "
+        >
           <span
+            style={{
+              height: `${Math.ceil(0.025 * height)}px`,
+              borderWidth: `${Math.ceil(0.00125 * width)}px`,
+            }}
             className={clsx(
               buttons.dark
                 ? "bg-zinc-500  border-zinc-500"
                 : "bg-red-500 border-red-500",
               !buttons.solid && "bg-transparent",
-              "p-2 rounded-full border-2"
+              "rounded-full aspect-square  "
             )}
           ></span>
           <span
+            style={{
+              height: `${Math.ceil(0.025 * height)}px`,
+              borderWidth: `${Math.ceil(0.00125 * width)}px`,
+            }}
             className={clsx(
               buttons.dark
                 ? "bg-zinc-500  border-zinc-500"
                 : "bg-yellow-500 border-yellow-500",
               !buttons.solid && "bg-transparent",
-              "p-2 rounded-full border-2"
+              "rounded-full aspect-square border "
             )}
           ></span>
           <span
+            style={{
+              height: `${Math.ceil(0.025 * height)}px`,
+              borderWidth: `${Math.ceil(0.00125 * width)}px`,
+            }}
             className={clsx(
               buttons.dark
                 ? "bg-zinc-500  border-zinc-500"
                 : "bg-green-500 border-green-500",
               !buttons.solid && "bg-transparent",
-              "p-2 rounded-full border-2"
+              " rounded-full  aspect-square border"
             )}
           ></span>
         </div>
@@ -246,10 +279,25 @@ export const Toolbar: NextComponentType<NextPageContext, {}, ToolbarProps> = ({
     </div>
   );
 };
+interface PreviewToolbarProps {
+  options: {
+    show: boolean;
+    dark: boolean;
+    opacity: number;
+    buttons: {
+      show: boolean;
+      dark: boolean;
+      solid: boolean;
+    };
+    searchBar: {
+      show: boolean;
+    };
+  };
+}
 export const PreviewToolbar: NextComponentType<
   NextPageContext,
   {},
-  ToolbarProps
+  PreviewToolbarProps
 > = ({ options: { dark, buttons, searchBar, opacity } }) => {
   return (
     <div className="w-full absolute  z-10 bg-transparent">

@@ -55,7 +55,7 @@ const Border: NextComponentType<NextPageContext, {}, BorderProps> = ({
         })
       }
       min={0}
-      max={4}
+      max={2}
     >
       <div className="flex space-x-2 items-center">
         <p className=" font-medium text-zinc-300">Border Radius</p>

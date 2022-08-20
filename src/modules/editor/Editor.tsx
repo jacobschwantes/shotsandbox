@@ -30,6 +30,7 @@ import {
 } from "@heroicons/react/solid";
 import { toast } from "react-toastify";
 import {
+  ArrowLeftIcon,
   CameraIcon,
   ChevronUpIcon,
   RefreshIcon,
@@ -62,6 +63,7 @@ import {
 } from "./components/index";
 import { useWindowSize } from "@hooks/window";
 import { Watermark } from "./components/Watermarks";
+import Link from "next/link";
 
 const generalNavigation = [
   {
@@ -232,6 +234,7 @@ const Editor: NextPage = () => {
   const [removeBackground, setRemoveBackground] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const watermarkRef = useRef<HTMLSpanElement>(null);
+  const imageRef = useRef<HTMLDivElement>(null);
   const containerSize = useWindowSize(ref);
 
   const getScreenshot = async (options: {
@@ -423,8 +426,14 @@ const Editor: NextPage = () => {
         isLoading={isLoading}
         handleSubmit={getScreenshot}
       />
-      <div className="p-5 flex justify-between absolute w-full bg-black">
-        <h1 className="text-zinc-200">Editor</h1>
+      <div className="h-16 flex items-center justify-between absolute w-full bg-black px-2">
+        <Link href="/">
+          <a className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:ring-offset-black">
+            <ArrowLeftIcon className="h-5 w-5 mr-1" />
+            Back to Dashboard
+          </a>
+        </Link>
+
         <div className="flex space-x-2">
           <button onClick={() => console.log(config)} className="text-white">
             click me
@@ -648,7 +657,7 @@ const Editor: NextPage = () => {
           </Popover>
         </div>
       </div>
-      <div className="flex justify-between h-full pt-[82px] ">
+      <div className="flex justify-between h-full pt-[64px] ">
         {/* Editor preview container */}
         <div
           className={clsx(
@@ -752,7 +761,9 @@ const Editor: NextPage = () => {
                         style={{
                           fontSize: ref.current?.clientWidth
                             ? `${
-                                ref.current?.clientWidth * 0.02 * (config.header.content.size / 100)
+                                ref.current?.clientWidth *
+                                0.02 *
+                                (config.header.content.size / 100)
                               }px`
                             : "1rem",
                         }}
@@ -774,7 +785,11 @@ const Editor: NextPage = () => {
                     className="aspect-video relative flex flex-col flex-1 overflow-hidden "
                     style={{
                       boxShadow: `${config.shadow.color} ${config.shadow.size}`,
-                      borderRadius: `${config.border.radius}rem`,
+                      borderRadius: `${
+                        0.037 *
+                        (imageRef?.current?.clientHeight ?? 1000) *
+                        config.border.radius
+                      }px`,
                       borderColor: config.border.color,
                       borderWidth: `${config.border.width}px`,
                       marginTop:
@@ -789,10 +804,17 @@ const Editor: NextPage = () => {
                           : `${config.header.content.padding}rem`,
                     }}
                   >
-                    {config.frame.show && <Toolbar options={config.frame} />}
+                    {config.frame.show && (
+                      <Toolbar
+                        width={imageRef.current?.clientWidth ?? 1000}
+                        height={imageRef.current?.clientHeight ?? 1000}
+                        options={config.frame}
+                      />
+                    )}
                     <div
+                      ref={imageRef}
                       className={clsx(
-                        config.frame.show && "mt-[44px]",
+                        config.frame.show && "",
                         "relative flex-1 "
                       )}
                     >
