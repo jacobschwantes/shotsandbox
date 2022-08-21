@@ -123,11 +123,24 @@
     background: white; /* Green background */
     cursor: pointer; /* Cursor on hover */
   }
-
-  .slider::-moz-range-thumb {
-    background: #04aa6d; /* Green background */
-    cursor: pointer; /* Cursor on hover */
+  input[type="range"]::-webkit-slider-runnable-track {
+    box-shadow: none;
+    border: none;
+    background: transparent;
+    -webkit-appearance: none;
   }
+  input[type="range"] {
+    background-image: -webkit-gradient(
+      linear,
+      50% 0%,
+      50% 100%,
+      color-stop(0%, #2563eb),
+      color-stop(100%, #2563eb)
+    );
+    background-repeat: no-repeat;
+    -webkit-appearance: none;
+  }
+
 }
 .toolbar-button-spaced > :not([hidden]) ~ :not([hidden]) {
   --tw-space-x-reverse: 0;
