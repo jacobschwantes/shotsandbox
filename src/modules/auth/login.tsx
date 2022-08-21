@@ -5,11 +5,13 @@ import { EyeIcon, EyeOffIcon, UserIcon } from "@heroicons/react/solid";
 import {
   getAuth,
   signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
 } from "firebase/auth";
-
+import { getFunctions, httpsCallable } from "firebase/functions";
 import { firebaseApp } from "./firebase/client";
 import { handleAuthError } from "./utils/errors";
-import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
+import { toast } from "react-toastify";
+import { CheckCircleIcon } from "@heroicons/react/outline";
 const auth = getAuth(firebaseApp);
 type Tab = {
   heading: string;
@@ -23,7 +25,8 @@ const validatePassword = (password: string) => {
     password
   );
 };
-
+const functions = getFunctions();
+const resetPassword = httpsCallable(functions, "resetPassword");
 const Login: NextPage = () => {
   const [login, setLogin] = useState(true);
   return (
@@ -49,6 +52,7 @@ const PasswordPage: NextComponentType<
 > = ({ password, email, setPassword, setEmailValidated }) => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [passwordResetLoading, setPasswordResetLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
   const submitLogin = async (email: string, password: string) => {
@@ -59,8 +63,43 @@ const PasswordPage: NextComponentType<
       console.log(JSON.stringify(e));
       setError(handleAuthError(e));
     }
-
     setLoading(false);
+  };
+  const handleResetPassword = () => {
+    setPasswordResetLoading(true);
+    resetPassword(email)
+      .then((result) => {
+        console.log(result)
+       
+        toast(
+          <div className="flex items-center space-x-3">
+            <CheckCircleIcon className="h-6 w-6 text-blue-500" />
+            <span>
+              <p className="text-sm font-extralight">
+                Password reset email sent to {email}.
+              </p>
+            </span>
+          </div>,
+          {
+            theme: "dark",
+            progressClassName: "toastProgressBlue",
+          }
+        );
+      })
+      .catch((e: any) =>
+        toast(
+          <div className="flex items-center space-x-3">
+            <span>
+              <h1 className=" font-medium">{e.error}</h1>
+              <p className="text-sm font-extralight">{e.message}</p>
+            </span>
+          </div>,
+          {
+            type: "error",
+          }
+        )
+      );
+    setPasswordResetLoading(false);
   };
   return (
     <form
@@ -119,7 +158,14 @@ const PasswordPage: NextComponentType<
         </div>
         <p className="text-red-500 font-medium text-sm">{error}</p>
       </div>
-      <p className="font-medium text-blue-600">Forgot password?</p>
+      <button
+        type="button"
+        disabled={passwordResetLoading}
+        onClick={handleResetPassword}
+        className="font-medium text-blue-600 self-start"
+      >
+        Forgot password?
+      </button>
       <button
         type="submit"
         className="bg-blue-500 hover:bg-blue-400 w-full border border-blue-900 p-4 rounded-lg font-medium tracking-wide text-gray-900 flex items-center justify-center"
@@ -169,6 +215,7 @@ const EmailPage: NextComponentType<NextPageContext, {}, EmailPageProps> = ({
               setEmail(e.target.value);
             }}
             placeholder="Your email address"
+            type="email"
             name="email"
             id="email"
             className={
@@ -192,12 +239,12 @@ const EmailPage: NextComponentType<NextPageContext, {}, EmailPageProps> = ({
           Create account
         </button>
       </form>
-      <div className="flex flex-col items-center space-y-3">
+      {/* <div className="flex flex-col items-center space-y-3">
         <p className="font-medium text-sm text-blue-600">
           Sign into a business account
         </p>
         <p className="font-medium text-sm text-blue-600">Privacy policy</p>
-      </div>
+      </div> */}
     </>
   );
 };
@@ -247,12 +294,17 @@ const SignUpPage: NextComponentType<NextPageContext, {}, SignUpPageProps> = ({
   const [showPassword, setShowPassword] = useState(false);
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
-  const [
-    createUserWithEmailAndPassword,
-    user,
-    userCreateLoading,
-    userCreateError,
-  ] = useCreateUserWithEmailAndPassword(auth);
+  const [loading, setLoading] = useState(false);
+
+  const submitCreateUser = async (email: string, password: string) => {
+    setLoading(true);
+    try {
+      await createUserWithEmailAndPassword(auth, email, password);
+    } catch (e: any) {
+      setError(handleAuthError(e));
+    }
+    setLoading(false);
+  };
 
   return (
     <>
@@ -263,7 +315,7 @@ const SignUpPage: NextComponentType<NextPageContext, {}, SignUpPageProps> = ({
           if (passwordError || emailError) {
             return;
           } else {
-            createUserWithEmailAndPassword(email, password);
+            submitCreateUser(email, password);
           }
         }}
         className="flex flex-col space-y-4"
@@ -284,6 +336,7 @@ const SignUpPage: NextComponentType<NextPageContext, {}, SignUpPageProps> = ({
                 setEmailError("Please enter a valid email address");
               }
             }}
+            type="email"
             placeholder="Your email address"
             name="email"
             id="email"
@@ -334,16 +387,13 @@ const SignUpPage: NextComponentType<NextPageContext, {}, SignUpPageProps> = ({
           </div>
           <p className="text-red-500 font-medium text-sm">{passwordError}</p>
           <p className="text-red-500 font-medium text-sm">{error}</p>
-          <p className="text-red-500 font-medium text-sm">
-            {userCreateError?.message}
-          </p>
         </div>
 
         <button
           type="submit"
           className="bg-blue-500 hover:bg-blue-400 w-full border border-blue-900 p-4 rounded-lg font-medium tracking-wide text-gray-900 flex items-center justify-center"
         >
-          {userCreateLoading ? <Spinner className="h-5 w-5" /> : "Continue"}
+          {loading ? <Spinner className="h-5 w-5" /> : "Continue"}
         </button>
         <button
           type="button"
@@ -354,7 +404,7 @@ const SignUpPage: NextComponentType<NextPageContext, {}, SignUpPageProps> = ({
         </button>
       </form>
       <div className="flex flex-col items-center space-y-3">
-        <p className="font-medium text-sm text-blue-600">Privacy policy</p>
+        {/* <p className="font-medium text-sm text-blue-600">Privacy policy</p> */}
       </div>
     </>
   );
@@ -368,15 +418,12 @@ interface SignUpCardProps {
 const SignUpCard: NextComponentType<NextPageContext, {}, SignUpCardProps> = ({
   setLogin,
 }) => {
-
   return (
     <div className="border border-zinc-800 rounded-2xl p-10 max-w-lg w-full space-y-5">
       <h1 className="text-gray-100 text-3xl font-medium mb-12">
         screenshotify
       </h1>
-      <SignUpPage
-        setLogin={setLogin}
-      />
+      <SignUpPage setLogin={setLogin} />
     </div>
   );
 };
