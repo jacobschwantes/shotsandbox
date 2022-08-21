@@ -92,7 +92,7 @@ const Range: NextComponentType<NextPageContext, {}, RangeProps> = ({
         </div>
       )}
     </div>
-    {false && (
+    {/* {false && (
       <div className="text-zinc-400 text-xs mt-1 font-medium relative">
         <span className="absolute left-0">
           {min}
@@ -107,7 +107,7 @@ const Range: NextComponentType<NextPageContext, {}, RangeProps> = ({
           {label && String.fromCharCode(labels[label])}
         </span>
       </div>
-    )}
+    )} */}
   </div>
 );
 export default Range;
