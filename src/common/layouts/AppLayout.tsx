@@ -25,7 +25,7 @@ const AppLayout: NextPage<AppLayoutProps> = ({ children }) => {
       <div className="absolute w-full ">
         <Header />
       </div>
-      <div className=" pt-20 dark:bg-black dark:border-zinc-900 dark:border-r ">
+      <div className=" pt-20 dark:bg-black dark:border-zinc-900 dark:border-r sm:block hidden ">
         <Navigation wideNav={false} />
       </div>
       <div className="flex-1 h-full pt-16">{children}</div>

@@ -7,25 +7,51 @@ import {
   BookOpenIcon,
   ChipIcon,
   DownloadIcon,
+  ChartBarIcon,
+  KeyIcon,
+  ArchiveIcon,
+  CogIcon,
   MenuIcon,
   XIcon,
 } from "@heroicons/react/outline";
-const navigation = [
-  { name: "Pricing", href: "/pricing", icon: BellIcon },
-  { name: "Download", href: "/download", icon: DownloadIcon },
-  { name: "Docs", href: "#", icon: BookOpenIcon },
-  { name: "App", href: "#", icon: ChipIcon },
-];
+import { useRouter } from "next/router";
 import Link from "next/link";
 import clsx from "clsx";
 
 export default function Header() {
+  const router = useRouter();
+  const navigation = [
+    {
+      name: "Dashboard",
+      href: "/",
+      icon: ChartBarIcon,
+      current: router.asPath === "/",
+    },
+    {
+      name: "Tokens",
+      href: "/tokens",
+      icon: KeyIcon,
+      current: router.asPath.includes("tokens"),
+    },
+    {
+      name: "History",
+      href: "/history",
+      icon: ArchiveIcon,
+      current: router.asPath.includes("history"),
+    },
+    {
+      name: "Settings",
+      href: "/settings/account",
+      icon: CogIcon,
+      current: router.asPath.includes("settings"),
+    },
+  ];
   return (
     <Disclosure
       as="nav"
       className="bg-white shadow-sm z-30 dark:bg-black dark:border-b dark:border-zinc-900"
     >
-      {({ open }) => (
+      {({ open, close }) => (
         <>
           <div className=" px-2 sm:px-6 lg:px-6 ">
             <div className="flex items-center justify-between h-16">
@@ -54,7 +80,7 @@ export default function Header() {
               </div>
               <div className="flex items-center sm:hidden">
                 {/* Mobile menu button*/}
-                <Disclosure.Button className="inline-flex items-center justify-center p-2 rounded-md text-black hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
+                <Disclosure.Button className="inline-flex items-center justify-center p-2 rounded-md text-black dark:text-white hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
                   <span className="sr-only">Open main menu</span>
                   {open ? (
                     <XIcon className="block h-6 w-6" aria-hidden="true" />
@@ -66,19 +92,27 @@ export default function Header() {
             </div>
           </div>
 
-          <Disclosure.Panel className="sm:hidden">
+          <Disclosure.Panel className="sm:hidden absolute z-10 bg-black w-full">
             <div className="px-2 pt-2 pb-3 space-y-1">
-              {navigation.map((item) => (
-                <Disclosure.Button
-                  key={item.name}
-                  as="a"
-                  href={item.href}
-                  className={clsx(
-                    "block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white "
-                  )}
-                >
-                  {item.name}
-                </Disclosure.Button>
+              {navigation.map((item, index) => (
+                <Link key={index} href={item.href}>
+                  <button
+                    onClick={() => close()}
+                    key={item.name}
+                    className={clsx(
+                      item.current
+                        ? "bg-blue-200 text-blue-600 dark:bg-blue-900 dark:text-blue-600   "
+                        : "text-gray-300  ",
+                      " flex items-center  p-3 rounded-lg border border-transparent text-center transition-all  hover:bg-gray-100 dark:hover:bg-zinc-900 dark:bg-opacity-50 w-full space-x-2"
+                    )}
+                  >
+                    <item.icon
+                      className={"h-6 w-6 flex-shrink-0 transition-colors "}
+                      aria-hidden="true"
+                    />
+                    <span>{item.name}</span>
+                  </button>
+                </Link>
               ))}
             </div>
           </Disclosure.Panel>

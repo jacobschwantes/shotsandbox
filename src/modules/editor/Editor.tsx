@@ -429,18 +429,18 @@ const Editor: NextPage = () => {
       <div className="h-16 flex items-center justify-between absolute w-full bg-black px-2 sm:px-6 lg:px-6">
         <Link href="/">
           <a className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:ring-offset-black">
-            <ArrowLeftIcon className="h-5 w-5 mr-1" />
-            Dashboard
+            <ArrowLeftIcon className="h-5 w-5 sm:mr-1" />
+            <span className="hidden sm:block">Dashboard</span>
           </a>
         </Link>
 
         <div className="flex space-x-2">
-          <button onClick={() => console.log(config)} className="text-white">
+          {/* <button onClick={() => console.log(config)} className="text-white">
             click me
-          </button>
+          </button> */}
           <Popover
             gap={10}
-            placement="bottom-end"
+            placement="bottom"
             render={() => (
               <div className="bg-zinc-900 bg-opacity-80 backdrop-blur p-4 rounded-lg space-y-3 w-[320px] ">
                 <h1 className="text-zinc-100 font-medium text-lg">
@@ -565,8 +565,21 @@ const Editor: NextPage = () => {
             )}
           >
             <button className="flex items-center justify-center space-x-2 border border-zinc-800 text-zinc-200 bg-zinc-900 hover:bg-zinc-800 bg-opacity-25 hover:bg-opacity-25 transition-all cursor-pointer bg py-2 px-4 rounded-lg">
-              {config.size.dimensions.width} x {config.size.dimensions.height}{" "}
-              px
+              <svg
+                className="text-white h-5 w-5 sm:hidden"
+                viewBox="0 0 15 15"
+              >
+                <path
+                  fill-rule="evenodd"
+                  clip-rule="evenodd"
+                  d="M3.00014 2.73895C3.00014 2.94698 2.76087 3.06401 2.59666 2.93628L1.00386 1.69744C0.875177 1.59735 0.875177 1.40286 1.00386 1.30277L2.59666 0.063928C2.76087 -0.0637944 3.00014 0.0532293 3.00014 0.261266V1.00012H9.00009V0.261296C9.00009 0.0532591 9.23936 -0.0637646 9.40358 0.0639578L10.9964 1.3028C11.1251 1.40289 11.1251 1.59738 10.9964 1.69747L9.40358 2.93631C9.23936 3.06404 9.00009 2.94701 9.00009 2.73898V2.00012H3.00014V2.73895ZM9.50002 4.99998H2.50002C2.22388 4.99998 2.00002 5.22384 2.00002 5.49998V12.5C2.00002 12.7761 2.22388 13 2.50002 13H9.50002C9.77616 13 10 12.7761 10 12.5V5.49998C10 5.22384 9.77616 4.99998 9.50002 4.99998ZM2.50002 3.99998C1.67159 3.99998 1.00002 4.67156 1.00002 5.49998V12.5C1.00002 13.3284 1.67159 14 2.50002 14H9.50002C10.3284 14 11 13.3284 11 12.5V5.49998C11 4.67156 10.3284 3.99998 9.50002 3.99998H2.50002ZM14.7389 6.00001H14V12H14.7389C14.9469 12 15.064 12.2393 14.9362 12.4035L13.6974 13.9963C13.5973 14.125 13.4028 14.125 13.3027 13.9963L12.0639 12.4035C11.9362 12.2393 12.0532 12 12.2612 12H13V6.00001H12.2612C12.0532 6.00001 11.9361 5.76074 12.0639 5.59653L13.3027 4.00373C13.4028 3.87505 13.5973 3.87505 13.6974 4.00374L14.9362 5.59653C15.0639 5.76074 14.9469 6.00001 14.7389 6.00001Z"
+                  fill="currentColor"
+                />
+              </svg>
+              <span className="hidden sm:block">
+                {config.size.dimensions.width} x {config.size.dimensions.height}{" "}
+                px
+              </span>
               <ChevronDownIcon className="h-4 w-4 ml-1" />
             </button>
           </Popover>
@@ -577,7 +590,7 @@ const Editor: NextPage = () => {
             className="flex items-center justify-center space-x-2 border border-zinc-800 text-zinc-200 bg-zinc-900 hover:bg-zinc-800 bg-opacity-25 hover:bg-opacity-25 transition-all cursor-pointer bg py-2 px-4 rounded-lg"
           >
             <RefreshIcon className="h-4 w-4" />
-            <span>Reset</span>
+            <span className="hidden sm:block">Reset</span>
           </button>
           <Tooltip label="Undo">
             <button
@@ -601,7 +614,7 @@ const Editor: NextPage = () => {
           </Tooltip>
           <Popover
             gap={10}
-            placement="bottom-start"
+            placement="bottom"
             render={() => (
               <div className="bg-zinc-900 bg-opacity-80 backdrop-blur p-4 rounded-lg space-y-3 max-w-3xl ">
                 <h1 className="text-zinc-100 font-medium text-lg">Export</h1>
@@ -651,17 +664,17 @@ const Editor: NextPage = () => {
             )}
           >
             <button className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 ">
-              <span>Export</span>
-              <DownloadIcon className="h-4 w-4 ml-1" />
+              <span className="sm:block hidden">Export</span>
+              <DownloadIcon className="h-4 w-4 sm:ml-1" />
             </button>
           </Popover>
         </div>
       </div>
-      <div className="flex justify-between h-full pt-[64px] ">
+      <div className="flex sm:justify-between h-full pt-[64px] md:flex-row flex-col ">
         {/* Editor preview container */}
         <div
           className={clsx(
-            "flex-1  dark:bg-black light:grid-effect-light bg-gray-50 dark:grid-effect-dark xl:p-20 p-5   "
+            "h-1/2 sm:h-full flex-1 dark:bg-black light:grid-effect-light bg-gray-50 dark:grid-effect-dark xl:p-20 p-5   "
           )}
         >
           <motion.div
@@ -828,23 +841,23 @@ const Editor: NextPage = () => {
         </div>
 
         {/* Controls column start */}
-        <div className="flex border-l border-blue-900 h-full ">
+        <div className="flex sm:flex-row flex-col sm:border-l border-blue-900 sm:h-full h-1/2 ">
           {/* Editor navigation start */}
-          <div className="flex flex-col h-full pl-2 overflow-y-auto">
-            <div className="flex flex-col  bg-zinc-900 bg-opacity-50">
+          <div className="sm:flex sm:flex-col sm:h-full sm:pl-2 sm:overflow-y-auto overflow-x-auto ">
+            <div className="flex sm:flex-col  bg-zinc-900 bg-opacity-50">
               {generalNavigation.map((item, index) => (
                 <div className={clsx(active === item && "bg-black w-full")}>
                   <button
                     onClick={() => setActive(item)}
-                    className={clsx(
+                    className={clsx("rounded-none",
                       active.id === item.id
-                        ? "bg-zinc-900 bg-opacity-50 rounded-l-2xl"
+                        ? "bg-zinc-900 bg-opacity-50 sm:rounded-l-2xl"
                         : "bg-black",
-                      "flex flex-col items-center space-y-1 w-full  p-2 ",
+                      "flex flex-col items-center space-y-1 w-full  sm:p-2 p-1",
                       active.id > 1 &&
                         item.id === active.id - 1 &&
-                        "rounded-br-2xl",
-                      item.id === active.id + 1 && "rounded-tr-2xl"
+                        "sm:rounded-br-2xl",
+                      item.id === active.id + 1 && "sm:rounded-tr-2xl"
                     )}
                   >
                     <div
@@ -861,7 +874,7 @@ const Editor: NextPage = () => {
                     <span
                       className={clsx(
                         active === item ? "text-white" : "text-zinc-400",
-                        "text-xs font-medium"
+                        "text-xs font-medium sm:block hidden"
                       )}
                     >
                       {item.name}
@@ -870,7 +883,7 @@ const Editor: NextPage = () => {
                 </div>
               ))}
             </div>
-            <div className=" bg-zinc-900 bg-opacity-50 flex-1">
+            <div className=" bg-zinc-900 bg-opacity-50 flex-1 hidden sm:block">
               <div
                 className={clsx(
                   active.id === generalNavigation.length && "rounded-tr-2xl",
@@ -881,7 +894,7 @@ const Editor: NextPage = () => {
           </div>
 
           {/* Settings panel start */}
-          <div className=" w-[320px] p-5 space-y-3 overflow-y-auto overflow-x-hidden bg-zinc-900 bg-opacity-50  ">
+          <div className=" sm:w-[320px] w-full p-5 space-y-3 overflow-y-auto overflow-x-hidden bg-zinc-900 bg-opacity-50 flex-1  ">
             <AnimatePresence exitBeforeEnter>
               <motion.div
                 key={active.id}
@@ -891,7 +904,7 @@ const Editor: NextPage = () => {
                 transition={{ duration: 0.15 }}
               >
                 (
-                <div className=" pt-4 pb-2  text-sm text-gray-500 space-y-10 ">
+                <div className=" sm:pt-4 pb-2  text-sm text-gray-500 sm:space-y-10 space-y-6 ">
                   {/* Panel header */}
                   <h1 className="font-medium text-white pb-1 text-base flex items-center">
                     <active.icon className="h-6 w-6 text-zinc-600 mr-2" />

@@ -25,7 +25,7 @@ const Tabs: NextComponentType<NextPageContext, {}, TabsProps> = ({
               : "text-gray-700 hover:text-gray-600 dark:hover:text-zinc-200 dark:text-zinc-300"
           )}
         >
-          <h1 className="hidden sm:block">{tab}</h1>
+          <h1 className="">{tab}</h1>
         </button>
       ))}
     </div>
