@@ -1,5 +1,4 @@
 import { toPng, toJpeg, toBlob } from "html-to-image";
-import React from "react";
 import { toast } from "react-toastify";
 interface ExportOptions {
   width: number;

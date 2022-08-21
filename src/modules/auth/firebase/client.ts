@@ -1,7 +1,6 @@
 import { initializeApp } from "firebase/app";
-import {getAuth} from  "firebase/auth";
+import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
-
 const clientCredentials = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
   authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
@@ -10,9 +9,7 @@ const clientCredentials = {
   messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
-
 const firebaseApp = initializeApp(clientCredentials);
-// Initialize Cloud Firestore and get a reference to the service
 const db = getFirestore(firebaseApp);
-const auth = getAuth(firebaseApp)
-export {firebaseApp, db, auth};
+const auth = getAuth(firebaseApp);
+export { firebaseApp, db, auth };

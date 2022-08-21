@@ -1,23 +1,18 @@
 import "../common/styles/globals.css";
 import type { AppProps } from "next/app";
-import {
-  useAuthState,
-  useSendEmailVerification,
-} from "react-firebase-hooks/auth";
+import { useAuthState } from "react-firebase-hooks/auth";
 import { ToastContainer, toast } from "react-toastify";
 import { getAuth, signOut } from "firebase/auth";
-import { firebaseApp } from "../modules/auth/firebase/client";
+import { firebaseApp } from "@modules/auth/firebase/client";
 import Login from "@modules/auth/login";
 import { useRouter } from "next/router";
 import AppLayout from "@layouts/AppLayout";
 import { useEffect, useState } from "react";
 import ProgressBar from "@badrap/bar-of-progress";
-import { useIdToken } from "src/common/hooks/auth";
-import Spinner from "@components/Spinner";
+import { useIdToken } from "@hooks/auth";
+import { Spinner, Tooltip } from "@components/index";
 import Image from "next/image";
-import { ArrowLeftIcon } from "@heroicons/react/solid";
-import { LogoutIcon, XIcon, CheckCircleIcon } from "@heroicons/react/outline";
-import Tooltip from "@components/Tooltip";
+import { LogoutIcon, CheckCircleIcon } from "@heroicons/react/outline";
 import { getFunctions, httpsCallable } from "firebase/functions";
 const progress = new ProgressBar({
   size: 2,
@@ -27,14 +22,15 @@ const progress = new ProgressBar({
 });
 const auth = getAuth(firebaseApp);
 const functions = getFunctions(firebaseApp);
-const sendEmailVerification = httpsCallable(functions, "sendNewVerificationEmail");
+const sendEmailVerification = httpsCallable(
+  functions,
+  "sendNewVerificationEmail"
+);
 function MyApp({ Component, pageProps }: AppProps) {
   const [user, loading, error] = useAuthState(auth);
   const [sendingEmail, setSendingEmail] = useState(false);
   const token = useIdToken();
-  // const [token, setToken] = useState('');
   const router = useRouter();
-  // user?.getIdToken().then((res) => setToken(res))
   useEffect(() => {
     router.events.on("routeChangeStart", progress.start);
     router.events.on("routeChangeError", progress.finish);
@@ -47,7 +43,6 @@ function MyApp({ Component, pageProps }: AppProps) {
     setSendingEmail(true);
     sendEmailVerification()
       .then((result) => {
-        const data = result.data;
         setSendingEmail(false);
         toast(
           <div className="flex items-center space-x-3">
@@ -64,8 +59,8 @@ function MyApp({ Component, pageProps }: AppProps) {
           }
         );
       })
-      .catch((e: any) =>
-     { setSendingEmail(false);
+      .catch((e: any) => {
+        setSendingEmail(false);
         toast(
           <div className="flex items-center space-x-3">
             <span>
@@ -76,8 +71,8 @@ function MyApp({ Component, pageProps }: AppProps) {
           {
             type: "error",
           }
-        )}
-      );
+        );
+      });
   };
   if (router.asPath.includes("_auth")) {
     return <Component {...pageProps} />;
@@ -92,7 +87,24 @@ function MyApp({ Component, pageProps }: AppProps) {
       </AppLayout>
     );
   } else if (!user && !loading) {
-    return <Login />;
+    return (
+      <>
+        <ToastContainer
+          position="bottom-right"
+          className="text-sm"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          theme="colored"
+          pauseOnHover
+        />
+        <Login />
+      </>
+    );
   } else if (user && !user?.emailVerified) {
     return (
       <div className="flex h-screen w-screen items-center justify-center dark:bg-black  ">
@@ -150,7 +162,12 @@ function MyApp({ Component, pageProps }: AppProps) {
   } else {
     return (
       <div className="flex h-screen w-screen items-center justify-center dark:bg-black  ">
-        <Image alt="loading animation" height={100} width={100}  src="/loading.svg"/>
+        <Image
+          alt="loading animation"
+          height={100}
+          width={100}
+          src="/loading.svg"
+        />
       </div>
     );
   }

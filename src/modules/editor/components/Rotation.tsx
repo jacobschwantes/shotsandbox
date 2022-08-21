@@ -10,7 +10,7 @@ const Rotation: NextComponentType<NextPageContext, {}, RotationProps> = ({
   config,
   updateConfig,
 }) => (
-  <>
+  <div className="space-y-14">
     <Range
       showValues={false}
       value={config.orientation.perspective}
@@ -253,6 +253,6 @@ const Rotation: NextComponentType<NextPageContext, {}, RotationProps> = ({
       <RefreshIcon className="h-4 w-4" />
       <span>Reset</span>
     </button>
-  </>
+  </div>
 );
 export default Rotation;

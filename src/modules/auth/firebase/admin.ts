@@ -1,7 +1,5 @@
-//lib/firebase-admin.js
-
 import * as admin from "firebase-admin";
-var serviceAccount = JSON.parse(
+const serviceAccount = JSON.parse(
   process.env.FIREBASE_SERVICE_ACCOUNT_KEY as string
 );
 if (!admin.apps.length) {
