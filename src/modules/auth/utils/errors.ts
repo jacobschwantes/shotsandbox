@@ -274,6 +274,10 @@ const codeDictionary = {
     toDev: "Invalid password for given email or password is not set.",
     toClient: "Invalid email or password.",
   },
+  "auth/admin-restricted-operation": {
+    toDev: "Firebase account creation disabled",
+    toClient: "Account creation disabled.",
+  },
 };
 export const handleAuthError = ({ code }: ErrorProps) => {
   const foundCode = codeDictionary[code];
