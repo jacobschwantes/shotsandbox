@@ -426,11 +426,11 @@ const Editor: NextPage = () => {
         isLoading={isLoading}
         handleSubmit={getScreenshot}
       />
-      <div className="h-16 flex items-center justify-between absolute w-full bg-black px-2">
+      <div className="h-16 flex items-center justify-between absolute w-full bg-black px-2 sm:px-6 lg:px-6">
         <Link href="/">
           <a className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:ring-offset-black">
             <ArrowLeftIcon className="h-5 w-5 mr-1" />
-            Back to Dashboard
+            Dashboard
           </a>
         </Link>
 
@@ -778,12 +778,12 @@ const Editor: NextPage = () => {
                       rotateX: config.orientation.rotateX,
                       rotateY: config.orientation.rotateY,
                       rotateZ: config.orientation.rotateZ,
-                      transformPerspective: config.orientation.perspective,
                     }}
                     transition={{ type: "spring" }}
                     key={index}
                     className="aspect-video relative flex flex-col flex-1 overflow-hidden "
                     style={{
+                      transformPerspective: config.orientation.perspective,
                       boxShadow: `${config.shadow.color} ${config.shadow.size}`,
                       borderRadius: `${
                         0.037 *

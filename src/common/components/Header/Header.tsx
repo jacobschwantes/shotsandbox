@@ -27,7 +27,7 @@ export default function Header() {
     >
       {({ open }) => (
         <>
-          <div className="px-2">
+          <div className=" px-2 sm:px-6 lg:px-6 ">
             <div className="flex items-center justify-between h-16">
               <div className="flex items-center justify-between flex-1">
                 <Link href="/">
