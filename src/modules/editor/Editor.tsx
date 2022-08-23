@@ -831,7 +831,7 @@ const Editor: NextPage = () => {
                         "relative flex-1 "
                       )}
                     >
-                      <motion.img src={url.src} />
+                      <Image priority layout="fill" src={url.src} />
                     </div>
                   </motion.div>
                 </motion.div>

@@ -17,10 +17,19 @@ export const downloadPng = (
     },
   })
     .then((dataUrl) => {
-      const link = document.createElement("a");
-      link.download = "my-image-name.png";
-      link.href = dataUrl;
-      link.click();
+      toPng(elementRef, {
+        canvasWidth: options.width,
+        canvasHeight: options.height,
+        pixelRatio: 1,
+        style: {
+          borderRadius: "0px",
+        },
+      }).then((dataUrl) => {
+        const link = document.createElement("a");
+        link.download = "my-image-name.png";
+        link.href = dataUrl;
+        link.click();
+      });
     })
     .catch((err) => {
       console.log(err);
