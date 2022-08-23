@@ -154,8 +154,8 @@ export default function LineChart({
   return isLoading ? (
     <div className="relative overflow-hidden rounded-2xl border  dark:border-zinc-900  border-gray-100 dark:bg-black space-y-3 opacity-70">
       <div className="space-y-3 p-5">
-        <p className="h-4 bg-zinc-900 w-60 rounded-full"></p>
-        <p className="h-3 bg-zinc-900 w-96 rounded-full"></p>
+        <p className="h-4 bg-zinc-900 sm:w-60 w-1/2 rounded-full"></p>
+        <p className="h-3 bg-zinc-900 sm:w-96 w-1/4 rounded-full"></p>
       </div>
       <div className="before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:border-t before:border-rose-100/10 before:bg-gradient-to-r before:from-transparent before:via-rose-100/10 before:to-transparent">
         <div className=" ">

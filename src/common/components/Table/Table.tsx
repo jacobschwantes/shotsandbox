@@ -30,8 +30,8 @@ export default function Table({
   batchSize,
 }: TableProps) {
   return !isLoading && logs ? (
-    <div className="rounded-2xl bg-white dark:bg-black border shadow-lg dark:shadow-none shadow-gray-100  border-gray-200 dark:border-zinc-900">
-      <table className="   divide-y divide-gray-200 dark:divide-zinc-900 ">
+    <div className="rounded-2xl bg-white dark:bg-black border shadow-lg dark:shadow-none shadow-gray-100  border-gray-200 dark:border-zinc-900 ">
+      <table className="   divide-y divide-gray-200 dark:divide-zinc-900  ">
         <thead>
           <tr>
             <th className="px-6 py-3 bg-gray-50 dark:bg-black text-left text-xs font-medium text-gray-500 uppercase tracking-wider rounded-2xl">
