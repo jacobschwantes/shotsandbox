@@ -259,7 +259,7 @@ const LoginCard: NextComponentType<NextPageContext, {}, LoginCardProps> = ({
   const [emailValidated, setEmailValidated] = useState(false);
 
   return (
-    <div className="border border-zinc-900 rounded-2xl p-10 max-w-lg w-full space-y-5">
+    <div className="sm:border border-zinc-900 rounded-2xl sm:p-10 p-5 max-w-lg w-full space-y-5">
       <h1 className="text-gray-100 text-3xl font-medium mb-12">
         screenshotify
       </h1>
@@ -419,7 +419,7 @@ const SignUpCard: NextComponentType<NextPageContext, {}, SignUpCardProps> = ({
   setLogin,
 }) => {
   return (
-    <div className="border border-zinc-800 rounded-2xl p-10 max-w-lg w-full space-y-5">
+    <div className="sm:border border-zinc-800 rounded-2xl sm:p-10 p-5 max-w-lg w-full space-y-5">
       <h1 className="text-gray-100 text-3xl font-medium mb-12">
         screenshotify
       </h1>

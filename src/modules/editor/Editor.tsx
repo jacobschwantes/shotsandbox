@@ -611,7 +611,7 @@ const Editor: NextPage = () => {
           </Tooltip>
           <Popover
             gap={10}
-            placement="bottom"
+            placement="bottom-end"
             render={() => (
               <div className="bg-zinc-900 bg-opacity-80 backdrop-blur p-4 rounded-lg space-y-3 max-w-3xl ">
                 <h1 className="text-zinc-100 font-medium text-lg">Export</h1>

@@ -15,21 +15,13 @@ export const downloadPng = (
     style: {
       borderRadius: "0px",
     },
+    cacheBust: true
   })
     .then((dataUrl) => {
-      toPng(elementRef, {
-        canvasWidth: options.width,
-        canvasHeight: options.height,
-        pixelRatio: 1,
-        style: {
-          borderRadius: "0px",
-        },
-      }).then((dataUrl) => {
-        const link = document.createElement("a");
-        link.download = "my-image-name.png";
-        link.href = dataUrl;
-        link.click();
-      });
+      const link = document.createElement("a");
+      link.download = "my-image-name.png";
+      link.href = dataUrl;
+      link.click();
     })
     .catch((err) => {
       console.log(err);
@@ -46,6 +38,7 @@ export const downloadJpg = (
       borderRadius: "0px",
     },
     pixelRatio: 1,
+    cacheBust: true
   })
     .then((dataUrl) => {
       const link = document.createElement("a");
@@ -68,6 +61,7 @@ export const copyImageToClipboard = (
     style: {
       borderRadius: "0px",
     },
+    cacheBust: true
   })
     .then((dataUrl) => {
       if (dataUrl) {
