@@ -98,7 +98,7 @@ const Header: NextComponentType<NextPageContext, {}, HeaderProps> = ({
               : "text-gray-700 hover:bg-white/[0.12] hover:text-gray-600 dark:hover:text-zinc-200 dark:text-zinc-300"
           )}
         >
-          <h1 className="hidden sm:block">Horizontal</h1>
+          <h1 className="">Horizontal</h1>
         </button>
         <button
           onClick={() =>
@@ -117,7 +117,7 @@ const Header: NextComponentType<NextPageContext, {}, HeaderProps> = ({
               : "text-gray-700 hover:bg-white/[0.12] hover:text-gray-600 dark:hover:text-zinc-200 dark:text-zinc-300"
           )}
         >
-          <h1 className="hidden sm:block">Vertical</h1>
+          <h1 className="">Vertical</h1>
         </button>
       </div>
     </div>

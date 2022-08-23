@@ -565,10 +565,7 @@ const Editor: NextPage = () => {
             )}
           >
             <button className="flex items-center justify-center space-x-2 border border-zinc-800 text-zinc-200 bg-zinc-900 hover:bg-zinc-800 bg-opacity-25 hover:bg-opacity-25 transition-all cursor-pointer bg py-2 px-4 rounded-lg">
-              <svg
-                className="text-white h-5 w-5 sm:hidden"
-                viewBox="0 0 15 15"
-              >
+              <svg className="text-white h-5 w-5 sm:hidden" viewBox="0 0 15 15">
                 <path
                   fill-rule="evenodd"
                   clip-rule="evenodd"
@@ -679,7 +676,7 @@ const Editor: NextPage = () => {
         >
           <motion.div
             style={
-            removeBackground
+              removeBackground
                 ? {
                     background: "transparent",
                     aspectRatio: `auto ${config.size.dimensions.aspectRatio}`,
@@ -831,7 +828,7 @@ const Editor: NextPage = () => {
                         "relative flex-1 "
                       )}
                     >
-                      <Image priority layout="fill" src={url.src} />
+                      <motion.img src={url.src} />
                     </div>
                   </motion.div>
                 </motion.div>
@@ -849,7 +846,8 @@ const Editor: NextPage = () => {
                 <div className={clsx(active === item && "bg-black w-full")}>
                   <button
                     onClick={() => setActive(item)}
-                    className={clsx("rounded-none",
+                    className={clsx(
+                      "rounded-none",
                       active.id === item.id
                         ? "bg-zinc-900 bg-opacity-50 sm:rounded-l-2xl"
                         : "bg-black",
@@ -903,7 +901,6 @@ const Editor: NextPage = () => {
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.15 }}
               >
-                (
                 <div className=" sm:pt-4 pb-2  text-sm text-gray-500 sm:space-y-10 space-y-6 ">
                   {/* Panel header */}
                   <h1 className="font-medium text-white pb-1 text-base flex items-center">
@@ -995,7 +992,6 @@ const Editor: NextPage = () => {
                     }
                   })()}
                 </div>
-                )
               </motion.div>
             </AnimatePresence>
           </div>
