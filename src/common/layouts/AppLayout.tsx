@@ -22,7 +22,7 @@ const AppLayout: NextPage<AppLayoutProps> = ({ children }) => {
         theme="colored"
         pauseOnHover
       />
-      <div className="absolute w-full ">
+      <div className="fixed w-full z-10 ">
         <Header />
       </div>
       <div className=" pt-20 dark:bg-black dark:border-zinc-900 dark:border-r sm:block hidden ">

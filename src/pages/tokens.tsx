@@ -12,6 +12,7 @@ import {
   CheckCircleIcon,
   ClipboardCheckIcon,
   CogIcon,
+  TrashIcon,
 } from "@heroicons/react/outline";
 import { Dialog, Transition } from "@headlessui/react";
 import { isEqual } from "lodash";
@@ -184,48 +185,50 @@ const Tokens: NextPage<TokensProps> = (props) => {
 
   return (
     <div className="flex flex-col items-start  p-5">
-      <div className="pb-5 dark:pb-0 border-b border-gray-200 dark:border-zinc-700 dark:border-none sm:flex sm:items-center sm:justify-between w-full">
-        <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-zinc-100">
-          API Keys
-        </h3>
-        <div className="mt-3 flex sm:mt-0 sm:ml-4 space-x-3">
-          <button
-            disabled={spin}
-            type="button"
-            onAnimationEnd={() => setSpin(false)}
-            onClick={() => {
-              setSpin(true);
-              mutate(["/api/user/tokens", idToken]);
-            }}
-            className="inline-flex items-center p-2 border border-gray-300 dark:border-zinc-800 dark:bg-black rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 dark:hover:bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:ring-offset-zinc-800 "
-          >
-            <RefreshIcon
-              className={clsx(
-                "h-6 text-gray-400 dark:text-zinc-300 ",
-                spin && "animate-spin-slow"
+      <div className="pb-5  border-b border-gray-200 dark:border-zinc-700 dark:border-none sm:flex sm:flex-row  w-full flex-col sm:space-x-3 space-y-3 sm:space-y-0">
+        <div className="flex justify-between items-center flex-1">
+          <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-zinc-100">
+            API Keys
+          </h3>
+          <div className="flex space-x-3">
+            <button
+              disabled={spin}
+              type="button"
+              onAnimationEnd={() => setSpin(false)}
+              onClick={() => {
+                setSpin(true);
+                mutate(["/api/user/tokens", idToken]);
+              }}
+              className="inline-flex items-center p-2 border border-gray-300 dark:border-zinc-800 dark:bg-black rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 dark:hover:bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:ring-offset-zinc-800 "
+            >
+              <RefreshIcon
+                className={clsx(
+                  "h-6 text-gray-400 dark:text-zinc-300 ",
+                  spin && "animate-spin-slow"
+                )}
+              />
+            </button>
+            <button
+              type="button"
+              onClick={() => setShowKeys(!showKeys)}
+              className="inline-flex items-center p-2 border border-gray-300 dark:border-zinc-800 dark:bg-black rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 dark:hover:bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:ring-offset-zinc-800"
+            >
+              {showKeys ? (
+                <EyeIcon className="h-6 text-gray-400 dark:text-zinc-300" />
+              ) : (
+                <EyeOffIcon className="h-6 text-gray-400 dark:text-zinc-300" />
               )}
-            />
-          </button>
-          <button
-            type="button"
-            onClick={() => setShowKeys(!showKeys)}
-            className="inline-flex items-center p-2 border border-gray-300 dark:border-zinc-800 dark:bg-black rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 dark:hover:bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:ring-offset-zinc-800"
-          >
-            {showKeys ? (
-              <EyeIcon className="h-6 text-gray-400 dark:text-zinc-300" />
-            ) : (
-              <EyeOffIcon className="h-6 text-gray-400 dark:text-zinc-300" />
-            )}
-          </button>
-          <button
-            disabled={creatingToken}
-            onClick={() => createToken()}
-            type="button"
-            className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:ring-offset-black"
-          >
-            Create Token
-          </button>
+            </button>
+          </div>
         </div>
+        <button
+          disabled={creatingToken}
+          onClick={() => createToken()}
+          type="button"
+          className="inline-flex items-center justify-center w-full px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:ring-offset-black"
+        >
+          Create Token
+        </button>
       </div>
 
       {isLoading && (
@@ -235,7 +238,7 @@ const Tokens: NextPage<TokensProps> = (props) => {
             return (
               <div key={item} className="space-y-3 max-w-xl w-full">
                 <div className=" w-1/4 h-3 dark:bg-zinc-800  rounded-lg animate-pulse"></div>
-                <div className="h-14 w-[34rem] rounded-lg flex items-center justify-between p-5 overflow-hidden relative bg-white dark:bg-black border shadow-lg dark:shadow-none shadow-gray-100  border-gray-200 dark:border-zinc-900 before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:border-t before:border-rose-100/10 before:bg-gradient-to-r before:from-transparent before:via-rose-100/10 before:to-transparent">
+                <div className="h-14 w-[90vw] sm:w-[34rem]  rounded-lg flex items-center justify-between p-5 overflow-hidden relative bg-white dark:bg-black border shadow-lg dark:shadow-none shadow-gray-100  border-gray-200 dark:border-zinc-900 before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:border-t before:border-rose-100/10 before:bg-gradient-to-r before:from-transparent before:via-rose-100/10 before:to-transparent">
                   <div className=" w-3/4 h-3 bg-zinc-800 rounded-lg "></div>
                   <DuplicateIcon className="h-6 text-gray-600 hover:text-blue-500 transition-colors " />
                 </div>
@@ -399,7 +402,7 @@ const TokenPage: NextComponentType<NextPageContext, {}, TokenPageProps> = ({
         </Transition.Child>
 
         <div className="fixed z-10 inset-0 overflow-y-auto">
-          <div className="flex items-end sm:items-center justify-center min-h-full p-4 text-center sm:p-0">
+          <div className="flex items-end sm:items-center justify-center min-h-full py-4 px-2 text-center sm:p-0">
             <Transition.Child
               as={Fragment}
               enter="ease-out duration-300"
@@ -424,7 +427,7 @@ const TokenPage: NextComponentType<NextPageContext, {}, TokenPageProps> = ({
                       }}
                       type="text"
                       className={clsx(
-                        "form-input text-sm p-3 w-1/2 font-medium rounded-lg focus:outline-none bg-black text-gray-400 border-zinc-900 border transition-colors",
+                        "form-input text-sm p-3 sm:w-1/2 w-full font-medium rounded-lg focus:outline-none bg-black text-gray-400 border-zinc-900 border transition-colors",
                         error ? "border-red-500" : "hover:border-blue-500"
                       )}
                     />
@@ -612,12 +615,15 @@ const TokenPage: NextComponentType<NextPageContext, {}, TokenPageProps> = ({
                           });
                         }}
                         type="button"
-                        className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 dark:ring-offset-black"
+                        className="inline-flex items-center sm:px-4 px-2 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 dark:ring-offset-black"
                       >
                         {deleteLoading ? (
                           <Spinner className="h-5 w-5" />
                         ) : (
-                          "Revoke Token"
+                          <span>
+                            <span className="hidden sm:block">Revoke Token </span>
+                            <TrashIcon className="h-5 w-5 sm:hidden" />
+                          </span>
                         )}
                       </button>
                     </div>

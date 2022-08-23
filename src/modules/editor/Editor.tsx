@@ -670,7 +670,7 @@ const Editor: NextPage = () => {
           </Popover>
         </div>
       </div>
-      <div className="flex sm:justify-between h-full pt-[64px] md:flex-row flex-col ">
+      <div className="flex sm:justify-between h-screen pt-[64px] md:flex-row flex-col ">
         {/* Editor preview container */}
         <div
           className={clsx(
@@ -679,7 +679,7 @@ const Editor: NextPage = () => {
         >
           <motion.div
             style={
-              removeBackground
+            removeBackground
                 ? {
                     background: "transparent",
                     aspectRatio: `auto ${config.size.dimensions.aspectRatio}`,

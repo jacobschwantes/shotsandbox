@@ -13,6 +13,7 @@ import {
   CogIcon,
   MenuIcon,
   XIcon,
+  PencilIcon,
 } from "@heroicons/react/outline";
 import { useRouter } from "next/router";
 import Link from "next/link";
@@ -55,17 +56,18 @@ export default function Header() {
         <>
           <div className=" px-2 sm:px-6 lg:px-6 ">
             <div className="flex items-center justify-between h-16">
-              <div className="flex items-center justify-between flex-1">
+              <div className="flex items-center justify-between sm:flex-1 ">
                 <Link href="/">
-                  <span className="hidden lg:flex items-end justify-center space-x-2 dark:text-white ">
+                  <span className="flex items-end justify-center space-x-2 dark:text-white ">
                     <img
-                      className=" h-7 mt-1.5 dark:bg-zinc-200 rounded-md p-0.5 "
+                      className=" h-7 ml-1.5 sm:ml-0 sm:mt-1.5  dark:bg-zinc-200 rounded-md p-0.5 "
                       src="logo.svg"
                       alt="logo"
                     />
-                    <h1 className="text-2xl">screenshotify</h1>
+                    <h1 className="text-2xl hidden sm:block">screenshotify</h1>
                   </span>
                 </Link>
+
                 <div className="hidden sm:block">
                   <div className="flex space-x-4 z-20 items-center">
                     <Notifications />
@@ -78,6 +80,15 @@ export default function Header() {
                   </div>
                 </div>
               </div>
+              <div className="sm:hidden">
+
+             
+              <Link href="/editor">
+                <a className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:ring-offset-black">
+                  Open Editor
+                  <PencilIcon className="h-4 ml-1"/>
+                </a>
+              </Link> </div>
               <div className="flex items-center sm:hidden">
                 {/* Mobile menu button*/}
                 <Disclosure.Button className="inline-flex items-center justify-center p-2 rounded-md text-black dark:text-white hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
@@ -92,7 +103,7 @@ export default function Header() {
             </div>
           </div>
 
-          <Disclosure.Panel className="sm:hidden absolute z-10 bg-black w-full">
+          <Disclosure.Panel className="sm:hidden absolute z-10 bg-black w-screen">
             <div className="px-2 pt-2 pb-3 space-y-1">
               {navigation.map((item, index) => (
                 <Link key={index} href={item.href}>
@@ -101,7 +112,7 @@ export default function Header() {
                     key={item.name}
                     className={clsx(
                       item.current
-                        ? "bg-blue-200 text-blue-600 dark:bg-blue-900 dark:text-blue-600   "
+                        ? "bg-blue-200 text-blue-600 dark:bg-blue-900 dark:text-blue-600 dark:bg-opacity-30   "
                         : "text-gray-300  ",
                       " flex items-center  p-3 rounded-lg border border-transparent text-center transition-all  hover:bg-gray-100 dark:hover:bg-zinc-900 dark:bg-opacity-50 w-full space-x-2"
                     )}
@@ -110,7 +121,7 @@ export default function Header() {
                       className={"h-6 w-6 flex-shrink-0 transition-colors "}
                       aria-hidden="true"
                     />
-                    <span>{item.name}</span>
+                    <span className={clsx(item.current ? "text-blue-500" : "text-white")}>{item.name}</span>
                   </button>
                 </Link>
               ))}

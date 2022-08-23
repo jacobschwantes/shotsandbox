@@ -34,11 +34,11 @@ const Dashboard: NextPage<DashboardProps> = (props) => {
   const [data, setData] = useState("1w");
   return (
     <div className="space-y-4 p-5 overflow-y-auto h-full ">
-      <div className="pb-5 dark:pb-0 border-b border-gray-200 dark:border-zinc-700 dark:border-none sm:flex sm:items-center sm:justify-between w-full">
+      <div className="pb-5  border-b border-gray-200 dark:border-zinc-700 dark:border-none items-center flex justify-between w-full">
         <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-zinc-100">
           Dashboard
         </h3>
-        <div className="mt-3 flex sm:mt-0 sm:ml-4 space-x-3">
+        <div className=" flex sm:mt-0  space-x-3">
           <button
             disabled={spin}
             type="button"

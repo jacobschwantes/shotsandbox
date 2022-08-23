@@ -60,7 +60,7 @@ const History: NextPage<HistoryProps> = (props) => {
     setOpen(true);
   };
   return (
-    <div className="space-y-4 p-5 h-full overflow-y-auto">
+    <div className="space-y-4 p-5 h-full sm:w-full  overflow-y-auto overflow-x-hidden flex flex-col w-screen">
       <div className="pb-5 dark:pb-0 border-b border-gray-200 dark:border-zinc-700 dark:border-none sm:flex sm:items-center sm:justify-between w-full">
         <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-zinc-100">
           History
@@ -92,12 +92,14 @@ const History: NextPage<HistoryProps> = (props) => {
           logs error: {isErrorLogs.message}
         </p>
       )} */}
-      <Table
-        logs={logs?.logs}
-        isLoading={isLoadingLogs}
-        dispatchModal={dispatchModal}
-        batchSize={10}
-      />
+      <div className=" overflow-x-auto sm:w-full">
+        <Table
+          logs={logs?.logs}
+          isLoading={isLoadingLogs}
+          dispatchModal={dispatchModal}
+          batchSize={10}
+        />
+      </div>
 
       <Pagination
         pages={Math.ceil(entriesCount / batchSize)}
@@ -121,23 +123,41 @@ interface PaginationProps {
 
 const Pagination = (props: PaginationProps) => {
   return (
-    <div className="flex items-center justify-between  bg-white px-4 py-3 sm:px-6 dark:bg-black">
-      <div className="flex flex-1 justify-between sm:hidden">
-        <button
-          disabled={props.active === 1}
-          onClick={() => props.setActive(props.active - 1)}
-          className="relative inline-flex items-center rounded-md border border-gray-300 dark:border-zinc-900 bg-white dark:bg-black px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-        >
-          Previous
-        </button>
-        <button
-          disabled={props.active === props.pages}
-          onClick={() => props.setActive(props.active + 1)}
-          className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 dark:borer-zinc-900 bg-white dark:bg-black px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-        >
-          Next
-        </button>
-      </div>
+    <div className="flex items-start sm:items-center sm:flex-row space-y-3 justify-between flex-col bg-white px-4 py-3 sm:px-6 dark:bg-black">
+    
+        <div className="flex w-full justify-between sm:hidden ">
+          <button
+            disabled={props.active === 1}
+            onClick={() => props.setActive(props.active - 1)}
+            className="relative inline-flex items-center rounded-md border border-gray-300 bg-white dark:bg-black dark:border-zinc-900 dark:text-zinc-200 px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 dark:hover:bg-zinc-900"
+          >
+            Previous
+          </button>
+
+          <button
+            disabled={props.active === props.pages}
+            onClick={() => props.setActive(props.active + 1)}
+            className="relative inline-flex items-center rounded-md border border-gray-300 bg-white dark:bg-black dark:border-zinc-900 dark:text-zinc-200 px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 dark:hover:bg-zinc-900"
+          >
+            Next
+          </button>
+        </div>
+        <div  className="sm:hidden">
+          <p className="text-sm text-gray-700 dark:text-zinc-100">
+            Showing{" "}
+            <span className="font-medium">
+              {1 + (props.active - 1) * props.batchSize}
+            </span>{" "}
+            to{" "}
+            <span className="font-medium">
+              {props.active * props.batchSize > props.size
+                ? props.size
+                : props.active * props.batchSize}
+            </span>{" "}
+            of <span className="font-medium">{props.size}</span> results
+          </p>
+        </div>
+      
       <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
         <div>
           <p className="text-sm text-gray-700 dark:text-zinc-100">
