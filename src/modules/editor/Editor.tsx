@@ -674,7 +674,7 @@ const Editor: NextPage = () => {
         {/* Editor preview container */}
         <div
           className={clsx(
-            "h-1/2 sm:h-full flex-1 dark:bg-black light:grid-effect-light bg-gray-50 dark:grid-effect-dark xl:p-20 p-5   "
+            "h-1/2 sm:h-full flex-1 dark:bg-black light:grid-effect-light bg-gray-50 dark:grid-effect-dark xl:p-20 p-3   "
           )}
         >
           <motion.div
@@ -698,7 +698,7 @@ const Editor: NextPage = () => {
             }
             ref={ref}
             className={clsx(
-              "overflow-hidden relative flex items-center justify-center max-h-full max-w-full rounded-3xl"
+              "overflow-hidden relative flex items-center justify-center max-h-full max-w-full sm:rounded-3xl"
             )}
           >
             {config.watermark.show && (
@@ -831,7 +831,7 @@ const Editor: NextPage = () => {
                         "relative flex-1 "
                       )}
                     >
-                      <Image priority layout="fill" src={url.src} />
+                      <motion.img src={url.src} />
                     </div>
                   </motion.div>
                 </motion.div>
