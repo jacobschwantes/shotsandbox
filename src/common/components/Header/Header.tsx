@@ -58,13 +58,18 @@ export default function Header() {
             <div className="flex items-center justify-between h-16">
               <div className="flex items-center justify-between sm:flex-1 ">
                 <Link href="/">
-                  <span className="flex items-end justify-center space-x-2 dark:text-white ">
+                  <span className="flex items-end justify-center space-x-2 dark:text-white  ">
                     <img
-                      className=" h-7 ml-1.5 sm:ml-0 sm:mt-1.5  dark:bg-zinc-200 rounded-md p-0.5 "
-                      src="logo.svg"
+                      className=" h-7 hidden sm:block   "
+                      src="logo.png"
                       alt="logo"
                     />
-                    <h1 className="text-2xl hidden sm:block">screenshotify</h1>
+                    <img
+                      className=" h-8 sm:hidden   "
+                      src="logo_short.png"
+                      alt="logo"
+                    />
+                    {/* <h1 className="text-2xl hidden sm:block">screenshotify</h1> */}
                   </span>
                 </Link>
 
