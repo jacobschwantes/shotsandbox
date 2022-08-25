@@ -1,6 +1,6 @@
 import { NextPage } from "next";
 import { ToastContainer } from "react-toastify";
-
+import Head from "next/head";
 import { Header, Navigation } from "@components/index";
 import { ReactNode } from "react";
 interface AppLayoutProps {
@@ -9,6 +9,9 @@ interface AppLayoutProps {
 const AppLayout: NextPage<AppLayoutProps> = ({ children }) => {
   return (
     <div className="h-screen w-screen flex overflow-hidden dark:bg-black">
+      <Head>
+        <title>screenshotify | app</title>
+      </Head>
       <ToastContainer
         position="bottom-right"
         className="text-sm"
