@@ -155,7 +155,7 @@ const Stats: NextComponentType<NextPageContext, {}, StatsProps> = (props) => {
               className="relative bg-white dark:bg-black pt-5 px-4 pb-12 sm:pt-6 sm:px-6 shadow rounded-2xl overflow-hidden dark:border dark:border-zinc-900"
             >
               <dt>
-                <div className="absolute bg-blue-500 rounded-md p-3">
+                <div className="absolute bg-blue-600 rounded-md p-3">
                   <item.icon
                     className="h-6 w-6 text-white"
                     aria-hidden="true"
