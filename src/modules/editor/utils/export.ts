@@ -15,7 +15,6 @@ export const downloadPng = (
     style: {
       borderRadius: "0px",
     },
-    cacheBust: true
   })
     .then((dataUrl) => {
       const link = document.createElement("a");
@@ -38,7 +37,6 @@ export const downloadJpg = (
       borderRadius: "0px",
     },
     pixelRatio: 1,
-    cacheBust: true
   })
     .then((dataUrl) => {
       const link = document.createElement("a");
@@ -61,7 +59,6 @@ export const copyImageToClipboard = (
     style: {
       borderRadius: "0px",
     },
-    cacheBust: true
   })
     .then((dataUrl) => {
       if (dataUrl) {
