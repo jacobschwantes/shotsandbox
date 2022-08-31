@@ -49,7 +49,7 @@ const Account: NextPage = () => {
                               <div
                                 className={clsx(
                                   false ? "bg-zinc-900" : "  bg-zinc-200",
-                                  "pt-4 px-4  w-[286px] aspect-video rounded-xl flex flex-col absolute  "
+                                  "pt-4 px-4  sm:w-[286px]  h-full aspect-video rounded-xl flex flex-col absolute  "
                                 )}
                               >
                                 <div
