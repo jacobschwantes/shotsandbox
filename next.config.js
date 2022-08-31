@@ -4,15 +4,6 @@ const nextConfig = {
   images: {
     domains: ['cloud.screenshotify.io']
   },
-  async redirects() {
-    return [
-      {
-        source: '/settings',
-        destination: '/settings/account',
-        permanent: true,
-      },
-    ]
-  },
 }
 
 module.exports = nextConfig
