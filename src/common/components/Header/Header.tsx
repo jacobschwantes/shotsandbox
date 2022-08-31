@@ -61,12 +61,12 @@ export default function Header() {
                   <span className="flex items-end justify-center space-x-2 dark:text-white  ">
                     <img
                       className=" h-7 hidden sm:block   "
-                      src="logo.png"
+                      src="/logo.png"
                       alt="logo"
                     />
                     <img
-                      className=" h-8 sm:hidden   "
-                      src="logo_short.png"
+                      className="h-8 sm:hidden"
+                      src="/logo_short.png"
                       alt="logo"
                     />
                     {/* <h1 className="text-2xl hidden sm:block">screenshotify</h1> */}
