@@ -50,11 +50,11 @@ const Billing: NextPage = () => {
               <section aria-labelledby="plan-heading">
                 <form action="#" method="POST">
                   <div className="shadow sm:rounded-md sm:overflow-hidden">
-                    <div className="bg-white py-6 px-4 space-y-6 sm:p-6">
+                    <div className="bg-white dark:bg-black py-6 px-4 space-y-6 sm:p-6">
                       <div>
                         <h2
                           id="plan-heading"
-                          className="text-lg leading-6 font-medium text-gray-900"
+                          className="text-lg leading-6 font-medium text-gray-900 dark:text-zinc-100"
                         >
                           Plan
                         </h2>
@@ -67,7 +67,7 @@ const Billing: NextPage = () => {
                         <RadioGroup.Label className="sr-only">
                           Pricing plans
                         </RadioGroup.Label>
-                        <div className="relative bg-white rounded-md -space-y-px">
+                        <div className="relative bg-white dark:bg-black rounded-md -space-y-px">
                           {plans.map((plan, planIdx) => (
                             <RadioGroup.Option
                               key={plan.name}
@@ -81,8 +81,8 @@ const Billing: NextPage = () => {
                                     ? "rounded-bl-md rounded-br-md"
                                     : "",
                                   checked
-                                    ? "bg-blue-50 border-blue-200 z-10"
-                                    : "border-gray-200",
+                                    ? "bg-blue-50 border-blue-200 dark:border-blue-900 dark:bg-blue-900 dark:bg-opacity-50 z-10"
+                                    : "border-gray-200 dark:border-zinc-800",
                                   "relative border p-4 flex flex-col cursor-pointer md:pl-4 md:pr-6 md:grid md:grid-cols-3 focus:outline-none"
                                 )
                               }
@@ -106,7 +106,7 @@ const Billing: NextPage = () => {
                                     </span>
                                     <RadioGroup.Label
                                       as="span"
-                                      className="ml-3 font-medium text-gray-900"
+                                      className="ml-3 font-medium text-gray-900 dark:text-zinc-300 "
                                     >
                                       {plan.name}
                                     </RadioGroup.Label>
@@ -118,8 +118,8 @@ const Billing: NextPage = () => {
                                     <span
                                       className={clsx(
                                         checked
-                                          ? "text-blue-900"
-                                          : "text-gray-900",
+                                          ? "text-blue-900 dark:text-blue-500"
+                                          : "text-gray-900 dark:text-zinc-300",
                                         "font-medium"
                                       )}
                                     >
@@ -129,8 +129,8 @@ const Billing: NextPage = () => {
                                     <span
                                       className={
                                         checked
-                                          ? "text-blue-700"
-                                          : "text-gray-500"
+                                          ? "text-blue-700 dark:text-blue-500"
+                                          : "text-gray-500 dark:text-zinc-400"  
                                       }
                                     >
                                       {annualBillingEnabled ? 'billed yearly' : 'billed monthly'} 
@@ -140,7 +140,7 @@ const Billing: NextPage = () => {
                                     as="span"
                                     className={clsx(
                                       checked
-                                        ? "text-blue-700"
+                                        ? "text-blue-700 dark:text-blue-500"
                                         : "text-gray-500",
                                       "ml-6 pl-1 text-sm md:ml-0 md:pl-0 md:text-right"
                                     )}
@@ -159,10 +159,8 @@ const Billing: NextPage = () => {
                           checked={annualBillingEnabled}
                           onChange={setAnnualBillingEnabled}
                           className={clsx(
-                            annualBillingEnabled
-                              ? "bg-blue-500"
-                              : "bg-gray-200",
-                            "relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 transition-colors ease-in-out duration-200"
+                            annualBillingEnabled ? "bg-blue-600" : "bg-zinc-200 dark:bg-zinc-800",
+                            "relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:ring-offset-zinc-900 focus:ring-blue-600"
                           )}
                         >
                           <span
@@ -176,16 +174,17 @@ const Billing: NextPage = () => {
                           />
                         </Switch>
                         <Switch.Label as="span" className="ml-3">
-                          <span className="text-sm font-medium text-gray-900">
+                          <span className="text-sm font-medium text-gray-900 dark:text-zinc-100">
                             Annual billing
                           </span>
                         </Switch.Label>
                       </Switch.Group>
                     </div>
-                    <div className="px-4 py-3 bg-gray-50 text-right sm:px-6">
+                    <div className="px-4 py-3 bg-gray-50 dark:bg-black text-right sm:px-6">
                       <button
+                      disabled
                         type="submit"
-                        className="bg-gray-800 border border-transparent rounded-md shadow-sm py-2 px-4 inline-flex justify-center text-sm font-medium text-white hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900"
+                        className="bg-blue-600  border border-transparent rounded-md shadow-sm py-2 px-4 inline-flex justify-center text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900"
                       >
                         Save
                       </button>
@@ -195,7 +194,7 @@ const Billing: NextPage = () => {
               </section>
 
               {/* Billing history */}
-              <section aria-labelledby="billing-history-heading">
+              {/* <section aria-labelledby="billing-history-heading">
                 <div className="bg-white pt-6 shadow sm:rounded-md sm:overflow-hidden">
                   <div className="px-4 sm:px-6">
                     <h2
@@ -233,7 +232,7 @@ const Billing: NextPage = () => {
                                 {/*
                                     `relative` is added here due to a weird bug in Safari that causes `sr-only` headings to introduce overflow on the body on mobile.
                                   */}
-                                <th
+                                {/* <th
                                   scope="col"
                                   className="relative px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                                 >
@@ -272,7 +271,9 @@ const Billing: NextPage = () => {
                     </div>
                   </div>
                 </div>
-              </section>
+              </section> */} 
+
+
             </div>
           </div>
         </main>

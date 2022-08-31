@@ -52,7 +52,10 @@ const Account: NextPage<AccountProps> = (props) => {
   return (
     <div className="flex-1  p-5 h-full overflow-y-auto ">
       <SettingsLayout>
-        <main className=" pb-10 lg:py-12  max-w-7xl">
+        <main className="  space-y-5 max-w-7xl">
+          <p className="text-zinc-100 font-medium">
+            Signed in as: <span className="font-normal text-zinc-300">{props.user.email}</span>
+          </p>
           <button
             onClick={handleResetPassword}
             type="button"
@@ -60,8 +63,8 @@ const Account: NextPage<AccountProps> = (props) => {
           >
             Reset password {loading && <Spinner className="h-5 w-5" />}
           </button>
-          <div className="lg:grid lg:grid-cols-12 lg:gap-x-5">
-            {/* Payment details */}
+          {/* <div className="lg:grid lg:grid-cols-12 lg:gap-x-5">
+          
             <div className="space-y-6 sm:px-6 lg:px-0 lg:col-span-9">
               <section aria-labelledby="payment-details-heading">
                 <form action="#" method="POST">
@@ -214,7 +217,7 @@ const Account: NextPage<AccountProps> = (props) => {
                 </form>
               </section>
             </div>
-          </div>
+          </div> */}
         </main>
       </SettingsLayout>
     </div>
