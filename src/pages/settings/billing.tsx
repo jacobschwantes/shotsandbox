@@ -5,21 +5,21 @@ import SettingsLayout from "@layouts/SettingsLayout";
 import clsx from "clsx";
 const plans = [
   {
-    name: "Startup",
-    priceMonthly: 9,
-    priceYearly: 7,
+    name: "Free",
+    priceMonthly: 0,
+    priceYearly: 0,
     limit: "200 requests / mo",
   },
   {
-    name: "Business",
-    priceMonthly: 19,
-    priceYearly: 15,
+    name: "Pro",
+    priceMonthly: 9,
+    priceYearly: 7.50,
     limit: "1000 requests / mo",
   },
   {
-    name: "Enterprise",
-    priceMonthly: 29,
-    priceYearly: 25,
+    name: "Pro+",
+    priceMonthly: 15,
+    priceYearly: 12.50,
     limit: "2500 requests / mo",
   },
 ];
@@ -50,7 +50,7 @@ const Billing: NextPage = () => {
               <section aria-labelledby="plan-heading">
                 <form action="#" method="POST">
                   <div className="shadow sm:rounded-md sm:overflow-hidden">
-                    <div className="bg-white dark:bg-black py-6 px-4 space-y-6 sm:p-6">
+                    <div className="bg-white dark:bg-black py-6  space-y-6 sm:p-6">
                       <div>
                         <h2
                           id="plan-heading"
