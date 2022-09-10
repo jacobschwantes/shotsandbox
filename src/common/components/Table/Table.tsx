@@ -62,7 +62,7 @@ export default function Table({
               >
                 <td className="max-w-0 w-full px-6 py-4 whitespace-nowrap text-sm text-gray-900 rounded-2xl">
                   <div className="flex ">
-                    <p className="text-gray-500 truncate group-hover:text-gray-900 ">
+                    <p className="text-zinc-400 truncate group-hover:text-gray-900 ">
                       {url}
                     </p>
                   </div>
@@ -78,10 +78,10 @@ export default function Table({
                     {status}
                   </span>
                 </td>
-                <td className="px-6 py-4 text-left whitespace-nowrap text-sm text-gray-500 rounded-2xl">
+                <td className="px-6 py-4 text-left whitespace-nowrap text-sm text-zinc-400 rounded-2xl">
                   <time>{new Date(timestamp).toLocaleString()}</time>
                 </td>
-                <td className="px-6 py-4 text-left whitespace-nowrap text-sm text-gray-500 rounded-2xl">
+                <td className="px-6 py-4 text-left whitespace-nowrap text-sm text-zinc-400 rounded-2xl">
                   {status === "processing" ? (
                     <Spinner className="h-5 w-5" />
                   ) : (
