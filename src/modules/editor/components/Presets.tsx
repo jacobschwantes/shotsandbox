@@ -20,8 +20,9 @@ const Presets: NextComponentType<NextPageContext, {}, PresetsProps> = ({
       >
         {selected === "global" ? (
           <div className="space-y-10 mt-10">
-            {presets.map((config) => (
+            {presets.map((config, index) => (
               <button
+                key={index}
                 onClick={() => {
                   updateConfig(config);
                 }}

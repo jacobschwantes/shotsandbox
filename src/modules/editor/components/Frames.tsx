@@ -136,8 +136,9 @@ const Frames: NextComponentType<NextPageContext, {}, FramesProps> = ({
       <div className="space-y-3">
         <h2 className="font-medium text-zinc-200 text-base">Presets</h2>
         <div className="space-y-3">
-          {presets.map((item) => (
+          {presets.map((item, index) => (
             <button
+              key={index}
               onClick={() =>
                 updateConfig({
                   frame: {

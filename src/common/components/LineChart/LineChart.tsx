@@ -183,8 +183,9 @@ export default function LineChart({
           </p>
         </span>
         <div className="text-zinc-100 flex space-x-3 text-sm">
-          {dataOptions.map((option) => (
+          {dataOptions.map((option, index) => (
             <button
+              key={index}
               className={clsx(
                 "uppercase transition-colors duration-300 ",
                 seriesOption === option

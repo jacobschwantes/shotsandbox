@@ -20,6 +20,6 @@ export function useWindowSize(ref: React.RefObject<HTMLDivElement>) {
     handleResize();
     // Remove event listener on cleanup
     return () => window.removeEventListener("resize", handleResize);
-  }, []); // Empty array ensures that effect is only run on mount
+  }, [ref]); // Empty array ensures that effect is only run on mount
   return windowSize;
 }

@@ -129,17 +129,15 @@ const runAggregation = async (
 interface ApiRequest extends NextApiRequest {
   uid: string;
   email: string;
-  email_verified: boolean
+  email_verified: boolean;
 }
 async function handler(req: ApiRequest, res: NextApiResponse<ResData>) {
   const userRef = firestore.collection("users").doc(req.uid);
   const doc = await userRef.get();
   const zone =
-    typeof req.query.zone === "string"
-      ? req.query.zone.replace("-", "/")
-      : req.query.zone[0].replace("-", "/");
+    typeof req.query.zone === "string" ? req.query.zone.replace("-", "/") : undefined;
 
-  if (!doc.exists) {
+  if (!doc.exists || !zone) {
     res.status(404).json({ message: "user does not exist" });
   } else {
     const usage: number = await getCount(userRef.collection("usage"));

@@ -18,6 +18,9 @@ import {
 import { useRouter } from "next/router";
 import Link from "next/link";
 import clsx from "clsx";
+import logo from "../../../../public/logo.png"
+import logo_short from "../../../../public/logo_short.png"
+import Image from "next/future/image";
 
 export default function Header() {
   const router = useRouter();
@@ -59,14 +62,14 @@ export default function Header() {
               <div className="flex items-center justify-between sm:flex-1 ">
                 <Link href="/">
                   <span className="flex items-end justify-center space-x-2 dark:text-white  ">
-                    <img
-                      className=" h-7 hidden sm:block   "
-                      src="/logo.png"
+                    <Image
+                      className=" h-7 hidden sm:block w-auto  "
+                      src={logo}
                       alt="logo"
                     />
-                    <img
-                      className="h-8 sm:hidden"
-                      src="/logo_short.png"
+                    <Image
+                      className="h-8 sm:hidden w-auto"
+                      src={logo_short}
                       alt="logo"
                     />
                     {/* <h1 className="text-2xl hidden sm:block">screenshotify</h1> */}

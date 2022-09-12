@@ -48,8 +48,8 @@ const Shadow: NextComponentType<NextPageContext, {}, ShadowProps> = ({
     <div className="space-y-2">
       <label className="font-medium text-zinc-300">Size</label>
       <div className="grid grid-cols-2 gap-5">
-        {presets.map((item) => (
-          <div className="space-y-2">
+        {presets.map((item, index) => (
+          <div key={index} className="space-y-2">
             <button
               onClick={() =>
                 updateConfig({

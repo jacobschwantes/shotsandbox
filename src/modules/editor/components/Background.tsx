@@ -92,8 +92,9 @@ const Background: NextComponentType<NextPageContext, {}, BackgroundProps> = ({
         <div className="space-y-2">
           <label className="font-medium text-zinc-300">Presets</label>
           <div className="grid grid-cols-7 gap-2">
-            {gradientPresets.map(({ stops, direction }) => (
+            {gradientPresets.map(({ stops, direction }, index) => (
               <button
+                key={index}
                 style={{
                   background: `linear-gradient(${90}deg, ${stops
                     .map((item) => item.color)
@@ -136,8 +137,9 @@ const Background: NextComponentType<NextPageContext, {}, BackgroundProps> = ({
         <div className="space-y-2">
           <label className="font-medium text-zinc-300">Presets</label>
           <div className="grid grid-cols-7 gap-2">
-            {colorPresets.map((color) => (
+            {colorPresets.map((color, index) => (
               <button
+                key={index}
                 style={{ background: color }}
                 onClick={() =>
                   updateConfig({
@@ -189,7 +191,7 @@ function GradientList({ list, setList }: ListProps) {
         }}
       >
         {Array.from(Array(list.length - 1)).map((item, index) => (
-          <Tooltip label="+">
+          <Tooltip key={index} label="+">
             <button
               className="w-full"
               onClick={(e) => {
