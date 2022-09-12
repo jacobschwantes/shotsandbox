@@ -12,6 +12,9 @@ import { firebaseApp } from "./firebase/client";
 import { handleAuthError } from "./utils/errors";
 import { toast } from "react-toastify";
 import { CheckCircleIcon } from "@heroicons/react/outline";
+import Image from "next/future/image";
+import logo from "../../../public/logo.png";
+import logo_light from "../../../public/logo_light.png";
 const auth = getAuth(firebaseApp);
 type Tab = {
   heading: string;
@@ -259,17 +262,20 @@ const LoginCard: NextComponentType<NextPageContext, {}, LoginCardProps> = ({
   const [emailValidated, setEmailValidated] = useState(false);
 
   return (
-    <div className="sm:border border-zinc-900 rounded-2xl sm:p-10 p-5 max-w-lg w-full space-y-10">
-      <img
-        className="h-8 hidden dark:block"
-        src="/logo.png"
-        alt="Company name"
-      />
-      <img
-        className="h-8 dark:hidden"
-        src="/logo_light.png"
-        alt="Company name"
-      />
+    <div className="sm:border border-zinc-900 rounded-2xl sm:p-10 p-5 max-w-lg w-full space-y-4">
+   <div className="pb-10">
+        <Image
+          className="h-8 hidden dark:block w-auto"
+          src={logo}
+          alt="Company name"
+        />
+
+        <Image
+          className="h-8 dark:hidden w-auto "
+          src={logo_light}
+          alt="Company name"
+        />
+      </div>
       {emailValidated ? (
         <PasswordPage
           email={email}
@@ -327,7 +333,7 @@ const SignUpPage: NextComponentType<NextPageContext, {}, SignUpPageProps> = ({
         }}
         className="flex flex-col space-y-4"
       >
-        <h1 className="text-gray-100 text-2xl font-semibold">Sign up</h1>
+        <h1 className="text-gray-100 text-3xl font-bold">Sign up</h1>
         <div className="flex flex-col space-y-1">
           <label htmlFor="email" className="text-gray-100 font-medium text-sm">
             Email
@@ -411,7 +417,12 @@ const SignUpPage: NextComponentType<NextPageContext, {}, SignUpPageProps> = ({
         </button>
       </form>
       <div className="flex flex-col items-center space-y-3">
-        <a href="https://screenshotify.io/privacy" className="font-medium text-sm text-blue-600">Privacy policy</a>
+        <a
+          href="https://screenshotify.io/privacy"
+          className="font-medium text-sm text-blue-600"
+        >
+          Privacy policy
+        </a>
       </div>
     </>
   );
@@ -426,17 +437,21 @@ const SignUpCard: NextComponentType<NextPageContext, {}, SignUpCardProps> = ({
   setLogin,
 }) => {
   return (
-    <div className="sm:border border-zinc-800 rounded-2xl sm:p-10 p-5 max-w-lg w-full space-y-10">
-      <img
-        className="h-8 hidden dark:block"
-        src="/logo.png"
-        alt="Company name"
-      />
-      <img
-        className="h-8 dark:hidden"
-        src="/logo_light.png"
-        alt="Company name"
-      />
+    <div className="sm:border border-zinc-800 rounded-2xl sm:p-10 p-5 max-w-lg w-full space-y-4">
+      <div className="pb-10">
+        <Image
+          className="h-8 hidden dark:block w-auto"
+          src={logo}
+          alt="Company name"
+        />
+
+        <Image
+          className="h-8 dark:hidden w-auto "
+          src={logo_light}
+          alt="Company name"
+        />
+      </div>
+
       <SignUpPage setLogin={setLogin} />
     </div>
   );
