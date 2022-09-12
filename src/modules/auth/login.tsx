@@ -69,8 +69,8 @@ const PasswordPage: NextComponentType<
     setPasswordResetLoading(true);
     resetPassword(email)
       .then((result) => {
-        console.log(result)
-       
+        console.log(result);
+
         toast(
           <div className="flex items-center space-x-3">
             <CheckCircleIcon className="h-6 w-6 text-blue-500" />
@@ -259,10 +259,17 @@ const LoginCard: NextComponentType<NextPageContext, {}, LoginCardProps> = ({
   const [emailValidated, setEmailValidated] = useState(false);
 
   return (
-    <div className="sm:border border-zinc-900 rounded-2xl sm:p-10 p-5 max-w-lg w-full space-y-5">
-      <h1 className="text-gray-100 text-3xl font-medium mb-12">
-        screenshotify
-      </h1>
+    <div className="sm:border border-zinc-900 rounded-2xl sm:p-10 p-5 max-w-lg w-full space-y-10">
+      <img
+        className="h-8 hidden dark:block"
+        src="/logo.png"
+        alt="Company name"
+      />
+      <img
+        className="h-8 dark:hidden"
+        src="/logo_light.png"
+        alt="Company name"
+      />
       {emailValidated ? (
         <PasswordPage
           email={email}
@@ -320,7 +327,7 @@ const SignUpPage: NextComponentType<NextPageContext, {}, SignUpPageProps> = ({
         }}
         className="flex flex-col space-y-4"
       >
-        <h1 className="text-gray-100 text-3xl font-bold">Sign up</h1>
+        <h1 className="text-gray-100 text-2xl font-semibold">Sign up</h1>
         <div className="flex flex-col space-y-1">
           <label htmlFor="email" className="text-gray-100 font-medium text-sm">
             Email
@@ -404,7 +411,7 @@ const SignUpPage: NextComponentType<NextPageContext, {}, SignUpPageProps> = ({
         </button>
       </form>
       <div className="flex flex-col items-center space-y-3">
-        {/* <p className="font-medium text-sm text-blue-600">Privacy policy</p> */}
+        <a href="https://screenshotify.io/privacy" className="font-medium text-sm text-blue-600">Privacy policy</a>
       </div>
     </>
   );
@@ -419,10 +426,17 @@ const SignUpCard: NextComponentType<NextPageContext, {}, SignUpCardProps> = ({
   setLogin,
 }) => {
   return (
-    <div className="sm:border border-zinc-800 rounded-2xl sm:p-10 p-5 max-w-lg w-full space-y-5">
-      <h1 className="text-gray-100 text-3xl font-medium mb-12">
-        screenshotify
-      </h1>
+    <div className="sm:border border-zinc-800 rounded-2xl sm:p-10 p-5 max-w-lg w-full space-y-10">
+      <img
+        className="h-8 hidden dark:block"
+        src="/logo.png"
+        alt="Company name"
+      />
+      <img
+        className="h-8 dark:hidden"
+        src="/logo_light.png"
+        alt="Company name"
+      />
       <SignUpPage setLogin={setLogin} />
     </div>
   );
