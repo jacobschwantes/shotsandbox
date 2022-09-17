@@ -86,14 +86,14 @@ function MyApp({ Component, pageProps }: AppProps) {
   }
   if (router.asPath.includes("editor")) {
     return (
-      <ThemeProvider theme={data.preferences.theme}>
+      <ThemeProvider theme={data?.preferences?.theme}>
         <Component {...pageProps} />
       </ThemeProvider>
     );
   }
   if (user?.emailVerified && !error && data) {
     return (
-      <ThemeProvider theme={data.preferences.theme}>
+      <ThemeProvider theme={data?.preferences?.theme}>
         <AppLayout>
           <Component user={user} idToken={token} {...pageProps} />
         </AppLayout>
@@ -120,7 +120,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     );
   } else if (user && !user?.emailVerified) {
     return (
-      <ThemeProvider theme={data.preferences.theme}>
+      <ThemeProvider theme={data?.preferences?.theme}>
         <div className="flex h-screen w-screen items-center justify-center dark:bg-black  ">
           <ToastContainer
             position="bottom-right"
