@@ -11,9 +11,11 @@ import { useEffect, useState } from "react";
 import ProgressBar from "@badrap/bar-of-progress";
 import { useIdToken } from "@hooks/auth";
 import { Spinner, Tooltip } from "@components/index";
+import { usePreferences } from "@hooks/swr";
 import Image from "next/image";
 import { LogoutIcon, CheckCircleIcon } from "@heroicons/react/outline";
 import { getFunctions, httpsCallable } from "firebase/functions";
+import ThemeProvider from "@layouts/ThemeProvider";
 const progress = new ProgressBar({
   size: 2,
   color: "#6366f1",
@@ -30,6 +32,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   const [user, loading, error] = useAuthState(auth);
   const [sendingEmail, setSendingEmail] = useState(false);
   const token = useIdToken();
+  const { data, isLoading, isError } = usePreferences(token);
   const router = useRouter();
   useEffect(() => {
     router.events.on("routeChangeStart", progress.start);
@@ -75,20 +78,30 @@ function MyApp({ Component, pageProps }: AppProps) {
       });
   };
   if (router.asPath.includes("_auth")) {
-    return <Component {...pageProps} />;
+    return (
+      <ThemeProvider theme="system">
+        <Component {...pageProps} />
+      </ThemeProvider>
+    );
   }
   if (router.asPath.includes("editor")) {
-    return <Component {...pageProps} />;
-  }
-  if (user?.emailVerified && !error) {
     return (
-      <AppLayout>
-        <Component user={user} idToken={token} {...pageProps} />
-      </AppLayout>
+      <ThemeProvider theme={data.preferences.theme}>
+        <Component {...pageProps} />
+      </ThemeProvider>
+    );
+  }
+  if (user?.emailVerified && !error && data) {
+    return (
+      <ThemeProvider theme={data.preferences.theme}>
+        <AppLayout>
+          <Component user={user} idToken={token} {...pageProps} />
+        </AppLayout>
+      </ThemeProvider>
     );
   } else if (!user && !loading) {
     return (
-      <>
+      <ThemeProvider theme="system">
         <ToastContainer
           position="bottom-right"
           className="text-sm"
@@ -103,72 +116,76 @@ function MyApp({ Component, pageProps }: AppProps) {
           pauseOnHover
         />
         <Login />
-      </>
+      </ThemeProvider>
     );
   } else if (user && !user?.emailVerified) {
     return (
-      <div className="flex h-screen w-screen items-center justify-center dark:bg-black  ">
-        <ToastContainer
-          position="bottom-right"
-          className="text-sm"
-          autoClose={5000}
-          hideProgressBar={false}
-          newestOnTop
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          theme="colored"
-          pauseOnHover
-        />
-        <div className="border border-zinc-900 rounded-2xl p-10 max-w-lg w-full space-y-14">
-          <div className="flex justify-between items-center">
-            <h1 className="text-gray-100 text-3xl font-medium">
-              screenshotify
-            </h1>
-            <Tooltip label="logout">
-              <button onClick={logout}>
-                <LogoutIcon className="h-6 w-6 text-white" />
+      <ThemeProvider theme={data.preferences.theme}>
+        <div className="flex h-screen w-screen items-center justify-center dark:bg-black  ">
+          <ToastContainer
+            position="bottom-right"
+            className="text-sm"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            theme="colored"
+            pauseOnHover
+          />
+          <div className="border border-zinc-900 rounded-2xl p-10 max-w-lg w-full space-y-14">
+            <div className="flex justify-between items-center">
+              <h1 className="text-gray-100 text-3xl font-medium">
+                screenshotify
+              </h1>
+              <Tooltip label="logout">
+                <button onClick={logout}>
+                  <LogoutIcon className="h-6 w-6 text-white" />
+                </button>
+              </Tooltip>
+            </div>
+            <div className=" space-y-4">
+              <h1 className="text-gray-100 text-3xl font-bold">
+                Verify your email
+              </h1>
+              <p className="text-zinc-400 font-medium text-sm">
+                An email has been sent to {user.email} with a link to verify
+                your account. If you have not recieved the email after a few
+                minutes, please check your spam folder.
+              </p>
+            </div>
+            <div className="space-y-3">
+              <button
+                onClick={handleSendEmailVerification}
+                className="bg-blue-500 hover:bg-blue-400 w-full border border-blue-900 p-4 rounded-lg font-medium tracking-wide text-zinc-100 flex items-center justify-center"
+              >
+                Resend Email {sendingEmail && <Spinner className="h-5 w-5" />}
               </button>
-            </Tooltip>
-          </div>
-          <div className=" space-y-4">
-            <h1 className="text-gray-100 text-3xl font-bold">
-              Verify your email
-            </h1>
-            <p className="text-zinc-400 font-medium text-sm">
-              An email has been sent to {user.email} with a link to verify your
-              account. If you have not recieved the email after a few minutes,
-              please check your spam folder.
-            </p>
-          </div>
-          <div className="space-y-3">
-            <button
-              onClick={handleSendEmailVerification}
-              className="bg-blue-500 hover:bg-blue-400 w-full border border-blue-900 p-4 rounded-lg font-medium tracking-wide text-zinc-100 flex items-center justify-center"
-            >
-              Resend Email {sendingEmail && <Spinner className="h-5 w-5" />}
-            </button>
-            <a
-              href="mailto:support@screenshotify.io"
-              className=" hover:bg-gray-900 hover:bg-opacity-30 w-full border border-zinc-800 p-4 rounded-lg font-medium tracking-wide text-gray-100 flex items-center justify-center"
-            >
-              Contact Support
-            </a>
+              <a
+                href="mailto:support@screenshotify.io"
+                className=" hover:bg-gray-900 hover:bg-opacity-30 w-full border border-zinc-800 p-4 rounded-lg font-medium tracking-wide text-gray-100 flex items-center justify-center"
+              >
+                Contact Support
+              </a>
+            </div>
           </div>
         </div>
-      </div>
+      </ThemeProvider>
     );
   } else {
     return (
-      <div className="flex h-screen w-screen items-center justify-center dark:bg-black  ">
-        <Image
-          alt="loading animation"
-          height={100}
-          width={100}
-          src="/loading.svg"
-        />
-      </div>
+      <ThemeProvider theme="system">
+        <div className="flex h-screen w-screen items-center justify-center dark:bg-black  ">
+          <Image
+            alt="loading animation"
+            height={100}
+            width={100}
+            src="/loading.svg"
+          />
+        </div>
+      </ThemeProvider>
     );
   }
 }

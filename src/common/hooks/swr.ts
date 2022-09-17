@@ -55,3 +55,14 @@ export const useLogs = (token: string | null, params: string, options: SWRConfig
     isErrorLogs: error,
   };
 };
+export const usePreferences = (token: string | null) => {
+  const { data, error } = useSWR(
+    () => (token ? [`/api/user/preferences`, token] : null),
+    fetcher,
+  );
+  return {
+    data,
+    isLoading: !error && !data,
+    isError: error,
+  };
+};
