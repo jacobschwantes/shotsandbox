@@ -46,7 +46,7 @@ import {
   dimensionPresets,
 } from "./presets";
 import { Tooltip, Popover } from "@components/index";
-import { Disclosure } from "@headlessui/react";
+import { Disclosure, Tab } from "@headlessui/react";
 import {
   Background,
   Border,
@@ -446,22 +446,35 @@ const Editor: NextPage = () => {
                 <h1 className="text-zinc-100 font-medium text-lg">
                   Dimensions
                 </h1>
-                {dimensionPresets.map((item) => (
-                  <Disclosure key={item.name}>
-                    {({ open }) => (
-                      <>
-                        <Disclosure.Button className="flex w-full justify-between rounded-lg capitalize bg-blue-100 px-4 py-2 text-left text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring focus-visible:ring-blue-500 focus-visible:ring-opacity-75">
-                          <div className="flex items-center">
-                            <item.icon />
-                            {item.name}
-                          </div>
-                          <ChevronUpIcon
-                            className={`${
-                              open ? "rotate-180 transform" : ""
-                            } h-5 w-5 text-blue-500`}
+
+                <Tab.Group>
+                  <Tab.List className="flex space-x-1 rounded-xl bg-blue-900/20 p-1">
+                    {dimensionPresets.map((category) => (
+                      <Tab
+                        key={category.name}
+                        className={({ selected }) =>
+                          clsx("w-full flex items-center justify-center")
+                        }
+                      >
+                        {({ selected }) => (
+                          <category.icon
+                            className={clsx(
+                              "h-6 w-6",
+                              selected &&
+                                " ring-offset-transparent  ring-2 ring-white rounded-lg aspect-square"
+                            )}
                           />
-                        </Disclosure.Button>
-                        <Disclosure.Panel className="px-2  space-y-2 text-sm text-white">
+                        )}
+                      </Tab>
+                    ))}
+                  </Tab.List>
+                  <Tab.Panels className="mt-2">
+                    {dimensionPresets.map((item, idx) => (
+                      <Tab.Panel key={idx}>
+                        <h1 className="text-lg capitalize font-medium text-white pb-2">
+                          {item.name}
+                        </h1>
+                        <ul className="space-y-2">
                           {item.dimensions.map(
                             ({ height, width, name }, index) => (
                               <button
@@ -492,11 +505,12 @@ const Editor: NextPage = () => {
                               </button>
                             )
                           )}
-                        </Disclosure.Panel>
-                      </>
-                    )}
-                  </Disclosure>
-                ))}
+                        </ul>
+                      </Tab.Panel>
+                    ))}
+                  </Tab.Panels>
+                </Tab.Group>
+
                 <div className="flex space-x-5 items-end">
                   <div>
                     <label
