@@ -72,7 +72,7 @@ export const defaultConfig: Config = {
     },
   },
   watermark: {
-    show: false,
+    show: true,
     placement: "bottom-right",
     theme: "light",
   },

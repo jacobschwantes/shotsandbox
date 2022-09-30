@@ -331,11 +331,13 @@ const Editor: NextPage = () => {
     placements.forEach((item) => {
       acceptableClassLists.push(
         item +
-          " absolute bg-white px-3 py-2 rounded-xl border-2 border-zinc-200 shadow-xl z-10 flex space-x-1 items-center bg-opacity-80 text-black"
+          " " +
+          "absolute bg-black border-zinc-600 text-zinc-300 px-3 py-2 rounded-lg border-2 shadow-xl z-10 flex space-x-1 items-start bg-opacity-80 flex-col"
       );
       acceptableClassLists.push(
         item +
-          " absolute bg-black px-3 py-2 rounded-xl border-2 border-zinc-600 shadow-xl z-10 flex space-x-1 items-center bg-opacity-80 text-zinc-300"
+          " " +
+          "absolute border-zinc-200 text-black bg-white px-3 py-2 rounded-lg border-2 shadow-xl z-10 flex space-x-1 items-start bg-opacity-80 flex-col"
       );
     });
     if (document.contains(watermarkRef.current)) {
