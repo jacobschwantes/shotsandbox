@@ -332,12 +332,12 @@ const Editor: NextPage = () => {
       acceptableClassLists.push(
         item +
           " " +
-          "absolute bg-black border-zinc-600 text-zinc-300 px-3 py-2 rounded-lg border-2 shadow-xl z-10 flex space-x-1 items-start bg-opacity-80 flex-col"
+          "absolute bg-black border-zinc-600 text-zinc-300 border-2 shadow-xl z-10 flex space-x-1 items-start bg-opacity-80 flex-col"
       );
       acceptableClassLists.push(
         item +
           " " +
-          "absolute border-zinc-200 text-black bg-white px-3 py-2 rounded-lg border-2 shadow-xl z-10 flex space-x-1 items-start bg-opacity-80 flex-col"
+          "absolute border-zinc-200 text-black bg-white border-2 shadow-xl z-10 flex space-x-1 items-start bg-opacity-80 flex-col"
       );
     });
     if (document.contains(watermarkRef.current)) {
@@ -717,6 +717,7 @@ const Editor: NextPage = () => {
           >
             {config.watermark.show && (
               <Watermark
+                height={imageRef.current?.clientWidth ?? 1000}
                 ref={watermarkRef}
                 placement={config.watermark.placement}
                 theme={config.watermark.theme}

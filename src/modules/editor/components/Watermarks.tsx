@@ -121,21 +121,27 @@ const positions = {
 interface WatermarkProps {
   theme: "dark" | "light";
   placement?: "top-left" | "top-right" | "bottom-left" | "bottom-right";
+  height: number;
 }
 export const Watermark = forwardRef<HTMLSpanElement, WatermarkProps>(
-  ({ theme, placement }, ref) => (
+  ({ theme, placement, height }, ref) => (
     <span
       ref={ref}
+      style={{
+        padding: `${0.0066 * height}px ${0.01 * height}px`,
+        borderRadius: `${0.006 * height}px`,
+      }}
       className={clsx(
         placement && positions[placement],
         placement && "absolute",
         theme === "dark"
           ? "bg-black border-zinc-600 text-zinc-300"
           : "border-zinc-200 text-black bg-white",
-        "px-3 py-2 rounded-lg border-2 shadow-xl z-10 flex space-x-1 items-start bg-opacity-80 flex-col"
+        "border-2 shadow-xl z-10 flex space-x-1 items-start bg-opacity-80 flex-col"
       )}
     >
       <img
+        style={{ height: `${0.015 * height}px` }}
         className="h-5"
         src={clsx(theme === "dark" ? "logo.png" : "logo_light.png")}
       ></img>
