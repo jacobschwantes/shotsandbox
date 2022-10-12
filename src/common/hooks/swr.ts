@@ -43,7 +43,11 @@ export const useUsage = (token: string | null, zone: string) => {
     isError: error,
   };
 };
-export const useLogs = (token: string | null, params: string, options: SWRConfiguration) => {
+export const useLogs = (
+  token: string | null,
+  params: string,
+  options: SWRConfiguration
+) => {
   const { data, error } = useSWR(
     () => (token ? [`/api/user/logs${params}`, token] : null),
     fetcher,
@@ -58,7 +62,18 @@ export const useLogs = (token: string | null, params: string, options: SWRConfig
 export const usePreferences = (token: string | null) => {
   const { data, error } = useSWR(
     () => (token ? [`/api/user/preferences`, token] : null),
-    fetcher,
+    fetcher
+  );
+  return {
+    data,
+    isLoading: !error && !data,
+    isError: error,
+  };
+};
+export const usePresets = (token: string | null) => {
+  const { data, error } = useSWR(
+    () => (token ? [`/api/user/presets`, token] : null),
+    fetcher
   );
   return {
     data,
