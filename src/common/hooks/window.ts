@@ -1,5 +1,6 @@
+import { Config } from "@customTypes/configs";
 import { useEffect, useState } from "react";
-export function useWindowSize(ref: React.RefObject<HTMLDivElement>) {
+export function useWindowSize(ref: React.RefObject<HTMLDivElement>, config: Config) {
   const [windowSize, setWindowSize] = useState({
     width: ref.current?.getBoundingClientRect().width ?? 0,
     height: ref.current?.getBoundingClientRect().height ?? 0,
@@ -20,6 +21,6 @@ export function useWindowSize(ref: React.RefObject<HTMLDivElement>) {
     handleResize();
     // Remove event listener on cleanup
     return () => window.removeEventListener("resize", handleResize);
-  }, [ref]); // Empty array ensures that effect is only run on mount
+  }, [ref, config]); // Empty array ensures that effect is only run on mount
   return windowSize;
 }
