@@ -214,8 +214,10 @@ const generalNavigation = [
     ),
   },
 ];
-
-const Editor: NextPage = ({idToken}) => {
+interface EditorProps {
+  idToken: string;
+}
+const Editor: NextPage<EditorProps> = ({ idToken }) => {
   const [imageStack, setImageStack] = useState([
     {
       id: uniqueId(),
