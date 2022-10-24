@@ -105,16 +105,12 @@ export const templates: Partial<Config>[] = [
       color: "#252525",
       gradient: {
         stops: [
-          {
-            color: "#e3bcf5",
-            id: 1,
-          },
-          {
-            color: "#b9dcf2",
-            id: 2,
-          },
+          { color: "#ffffff", id: 1 },
+          { color: "#eda5f0", id: 2 },
+          { color: "#959dcc", id: 3 },
+          { color: "#ffffff", id: 4 },
         ],
-        direction: 90,
+        direction: 190,
       },
     },
     shadow: {
@@ -1065,6 +1061,15 @@ export const gradientPresets = [
       { color: "#e5f2f5", id: 2 },
     ],
     direction: 160,
+  },
+  {
+    stops: [
+      { color: "#ffffff", id: 1 },
+      { color: "#eda5f0", id: 2 },
+      { color: "#959dcc", id: 3 },
+      { color: "#ffffff", id: 4 },
+    ],
+    direction: 190,
   },
 ];
 export const colorPresets = [
