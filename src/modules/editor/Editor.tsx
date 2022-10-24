@@ -215,7 +215,7 @@ const generalNavigation = [
   },
 ];
 
-const Editor: NextPage = () => {
+const Editor: NextPage = ({idToken}) => {
   const [imageStack, setImageStack] = useState([
     {
       id: uniqueId(),
@@ -235,7 +235,7 @@ const Editor: NextPage = () => {
   const ref = useRef<HTMLDivElement>(null);
   const watermarkRef = useRef<HTMLSpanElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
-  const containerSize = useWindowSize(ref);
+  const containerSize = useWindowSize(ref, config);
 
   const getScreenshot = async (options: {
     url: string;
@@ -955,6 +955,7 @@ const Editor: NextPage = () => {
                       case "presets":
                         return (
                           <Presets
+                            idToken={idToken}
                             updateConfig={updateConfig}
                             presets={templates}
                           />
