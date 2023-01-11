@@ -12,6 +12,13 @@
   transform: perspective(20rem) rotateX(5deg) rotateY(-15deg) rotateZ(10deg);
 }
 @layer utilities {
+  .gradient-bg {
+    background: radial-gradient(
+      106.9% 91.8% at 100% 100%,
+      #2563eb 0%,
+      var(--token-8c47652b-dea5-4767-a9f2-5d952dcce49a, rgb(255, 255, 255)) 100%
+    );
+  }
   input[type="number"]::-webkit-inner-spin-button,
   input[type="number"]::-webkit-outer-spin-button {
     -webkit-appearance: none;
@@ -140,7 +147,6 @@
     background-repeat: no-repeat;
     -webkit-appearance: none;
   }
-
 }
 .toolbar-button-spaced > :not([hidden]) ~ :not([hidden]) {
   --tw-space-x-reverse: 0;
@@ -170,4 +176,34 @@
   html {
     font-family: "Inter", sans-serif;
   }
+}
+html {
+  height: 100%;
+}
+
+.container {
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.moveable {
+  font-family: "Roboto", sans-serif;
+  position: relative;
+  width: 250px;
+  height: 200px;
+  text-align: center;
+  font-size: 40px;
+  margin: 0px auto;
+  font-weight: 100;
+  letter-spacing: 1px;
+}
+
+.moveable span {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
 }

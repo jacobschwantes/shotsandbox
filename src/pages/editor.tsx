@@ -2,7 +2,7 @@ import type { NextPage } from "next";
 import Editor from "@modules/editor/Editor";
 import { ToastContainer } from "react-toastify";
 import Head from "next/head";
-const Home: NextPage = () => {
+const Home: NextPage = ({idToken}) => {
   return (
     <>
      <Head>
@@ -21,7 +21,7 @@ const Home: NextPage = () => {
         theme="colored"
         pauseOnHover
       />
-      <Editor />
+      <Editor idToken={idToken} />
     </>
   );
 };

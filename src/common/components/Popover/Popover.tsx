@@ -22,10 +22,11 @@ interface Props {
   placement?: Placement;
   children: JSX.Element;
   gap?: number;
+  open: boolean;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const Popover = ({ children, render, placement, gap = 5}: Props) => {
-  const [open, setOpen] = useState(false);
+const Popover = ({ children, render, placement, gap = 5, open, setOpen }: Props) => {
 
   const { x, y, reference, floating, strategy, context } = useFloating({
     open,
@@ -55,7 +56,7 @@ const Popover = ({ children, render, placement, gap = 5}: Props) => {
       <AnimatePresence>
         {open && (
           <motion.div
-          className="z-20"
+            className="z-20"
             initial={{ opacity: 0, scale: 0.85 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.85 }}

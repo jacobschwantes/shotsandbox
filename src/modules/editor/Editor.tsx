@@ -64,6 +64,8 @@ import {
 import { useWindowSize } from "@hooks/window";
 import { Watermark } from "./components/Watermarks";
 import Link from "next/link";
+import { flushSync } from "react-dom";
+import Moveable from "react-moveable";
 
 const generalNavigation = [
   {
@@ -714,6 +716,178 @@ const Editor: NextPage<EditorProps> = ({ idToken }) => {
             }
             ref={ref}
             className={clsx(
+              "overflow-hidden relative flex items-center justify-center max-h-full max-w-full sm:rounded-3xl hidden"
+            )}
+          >
+            {config.watermark.show && (
+              <Watermark
+                height={imageRef.current?.clientWidth ?? 1000}
+                ref={watermarkRef}
+                placement={config.watermark.placement}
+                theme={config.watermark.theme}
+              />
+            )}
+
+            <motion.div
+              className={clsx(" aspect-video flex-1 grid grid-cols-8 gap-7 group  ")}
+              style={{ scale: config.size.scale / 100 }}
+              transition={{ type: "spring" }}
+              animate={{
+                x: (config.position.x / 100) * containerSize.width,
+                y: (config.position.y / 100) * containerSize.height,
+                rotateX: 55,
+                rotateY: 0,
+                rotateZ: 25,
+                skewY: 11,
+                transformPerspective: 1500,
+              }}
+            >
+              {/* <Movable/> */}
+              {imageStack.map((url, index) => (
+                <motion.div
+                
+                  // style={
+                  //   index === 0
+                  //     ? {
+                  //         scale: 1.1,
+                  //         boxShadow: "0 0 1.5rem hsl(0 0% 100% / 0.8)",
+                  //       }
+                  //     : {}
+                  // }
+                  key={index}
+                  className={clsx(
+                    
+                    " first:col-span-5 [&:nth-child(2)]:col-span-3 col-span-4 relative  "
+                  )}
+                >
+                  {/* header */}
+                  {/* {config.header.show && (
+                    <motion.div
+                      animate={{
+                        x:
+                          (config.header.content.translateX / 100) *
+                          containerSize.width,
+                      }}
+                      style={{
+                        color: config.header.content.color,
+                        maxWidth:
+                          config.header.align === "horizontal"
+                            ? ref.current?.clientWidth
+                              ? `${ref.current?.clientWidth * 0.35}px`
+                              : "30%"
+                            : "100%",
+                      }}
+                      className={clsx(
+                        config.header.content.italic && "italic",
+                        config.header.align === "horizontal"
+                          ? " text-left"
+                          : "text-center",
+                        " space-y-2"
+                      )}
+                    >
+                      <h1
+                        style={{
+                          fontSize: ref.current?.clientWidth
+                            ? `${
+                                ref.current?.clientWidth *
+                                0.04 *
+                                (config.header.content.size / 100)
+                              }px`
+                            : "2rem",
+                        }}
+                        className={clsx(
+                          config.header.content.bold && "font-bold",
+                          ""
+                        )}
+                      >
+                        {config.header.content.title}
+                      </h1>
+                      <p
+                        style={{
+                          fontSize: ref.current?.clientWidth
+                            ? `${
+                                ref.current?.clientWidth *
+                                0.02 *
+                                (config.header.content.size / 100)
+                              }px`
+                            : "1rem",
+                        }}
+                      >
+                        {config.header.content.subtitle}
+                      </p>
+                    </motion.div>
+                  )} */}
+               
+                  <motion.div
+                    className=" flex flex-col flex-1 overflow-hidden w-full justify-center absolute inset-0  h-full   "
+                    style={{
+                      boxShadow: `${config.shadow.color} ${config.shadow.size}`,
+                      borderRadius: `${
+                        0.037 *
+                        (imageRef?.current?.clientHeight ?? 1000) *
+                        config.border.radius
+                      }px`,
+                      borderColor: config.border.color,
+                      borderWidth: `${config.border.width}px`,
+            
+                          rotate: index === 1 ? -90 : 0
+                    }}
+                  >
+                    {/* {config.frame.show && (
+                      <Toolbar
+                        width={imageRef.current?.clientWidth ?? 1000}
+                        height={imageRef.current?.clientHeight ?? 1000}
+                        options={config.frame}
+                      />
+                    )} */}
+                    <motion.div
+                      
+                      ref={imageRef}
+                      className={clsx(
+                        config.frame.show && "",
+                        "flex"
+                      )}
+                    >
+                      <Image
+                        alt="editor image"
+                        priority
+                        layout="fill"
+                        src={url.src}
+                      />
+                    </motion.div>
+                  </motion.div>
+                </motion.div>
+              ))}
+            </motion.div>
+          </motion.div>
+          <Moveable flushSync={flushSync} />
+        </div>
+        {/* <div
+          className={clsx(
+            "h-1/2 sm:h-full flex-1 dark:bg-black light:grid-effect-light bg-gray-50 dark:grid-effect-dark xl:p-20 p-3   "
+          )}
+        >
+          <motion.div
+            style={
+              removeBackground
+                ? {
+                    background: "transparent",
+                    aspectRatio: `auto ${config.size.dimensions.aspectRatio}`,
+                  }
+                : {
+                    background:
+                      config.background.type === "gradient"
+                        ? `linear-gradient(${
+                            config.background.gradient?.direction
+                          }deg, ${config.background.gradient?.stops
+                            .map((item) => item.color)
+                            .join(",")})`
+                        : config.background.color,
+                    aspectRatio: config.size.dimensions.aspectRatio,
+                  }
+            }
+            ref={ref}
+            className={clsx(
               "overflow-hidden relative flex items-center justify-center max-h-full max-w-full sm:rounded-3xl"
             )}
           >
@@ -730,6 +904,7 @@ const Editor: NextPage<EditorProps> = ({ idToken }) => {
               className={clsx(" w-full h-full ")}
               style={{ scale: config.size.scale / 100 }}
             >
+            
               {imageStack.map((url, index) => (
                 <motion.div
                   transition={{ type: "spring" }}
@@ -745,7 +920,7 @@ const Editor: NextPage<EditorProps> = ({ idToken }) => {
                     "relative flex flex-1"
                   )}
                 >
-                  {/* header */}
+                  
                   {config.header.show && (
                     <motion.div
                       animate={{
@@ -802,7 +977,7 @@ const Editor: NextPage<EditorProps> = ({ idToken }) => {
                       </p>
                     </motion.div>
                   )}
-                  {/* image container */}
+                 
                   <motion.div
                     animate={{
                       rotateX: config.orientation.rotateX,
@@ -860,7 +1035,7 @@ const Editor: NextPage<EditorProps> = ({ idToken }) => {
               ))}
             </motion.div>
           </motion.div>
-        </div>
+        </div> */}
 
         {/* Controls column start */}
         <div className="flex sm:flex-row flex-col sm:border-l border-blue-900 sm:h-full h-1/2 ">

@@ -15,10 +15,8 @@ import { CheckCircleIcon } from "@heroicons/react/outline";
 import Image from "next/future/image";
 import logo from "../../../public/logo.png";
 import logo_light from "../../../public/logo_light.png";
+import FormInput from "@components/FormInput";
 const auth = getAuth(firebaseApp);
-type Tab = {
-  heading: string;
-};
 
 const validateEmail = (email: string) => {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -33,12 +31,20 @@ const resetPassword = httpsCallable(functions, "resetPassword");
 const Login: NextPage = () => {
   const [login, setLogin] = useState(true);
   return (
-    <div className="bg-black h-screen flex justify-center items-center w-screen">
-      {login ? (
-        <LoginCard setLogin={setLogin} />
-      ) : (
-        <SignUpCard setLogin={setLogin} />
-      )}
+    <div
+     
+      className=" h-screen flex justify-center items-center w-screen bg-zinc-100 lg:gradient-bg"
+    >
+      <div className=" max-w-6xl w-full bg-zinc-100 lg:border lg:rounded-2xl lg:shadow-2xl grid grid-cols-1 lg:grid-cols-2 ">
+        <div className="lg:p-10 flex justify-center ">
+          {login ? (
+            <LoginCard setLogin={setLogin} />
+          ) : (
+            <SignUpCard setLogin={setLogin} />
+          )}
+        </div>
+        <div className="hidden lg:block bg-[#e0e9fc] p-10 rounded-r-2xl"></div>
+      </div>
     </div>
   );
 };
@@ -117,22 +123,21 @@ const PasswordPage: NextComponentType<
       }}
       className="flex flex-col space-y-6"
     >
-      <h1 className="text-gray-100 text-3xl font-bold">Enter password</h1>
+      <h1 className="text-zinc-800 text-3xl font-bold">Enter password</h1>
       <button
         type="button"
         onClick={() => setEmailValidated(false)}
-        className="p-4 font-bold rounded-lg focus:outline-none  active:scale-[.98] hover:brightness-150 active:bg-zinc-900  border-zinc-800 border flex items-center space-x-3 text-white "
+        className="p-4 font-medium rounded-lg focus:outline-none  active:scale-[.98]  bg-white border flex items-center space-x-3 text-zinc-700 "
       >
         <UserIcon className="h-7 border-2 rounded-full p-0.5 text-gray-400" />
         <p className="truncate">{email}</p>
       </button>
       <div className="flex flex-col space-y-1 pb-5">
-        <label htmlFor="email" className="text-gray-100 font-medium text-sm">
-          Password
-        </label>
-        <div className="w-full relative">
-          <input
+        <div className="w-full relative flex items-center justify-center">
+          <FormInput
+            error={error}
             value={password}
+            label="Password"
             onChange={(e) => {
               setError("");
               setPassword(e.target.value);
@@ -140,17 +145,14 @@ const PasswordPage: NextComponentType<
             placeholder="Your password"
             name="password"
             id="password"
-            spellCheck={false}
+            // spellCheck={false}
             type={showPassword ? "text" : "password"}
-            className={
-              "form-input pr-10 pl-4 py-4 w-full font-medium rounded-lg focus:outline-none bg-black text-gray-400 border-zinc-800 border " +
-              (error ? "border-red-500" : "focus:border-blue-500")
-            }
-          ></input>
+          />
+
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
-            className="cursor-pointer absolute inset-y-0 right-0 pr-4 flex items-center"
+            className="cursor-pointer absolute  top-1/2 pt-0.5 right-0 pr-4 flex items-center"
           >
             {showPassword ? (
               <EyeIcon className="h-5 text-gray-400" />
@@ -159,7 +161,7 @@ const PasswordPage: NextComponentType<
             )}
           </button>
         </div>
-        <p className="text-red-500 font-medium text-sm">{error}</p>
+
       </div>
       <button
         type="button"
@@ -171,7 +173,7 @@ const PasswordPage: NextComponentType<
       </button>
       <button
         type="submit"
-        className="bg-blue-500 hover:bg-blue-400 w-full border border-blue-900 p-4 rounded-lg font-medium tracking-wide text-gray-900 flex items-center justify-center"
+        className="bg-blue-600 hover:bg-blue-700 w-full border  p-4 rounded-lg font-medium tracking-wide text-white flex items-center justify-center transition-all duration-300"
       >
         {loading ? <Spinner className="h-5 w-5" /> : "Continue"}
       </button>
@@ -206,38 +208,32 @@ const EmailPage: NextComponentType<NextPageContext, {}, EmailPageProps> = ({
         }}
         className="flex flex-col space-y-4"
       >
-        <h1 className="text-gray-100 text-3xl font-bold">Sign in</h1>
+        <h1 className="text-zinc-800 text-3xl font-bold">Sign in</h1>
         <div className="flex flex-col space-y-1 pb-5">
-          <label htmlFor="email" className="text-gray-100 font-medium text-sm">
-            Email
-          </label>
-          <input
+          <FormInput
+          error={error}
+            label="Email"
+            placeholder="Your email address"
+            type="email"
+            name="email"
+            id="email"
             value={email}
             onChange={(e) => {
               setError("");
               setEmail(e.target.value);
             }}
-            placeholder="Your email address"
-            type="email"
-            name="email"
-            id="email"
-            className={
-              "form-input p-4 font-medium rounded-lg focus:outline-none bg-black text-gray-400 border-zinc-800 border " +
-              (error ? "border-red-500" : "focus:border-blue-500")
-            }
-          ></input>
-          <p className="text-red-500 font-medium text-sm">{error}</p>
+          />
         </div>
         <button
           type="submit"
-          className="bg-blue-500 hover:bg-blue-400 w-full border border-blue-900 p-4 rounded-lg font-medium tracking-wide text-gray-900 flex items-center justify-center"
+          className="bg-blue-600 hover:bg-blue-700 w-full border  p-4 rounded-lg font-medium tracking-wide text-white flex items-center justify-center transition-all duration-300"
         >
           {loading ? <Spinner className="h-5 w-5" /> : "Continue"}
         </button>
         <button
           onClick={() => setLogin(false)}
           type="button"
-          className=" hover:bg-gray-900 hover:bg-opacity-30 w-full border border-zinc-800 p-4 rounded-lg font-medium tracking-wide text-gray-100"
+          className=" hover:bg-opacity-70 w-full border  p-4 rounded-lg font-medium tracking-wide text-zinc-800 bg-white hover:bg-zinc-50 transition-all duration-300"
         >
           Create account
         </button>
@@ -262,8 +258,8 @@ const LoginCard: NextComponentType<NextPageContext, {}, LoginCardProps> = ({
   const [emailValidated, setEmailValidated] = useState(false);
 
   return (
-    <div className="sm:border border-zinc-900 rounded-2xl sm:p-10 p-5 max-w-lg w-full space-y-4">
-   <div className="pb-10">
+    <div className=" lg:p-10 p-5 max-w-lg w-full space-y-4">
+      <div className="pb-10">
         <Image
           className="h-8 hidden dark:block w-auto"
           src={logo}
@@ -333,12 +329,11 @@ const SignUpPage: NextComponentType<NextPageContext, {}, SignUpPageProps> = ({
         }}
         className="flex flex-col space-y-4"
       >
-        <h1 className="text-gray-100 text-3xl font-bold">Sign up</h1>
+        <h1 className="text-zinc-800 text-3xl font-bold">Sign up</h1>
         <div className="flex flex-col space-y-1">
-          <label htmlFor="email" className="text-gray-100 font-medium text-sm">
-            Email
-          </label>
-          <input
+          <FormInput
+            error={emailError}
+            label="Email"
             value={email}
             onChange={(e) => {
               setEmailError("");
@@ -353,19 +348,14 @@ const SignUpPage: NextComponentType<NextPageContext, {}, SignUpPageProps> = ({
             placeholder="Your email address"
             name="email"
             id="email"
-            className={
-              "form-input p-4 font-medium rounded-lg focus:outline-none bg-black text-gray-400 border-zinc-800 border " +
-              (emailError ? "border-red-500" : "focus:border-blue-500")
-            }
-          ></input>
-          <p className="text-red-500 font-medium text-sm">{emailError}</p>
+          />
         </div>
-        <div className="flex flex-col space-y-1 pb-5">
-          <label htmlFor="email" className="text-gray-100 font-medium text-sm">
-            Password
-          </label>
+        <div className="flex flex-col space-y-1 ">
+       
           <div className="w-full relative">
-            <input
+            <FormInput
+              error={passwordError}
+              label="Password"
               value={password}
               onChange={(e) => {
                 setPasswordError("");
@@ -379,17 +369,13 @@ const SignUpPage: NextComponentType<NextPageContext, {}, SignUpPageProps> = ({
               placeholder="Your password"
               name="password"
               id="password"
-              spellCheck={false}
+              // spellCheck={false}
               type={showPassword ? "text" : "password"}
-              className={
-                "form-input pr-10 pl-4 py-4 w-full font-medium rounded-lg focus:outline-none bg-black text-gray-400 border-zinc-800 border " +
-                (error ? "border-red-500" : "focus:border-blue-500")
-              }
-            ></input>
+            />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="cursor-pointer absolute inset-y-0 right-0 pr-4 flex items-center"
+              className="cursor-pointer absolute top-1/2 pt-0.5 right-0 pr-4 flex items-center"
             >
               {showPassword ? (
                 <EyeIcon className="h-5 text-gray-400" />
@@ -398,20 +384,19 @@ const SignUpPage: NextComponentType<NextPageContext, {}, SignUpPageProps> = ({
               )}
             </button>
           </div>
-          <p className="text-red-500 font-medium text-sm">{passwordError}</p>
           <p className="text-red-500 font-medium text-sm">{error}</p>
         </div>
 
         <button
           type="submit"
-          className="bg-blue-500 hover:bg-blue-400 w-full border border-blue-900 p-4 rounded-lg font-medium tracking-wide text-gray-900 flex items-center justify-center"
+          className="bg-blue-600 hover:bg-blue-700 w-full border  p-4 rounded-lg font-medium tracking-wide text-white flex items-center justify-center transition-all duration-300"
         >
           {loading ? <Spinner className="h-5 w-5" /> : "Continue"}
         </button>
         <button
           type="button"
           onClick={() => setLogin(true)}
-          className=" hover:bg-gray-900 hover:bg-opacity-30 w-full border border-zinc-800 p-4 rounded-lg font-medium tracking-wide text-gray-100"
+          className=" hover:bg-opacity-70 w-full border  p-4 rounded-lg font-medium tracking-wide text-zinc-800 bg-white hover:bg-zinc-50 transition-all duration-300"
         >
           Already have an account?
         </button>
@@ -437,7 +422,7 @@ const SignUpCard: NextComponentType<NextPageContext, {}, SignUpCardProps> = ({
   setLogin,
 }) => {
   return (
-    <div className="sm:border border-zinc-800 rounded-2xl sm:p-10 p-5 max-w-lg w-full space-y-4">
+    <div className=" lg:p-10 p-5  w-full space-y-4">
       <div className="pb-10">
         <Image
           className="h-8 hidden dark:block w-auto"

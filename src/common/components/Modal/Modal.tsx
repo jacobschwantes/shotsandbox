@@ -4,8 +4,10 @@ interface ModalProps {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   open: boolean;
   content: { message: string };
+  children?: React.ReactNode;
+  heading?: string;
 }
-export default function Modal({ setOpen, open, content }: ModalProps) {
+export default function Modal({ setOpen, open, content, children, heading = "Modal" }: ModalProps) {
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={setOpen}>
@@ -18,7 +20,7 @@ export default function Modal({ setOpen, open, content }: ModalProps) {
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-zinc-800 backdrop-blur-sm bg-opacity-30 transition-opacity" />
+          <div className="fixed inset-0 bg-zinc-800 backdrop-blur-sm bg-opacity-50 transition-opacity" />
         </Transition.Child>
 
         <div className="fixed z-10 inset-0 overflow-y-auto">
@@ -32,19 +34,20 @@ export default function Modal({ setOpen, open, content }: ModalProps) {
               leaveFrom="opacity-100 translate-y-0 sm:scale-100"
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
-              <Dialog.Panel className="relative bg-black border border-zinc-900 rounded-2xl px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-5xl sm:w-full sm:p-6">
+              <Dialog.Panel className="relative bg-white border border-zinc-400 rounded-2xl px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-xl sm:w-full sm:p-6">
                 <div className="space-y-4">
-                  <h1 className="font-medium text-white text-lg">Error logs</h1>
-                  <div>
-                    <code className="text-zinc-200 text-sm break-words">
+                  <h1 className="font-medium text-black text-lg">{heading}</h1>
+                  <div className="space-y-5">
+                    {children}
+                    {/* <code className="text-zinc-200 text-sm break-words">
                       {content.message}
-                    </code>
+                    </code> */}
                   </div>
 
                   <div className="flex justify-end">
                     <button
                       type="button"
-                      className="inline-flex items-center px-4 py-2 border border-zinc-900 rounded-md shadow-sm text-sm font-medium text-white bg-black hover:bg-zinc-900"
+                      className="inline-flex items-center px-4 py-2 border border-zinc-400 rounded-md shadow-sm text-sm font-medium text-white bg-black hover:bg-blue-700 transition-all duration-300"
                       onClick={() => {
                         setOpen(false);
                       }}
