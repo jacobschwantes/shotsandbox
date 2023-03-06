@@ -355,7 +355,7 @@ const Editor: NextPage<EditorProps> = ({ idToken }) => {
       else return true;
     } else return true;
   };
-  const getImage = useCallback(
+ const getImage = useCallback(
     (format: string) => {
       if (ref.current === null) {
         return;
