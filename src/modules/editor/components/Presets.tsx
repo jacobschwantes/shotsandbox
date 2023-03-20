@@ -5,10 +5,12 @@ import { useState } from "react";
 interface PresetsProps {
   updateConfig: (newConfig: Partial<Config>) => void;
   presets: Partial<Config>[];
+  idToken: string;
 }
 const Presets: NextComponentType<NextPageContext, {}, PresetsProps> = ({
   presets,
   updateConfig,
+  idToken,
 }) => {
   const [selected, setSelected] = useState("global");
   return (
@@ -20,7 +22,7 @@ const Presets: NextComponentType<NextPageContext, {}, PresetsProps> = ({
       >
         {selected === "global" ? (
           <div className="space-y-10 mt-10">
-            {presets.map((config, index) => (
+            {/* {presets.map((config, index) => (
               <button
                 key={index}
                 onClick={() => {
@@ -30,7 +32,7 @@ const Presets: NextComponentType<NextPageContext, {}, PresetsProps> = ({
               >
                 <img src={config.preview}></img>
               </button>
-            ))}
+            ))} */}
           </div>
         ) : (
           <></>

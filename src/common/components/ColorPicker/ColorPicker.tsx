@@ -26,7 +26,7 @@ const ColorPicker: NextComponentType<NextPageContext, {}, ColorPickerProps> = ({
               <div className="flex items-center space-x-3">
                 <p className="text-zinc-400 font-bold text-base">HEX</p>
                 <HexColorInput
-                  className="form-input shadow-sm focus:ring-blue-500 focus:border-blue-500 block sm:text-sm border-zinc-700 rounded-md bg-zinc-800 w-20 text-zinc-300 font-medium"
+                  className="form-input shadow-sm focus:ring-sky-500 focus:border-sky-500 block sm:text-sm border-zinc-700 rounded-md bg-zinc-800 w-20 text-zinc-300 font-medium"
                   color={color}
                   onChange={setColor}
                 />

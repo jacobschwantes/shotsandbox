@@ -1,82 +1,5 @@
 import { Config, ShadowConfig, FrameConfig } from "@customTypes/configs";
 import clsx from "clsx";
-export const defaultConfig: Config = {
-  id: "config1",
-  name: "default",
-  size: {
-    scale: 80,
-    dimensions: {
-      aspectRatio: "16 / 9",
-      width: 1920,
-      height: 1080,
-    },
-  },
-  orientation: {
-    rotateX: 0,
-    rotateY: 0,
-    rotateZ: 0,
-    perspective: 3000,
-  },
-  position: {
-    x: 0,
-    y: 0,
-  },
-  background: {
-    type: "gradient",
-    color: "#252525",
-    gradient: {
-      stops: [
-        { color: "#cd96b3", id: "664" },
-        { color: "#bda6f0", id: "356" },
-      ],
-      direction: 70,
-    },
-  },
-  shadow: {
-    color: "rgba(17, 12, 46, 0.15)",
-    type: "xl",
-    previewSize: "0px 5px 10px",
-    size: "0px 50px 100px",
-  },
-  border: {
-    radius: 0.8,
-    width: 0,
-    color: "rgba(0, 0, 0, 1)",
-  },
-  header: {
-    show: false,
-    anchored: false,
-    align: "vertical",
-    content: {
-      title: "The best image editing tool for founders",
-      subtitle: "Turn boring screenshots into stunning graphics",
-      color: "rgba(255, 255, 255, 1)",
-      bold: true,
-      italic: false,
-      size: 3.5,
-      padding: 5,
-      translateX: 0,
-    },
-  },
-  frame: {
-    show: true,
-    dark: false,
-    opacity: 0.3,
-    buttons: {
-      show: true,
-      dark: true,
-      solid: true,
-    },
-    searchBar: {
-      show: true,
-    },
-  },
-  watermark: {
-    show: true,
-    placement: "bottom-right",
-    theme: "light",
-  },
-};
 export const templates: Partial<Config>[] = [
   {
     id: "config5",
@@ -491,7 +414,7 @@ export const dimensionPresets = [
         fill="currentColor"
         viewBox="0 0 24 24"
         className={clsx(
-          "text-white h-6 w-6 bg-blue-500 rounded p-0.5",
+          "text-white h-6 w-6 bg-sky-500 rounded p-0.5",
           className
         )}
       >
@@ -511,7 +434,7 @@ export const dimensionPresets = [
         fill="currentColor"
         viewBox="0 0 24 24"
         className={clsx(
-          "text-white h-6 w-6 bg-blue-600 rounded p-0.5 ",
+          "text-white h-6 w-6 bg-sky-600 rounded p-0.5 ",
           className
         )}
       >
@@ -580,7 +503,7 @@ export const dimensionPresets = [
         fill="currentColor"
         viewBox="0 0 24 24"
         className={clsx(
-          "text-white h-6 w-6 bg-blue-500 rounded p-1",
+          "text-white h-6 w-6 bg-sky-500 rounded p-1",
           className
         )}
       >

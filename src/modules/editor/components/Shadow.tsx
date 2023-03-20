@@ -61,9 +61,9 @@ const Shadow: NextComponentType<NextPageContext, {}, ShadowProps> = ({
               }
               className={clsx(
                 config.shadow.type === item.type
-                  ? "outline-blue-500"
+                  ? "outline-sky-500"
                   : "outline-zinc-800",
-                "rounded-lg  bg-zinc-100 p-7 w-full outline  hover:outline-blue-500 transition-all duration-300"
+                "rounded-lg  bg-zinc-100 p-7 w-full outline  hover:outline-sky-500 transition-all duration-300"
               )}
             >
               <div

@@ -1,217 +1,302 @@
-import { NextPage } from "next";
-import { LineChart } from "@components/index";
-import Link from "next/link";
-import { useState, useEffect, SVGProps } from "react";
+import type { NextPage } from "next";
+import Head from "next/head";
+import { Modal, Tabs } from "@components/index";
+import { motion } from "framer-motion";
 import {
-  EmojiSadIcon,
-  RefreshIcon,
-  CalculatorIcon,
-  PaperAirplaneIcon,
+  ChartBarIcon,
+  KeyIcon,
+  ArchiveIcon,
+  CogIcon,
+  FolderAddIcon,
+  FolderIcon,
+  DocumentAddIcon,
 } from "@heroicons/react/outline";
+import { useRouter } from "next/router";
+import Link from "next/link";
+import { useState } from "react";
+import {
+  DotsHorizontalIcon,
+  PlusIcon,
+  TrashIcon,
+} from "@heroicons/react/solid";
 import clsx from "clsx";
-import { useUsage } from "@hooks/swr";
-import { useSWRConfig } from "swr";
-import { DateTime } from "luxon";
-import { User } from "firebase/auth";
-import { NextComponentType, NextPageContext } from "next";
-interface DashboardProps {
-  idToken: string;
-  user: User;
-}
-const Dashboard: NextPage<DashboardProps> = (props) => {
-  const { mutate } = useSWRConfig();
-  const [idToken, setIdToken] = useState(props.idToken);
-  const [spin, setSpin] = useState(false);
-  const { usage, isLoading, isError } = useUsage(
-    idToken,
-    DateTime.now().zoneName.replace("/", "-")
-  );
-  useEffect(() => {
-    if (isError) {
-      props.user.getIdToken().then((result) => setIdToken(result));
-    }
-  }, [isError, props.user]);
-  const [data, setData] = useState("1w");
+import { useLiveQuery } from "dexie-react-hooks";
+import { db } from "src/db";
+import { duplicate, insertFolder } from "src/db/utils/insert";
+import { deleteDb, deleteProject } from "src/db/utils/delete";
+import { AnimatePresence } from "framer-motion";
+const Home: NextPage = () => {
+  const [selected, setSelected] = useState("projects");
+  const folders = useLiveQuery(() => db.folders.toArray());
+  const projects = useLiveQuery(() => db.projects.toArray());
+  const [folderInput, setFolderInput] = useState("");
+  const [selectedFolder, setSelectedFolder] = useState(0);
+  const [openFolder, setOpenFolder] = useState(false);
+  const [openProject, setOpenProject] = useState(false);
+
   return (
-    <div className="space-y-4 p-5 overflow-y-auto h-full ">
-      <div className="pb-5  border-b border-gray-200 dark:border-zinc-700 dark:border-none items-center flex justify-between w-full">
-        <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-zinc-100">
-          Dashboard
-        </h3>
-        <div className=" flex sm:mt-0  space-x-3">
-          <button
-            disabled={spin}
-            type="button"
-            onAnimationEnd={() => setSpin(false)}
-            onClick={() => {
-              setSpin(true);
-              mutate(["/api/user/usage"]);
-              // asyncHero.execute();
-            }}
-            className="inline-flex items-center p-2 border border-gray-300 dark:border-zinc-800 dark:bg-black rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 dark:hover:bg-zinc-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:ring-offset-zinc-800 "
-          >
-            <RefreshIcon
+    <>
+      <Head>
+        <title>ShotSandbox - Dashboard</title>
+      </Head>
+      <div className="p-6 bg-zinc-50 min-h-screen ">
+        <Modal
+          callback={() => {
+            insertFolder(folderInput);
+            setFolderInput("");
+            setOpenFolder(false);
+          }}
+          heading="Add folder"
+          open={openFolder}
+          setOpen={setOpenFolder}
+        >
+          <div className="space-y-2">
+            <h1 className="font-medium text-zinc-900 ">Name</h1>
+            <input
+              value={folderInput}
+              onChange={(e) => {
+                setFolderInput(e.target.value);
+              }}
+              type="text"
               className={clsx(
-                "h-6 text-gray-400 dark:text-zinc-300  ",
-                spin && "animate-spin-slow"
+                "form-input text-sm p-3 sm:w-1/2 w-full font-medium rounded-lg focus:outline-none bg-white text-zinc-600 border-zinc-300 border transition-colors",
+                false ? "border-red-500" : "hover:border-sky-500"
               )}
             />
-          </button>
+            <p className="text-red-500 font-medium text-sm">{false}</p>
+          </div>
+        </Modal>
+        <Modal
+          heading="Add project"
+          open={openProject}
+          setOpen={setOpenProject}
+        >
+          <div className="space-y-2">
+            <h1 className="font-medium text-zinc-900 ">Name</h1>
+            <input
+              // value={tokenOptions.name}
+              // onChange={(e) => {
+              //   setError("");
+              // }}
+              type="text"
+              className={clsx(
+                "form-input text-sm p-3 sm:w-1/2 w-full font-medium rounded-lg focus:outline-none bg-white text-zinc-600 border-zinc-300 border transition-colors",
+                false ? "border-red-500" : "hover:border-sky-500"
+              )}
+            />
+            <p className="text-red-500 font-medium text-sm">{false}</p>
+          </div>
+        </Modal>
+        <div className="flex justify-between">
+          <div className=" w-full">
+            <Tabs
+              className=""
+              tabs={["projects", "settings", "assets"]}
+              selected={selected}
+              setSelected={setSelected}
+            >
+              {(() => {
+                switch (selected) {
+                  case "projects":
+                    return (
+                      <div className="py-5 space-y-10 w-full">
+                        <div className=" space-y-5 ">
+                          <h1 className="font-medium text-lg">
+                            Folders{" "}
+                            <span className="text-zinc-500">
+                              ∙ {folders?.length}
+                            </span>
+                          </h1>
+                          <div className="grid grid-cols-3 xl:grid-cols-3 2xl:grid-cols-6 gap-6">
+                            {folders?.map((item, idx) => (
+                              <button
+                                key={item.id}
+                                onClick={() => setSelectedFolder(idx)}
+                                className={clsx(
+                                  "border rounded-xl space-y-3 p-5 bg-white min-h-[125px] flex flex-col justify-between",
+                                  idx === selectedFolder
+                                    ? "border-sky-500 border-2"
+                                    : ""
+                                )}
+                              >
+                                <div className="flex justify-between text-zinc-400">
+                                  <FolderIcon className="h-7" />
+                                  <DotsHorizontalIcon className="h-7" />
+                                </div>
+                                <h2 className="font-medium text-zinc-700 whitespace-nowrap truncate">
+                                  {item.name}
+                                </h2>
+                              </button>
+                            ))}
+                            <button
+                              onClick={() => setOpenFolder(true)}
+                              className="border rounded-xl space-x-3 p-5 bg-white min-h-[125px] flex  items-center justify-center  hover:border-zinc-400 transition-all duration-300 cursor-pointer"
+                            >
+                              <span className="bg-zinc-100 rounded-full p-2 flex items-center justify-center">
+                                <PlusIcon className="h-5 text-zinc-500" />
+                              </span>
+                              <h1 className="font-medium text-zinc-700 text-xl whitespace-nowrap truncate">
+                                New Folder
+                              </h1>
+                            </button>
+                          </div>
+                        </div>
+                        <div className=" w-full space-y-5 ">
+                          <h1 className="font-medium text-lg">
+                            Projects{" "}
+                            <span className="text-zinc-500">
+                              ∙ {projects?.length}
+                            </span>
+                          </h1>
+                          <ul className="grid grid-cols-3 lg:grid-cols-3 2xl:grid-cols-6  gap-6 w-full">
+                            {folders && (
+                              <AnimatePresence initial={false} mode="sync">
+                                {projects?.map(
+                                  (item) =>
+                                    item.id &&
+                                    folders[selectedFolder].projects.includes(
+                                      item.id
+                                    ) && (
+                                      <motion.li
+                                        layout
+                                        initial={{ scale: 0.8, opacity: 0 }}
+                                        animate={{ scale: 1, opacity: 1 }}
+                                        exit={{ scale: 0.8, opacity: 0 }}
+                                        transition={{ ease: "easeInOut" }}
+                                        key={`${item.id}`}
+                                        className=" border rounded-xl overflow-hidden  bg-white min-h-[150px] flex flex-col aspect-square group relative"
+                                      >
+                                        <div className="absolute group-hover:flex hidden top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 bg-white p-2 rounded-lg flex-col space-y-1 min-w-[50%] border border-zinc-300 shadow-xl">
+                                          <Link href={`/editor/${item.id}`}>
+                                            <button className=" hover:bg-zinc-100 rounded-lg font-medium text-zinc-800 py-2 px-3 w-full text-center duration-200 transition-all">
+                                              Open
+                                            </button>
+                                          </Link>
+                                          <button
+                                            onClick={() =>
+                                              folders &&
+                                              duplicate(
+                                                folders[selectedFolder].id,
+                                                item,
+                                                `${item.name} Duplicate`
+                                              )
+                                            }
+                                            className=" hover:bg-zinc-100 rounded-lg font-medium text-zinc-800 py-2 px-3 w-full text-center duration-200 transition-all"
+                                          >
+                                            Duplicate
+                                          </button>
+                                          <button
+                                            onClick={() =>
+                                              deleteProject(
+                                                folders[selectedFolder].id,
+                                                item.id
+                                              )
+                                            }
+                                            className=" hover:bg-zinc-100 rounded-lg font-medium text-zinc-800 py-2 px-3 w-full text-center duration-200 transition-all"
+                                          >
+                                            Delete
+                                          </button>
+                                        </div>
+                                        <div className=" min-h-[150px] flex flex-col group-hover:blur-sm group-hover:brightness-90 duration-300 transition-all">
+                                          <img
+                                            className="object-cover h-2/3"
+                                            src={
+                                              item.config.preview instanceof
+                                              Blob
+                                                ? URL.createObjectURL(
+                                                    item.config.preview
+                                                  )
+                                                : item.config.preview
+                                            }
+                                          />
+                                          <div className="px-5 flex flex-col justify-between flex-1 py-4">
+                                            <h2 className="font-medium text-zinc-700 whitespace-nowrap truncate">
+                                              {item.name}
+                                            </h2>
+                                            <p className="text-sm">
+                                              {new Date(
+                                                item.date
+                                              ).toLocaleDateString("en-US", {
+                                                year: "numeric",
+                                                month: "short",
+                                                day: "numeric",
+                                              })}
+                                            </p>
+                                          </div>
+                                        </div>
+                                      </motion.li>
+                                    )
+                                )}
+
+                                <motion.li
+                                  layout
+                                  transition={{ ease: "easeInOut" }}
+                                  key={"0"}
+                                  className="relative group border rounded-xl space-x-3 p-5 bg-white hover:bg-zinc-100 flex  items-center justify-center transition-colors duration-300 cursor-pointer"
+                                >
+                                  <div className="absolute group-hover:flex hidden top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 bg-white p-2 rounded-lg flex-col space-y-1 min-w-[50%] border border-zinc-300 shadow-xl">
+                                    <Link href="/editor">
+                                      <button className=" hover:bg-zinc-100 rounded-lg font-medium text-zinc-800 py-2 px-3 w-full text-center duration-200 transition-all">
+                                        Blank
+                                      </button>
+                                    </Link>
+                                    <button className=" hover:bg-zinc-100 rounded-lg font-medium text-zinc-800 py-2 px-3 w-full text-center duration-200 transition-all">
+                                      Template
+                                    </button>
+                                  </div>
+                                  <span className="bg-zinc-100 rounded-full p-2 flex items-center justify-center">
+                                    <PlusIcon className="h-5 text-zinc-500" />
+                                  </span>
+                                  <h1 className="font-medium text-zinc-700 text-xl whitespace-nowrap truncate">
+                                    New Project
+                                  </h1>
+                                </motion.li>
+                              </AnimatePresence>
+                            )}
+                          </ul>
+                        </div>
+                      </div>
+                    );
+                  case "settings":
+                    return (
+                      <div className="py-5">
+                        <button
+                          onClick={() => deleteDb()}
+                          className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-sky-500 hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 dark:ring-offset-black transition-all duration-300 "
+                        >
+                          <TrashIcon className="h-4 w-4 sm:mr-1" />
+                          <span className="hidden sm:block">Clear DB</span>
+                        </button>
+                      </div>
+                    );
+
+                  default:
+                    return <></>;
+                }
+              })()}
+            </Tabs>
+          </div>
+          <div className="flex items-start space-x-2">
+            <button
+              onClick={() => setOpenFolder(true)}
+              className=" whitespace-nowrap inline-flex items-center px-4 py-2 border  rounded-md shadow-sm text-sm font-medium text-black  bg-white hover:bg-zinc-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 dark:ring-offset-black transition-all duration-300"
+            >
+              <FolderAddIcon className="h-5 w-5 sm:mr-1" />
+              <span className="hidden sm:block">Add folder</span>
+            </button>
+
+            <button
+              onClick={() => setOpenProject(true)}
+              className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-sky-500 hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 dark:ring-offset-black transition-all duration-300 "
+            >
+              <DocumentAddIcon className="h-4 w-4 sm:mr-1" />
+              <span className="hidden sm:block">Project</span>
+            </button>
+          </div>
         </div>
       </div>
-      <Stats
-        isLoading={isLoading}
-        stats={[
-          {
-            id: 1,
-            name: "Requests",
-            stat: usage?.data.usage,
-            href: "/history",
-            icon: PaperAirplaneIcon,
-            change: "122",
-            changeType: "increase",
-          },
-          {
-            id: 2,
-            name: "Quota Remaining",
-            href: "/settings/billing",
-            stat: usage?.data.quota - usage?.data.usage,
-            icon: CalculatorIcon,
-            change: "5.4%",
-            changeType: "increase",
-          },
-          {
-            id: 3,
-            name: "Failed Requests",
-            href: "/history",
-            stat: `${(usage?.data?.errorCount === 0
-              ? 0
-              : (usage?.data?.errorCount / usage?.data?.usage) * 100
-            ).toFixed(2)}%`,
-            icon: EmojiSadIcon,
-            change: "3.2%",
-            changeType: "decrease",
-          },
-        ]}
-      />
-      {
-        <LineChart
-          isLoading={isLoading}
-          seriesOption={data}
-          setData={setData}
-          data={
-            data === "1w"
-              ? usage?.data.chartData.usage7day
-              : usage?.data.chartData.usage30day
-          }
-          dark={true}
-        />
-      }
-    </div>
-  );
-};
-interface StatsProps {
-  isLoading: boolean;
-  stats: {
-    icon: (props: SVGProps<SVGSVGElement>) => JSX.Element;
-    id: number;
-    name: string;
-    stat?: number | string;
-    href: string;
-    change: string;
-    changeType: string;
-  }[];
-}
-const Stats: NextComponentType<NextPageContext, {}, StatsProps> = (props) => {
-  return (
-    <div>
-      {props.isLoading ? (
-        <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 opacity-70">
-          {Array.from(Array(3)).map((item) => (
-            <div
-              key={item}
-              className="relative bg-white dark:bg-black shadow rounded-2xl overflow-hidden dark:border dark:border-zinc-900 before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:border-t before:border-rose-100/10 before:bg-gradient-to-r before:from-transparent before:via-rose-100/10 before:to-transparent"
-            >
-              <div className="flex items-center space-x-4 p-6">
-                <div className=" bg-zinc-900 rounded-md p-3">
-                  <div className="h-6 w-6 text-zinc-900" />
-                </div>
-                <div className="flex flex-col flex-1 space-y-3">
-                  <p className="h-3 w-1/6 rounded-full bg-zinc-900 text-sm font-medium text-gray-500 truncate dark:text-zinc-100"></p>
-                  <p className="text-2xl h-3 w-1/3 rounded-full bg-zinc-900 font-semibold text-gray-900 dark:text-zinc-200"></p>{" "}
-                </div>
-              </div>
-              <div className="bg-gray-50 dark:bg-black p-6 dark:border-t dark:border-zinc-900 before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:border-t before:border-rose-100/10 before:bg-gradient-to-r before:from-transparent before:via-rose-100/10 before:to-transparent">
-                <div className="h-3 w-1/6 bg-zinc-900 rounded-full"></div>
-              </div>
-            </div>
-          ))}
-        </dl>
-      ) : (
-        <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {props.stats.map((item) => (
-            <div
-              key={item.id}
-              className="relative bg-white dark:bg-black pt-5 px-4 pb-12 sm:pt-6 sm:px-6 shadow rounded-2xl overflow-hidden dark:border dark:border-zinc-900"
-            >
-              <dt>
-                <div className="absolute bg-blue-600 rounded-md p-3">
-                  <item.icon
-                    className="h-6 w-6 text-white"
-                    aria-hidden="true"
-                  />
-                </div>
-                <p className="ml-16 text-sm font-medium text-gray-500 truncate dark:text-zinc-100">
-                  {item.name}
-                </p>
-              </dt>
-              <dd className="ml-16 pb-6 flex items-baseline sm:pb-7">
-                <p className="text-2xl font-semibold text-gray-900 dark:text-zinc-200">
-                  {item.stat}
-                </p>
-                {/* <p
-                className={classNames(
-                  item.changeType === "increase"
-                    ? "text-green-600"
-                    : "text-red-600",
-                  "ml-2 flex items-baseline text-sm font-semibold"
-                )}
-              >
-                {item.changeType === "increase" ? (
-                  <ArrowSmUpIcon
-                    className="self-center flex-shrink-0 h-5 w-5 text-green-500"
-                    aria-hidden="true"
-                  />
-                ) : (
-                  <ArrowSmDownIcon
-                    className="self-center flex-shrink-0 h-5 w-5 text-red-500"
-                    aria-hidden="true"
-                  />
-                )}
-
-                <span className="sr-only">
-                  {item.changeType === "increase" ? "Increased" : "Decreased"}{" "}
-                  by
-                </span>
-                {item.change}
-              </p> */}
-                <div className="absolute bottom-0 inset-x-0 bg-gray-50 dark:bg-black px-4 py-4 sm:px-6 dark:border-t dark:border-zinc-900">
-                  <div className="text-sm">
-                    <Link href={item.href}>
-                      <a className="font-medium text-blue-600 hover:text-blue-500">
-                        View all
-                        <span className="sr-only"> {item.name} stats</span>
-                      </a>
-                    </Link>
-                  </div>
-                </div>
-              </dd>
-            </div>
-          ))}
-        </dl>
-      )}
-    </div>
+    </>
   );
 };
 
-export default Dashboard;
+export default Home;

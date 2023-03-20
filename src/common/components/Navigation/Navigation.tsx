@@ -6,11 +6,8 @@ import {
   ArchiveIcon,
 } from "@heroicons/react/outline";
 import Link from "next/link";
-import { signOut, getAuth } from "firebase/auth";
-import { firebaseApp } from "@modules/auth/firebase/client";
 import { useRouter } from "next/router";
 import clsx from "clsx";
-const auth = getAuth(firebaseApp);
 interface NavigationProps {
   wideNav: boolean;
 }
@@ -52,7 +49,7 @@ export default function Navigation({ wideNav }: NavigationProps) {
               key={item.name}
               className={clsx(
                 item.current
-                  ? "bg-blue-200 text-blue-600 dark:bg-blue-900 dark:text-blue-600   "
+                  ? "bg-sky-200 text-sky-600 dark:bg-sky-900 dark:text-sky-600   "
                   : "text-gray-300  ",
                 " flex items-center  p-3 rounded-lg border border-transparent text-center transition-all  hover:bg-gray-100 dark:hover:bg-zinc-900 dark:bg-opacity-50 "
               )}
@@ -73,19 +70,6 @@ export default function Navigation({ wideNav }: NavigationProps) {
       </div>
 
       <div>
-        <button
-          onClick={() => {
-            signOut(auth);
-          }}
-          className={clsx(
-            " flex items-center  p-3 rounded-lg border border-transparent text-center  text-gray-300 transition-all hover:bg-gray-100 dark:hover:bg-zinc-900 dark:bg-opacity-50 "
-          )}
-        >
-          <LogoutIcon
-            className={"h-6 w-6 flex-shrink-0 transition-colors "}
-            aria-hidden="true"
-          />
-        </button>
       </div>
     </nav>
   );

@@ -8,7 +8,7 @@ interface AppLayoutProps {
 }
 const AppLayout: NextPage<AppLayoutProps> = ({ children }) => {
   return (
-    <div className="h-screen w-screen flex overflow-hidden dark:bg-black">
+    <div className="h-full flex overflow-hidden dark:bg-black">
       <Head>
         <title>screenshotify | app</title>
       </Head>
@@ -28,9 +28,9 @@ const AppLayout: NextPage<AppLayoutProps> = ({ children }) => {
       <div className="fixed w-full z-10 ">
         <Header />
       </div>
-      <div className=" pt-20 dark:bg-black dark:border-zinc-900 dark:border-r sm:block hidden ">
+      {/* <div className=" pt-20 dark:bg-black dark:border-zinc-900 dark:border-r sm:block hidden h-screen ">
         <Navigation wideNav={false} />
-      </div>
+      </div> */}
       <div className="flex-1 h-full pt-16">{children}</div>
     </div>
   );

@@ -11,7 +11,8 @@
       "@customTypes/*": ["src/common/types/*"],
       "@modules/*": ["src/modules/*"],
       "@utils/*": ["src/common/utils/*"],
-      "@content/*": ["src/content/*"]
+      "@content/*": ["src/content/*"],
+      "@public/*": ["public/*"]
     },
     "allowJs": true,
     "skipLibCheck": true,

@@ -147,8 +147,8 @@ const Frames: NextComponentType<NextPageContext, {}, FramesProps> = ({
                 })
               }
               className={clsx(
-                item.config === config.frame && "border-blue-600",
-                "p-5 rounded-lg bg-gradient-to-tr bg-zinc-900 border border-zinc-800 hover:border-blue-600 transition-all duration-300 w-full"
+                item.config === config.frame && "border-sky-600",
+                "p-5 rounded-lg bg-gradient-to-tr bg-zinc-900 border border-zinc-800 hover:border-sky-600 transition-all duration-300 w-full"
               )}
             >
               <div className=" rounded-t-md overflow-hidden relative h-5">

@@ -21,7 +21,7 @@ const Position: NextComponentType<NextPageContext, {}, PositionProps> = ({
             },
           });
         }}
-        className=" h-12 aspect-video border border-zinc-800 hover:border-blue-500 transition-all duration-300 rounded-lg absolute -right-1 -top-1 "
+        className=" h-12 aspect-video border border-zinc-800 hover:border-sky-500 transition-all duration-300 rounded-lg absolute -right-1 -top-1 "
       />
       <button
         onClick={() => {
@@ -32,7 +32,7 @@ const Position: NextComponentType<NextPageContext, {}, PositionProps> = ({
             },
           });
         }}
-        className=" h-12 aspect-video border border-zinc-800 hover:border-blue-500 transition-all duration-300  rounded-lg absolute -left-1 -top-1 "
+        className=" h-12 aspect-video border border-zinc-800 hover:border-sky-500 transition-all duration-300  rounded-lg absolute -left-1 -top-1 "
       />
       <button
         onClick={() => {
@@ -43,7 +43,7 @@ const Position: NextComponentType<NextPageContext, {}, PositionProps> = ({
             },
           });
         }}
-        className=" h-12 aspect-video border border-zinc-800 hover:border-blue-500 transition-all duration-300 rounded-lg absolute -right-1 -bottom-1 "
+        className=" h-12 aspect-video border border-zinc-800 hover:border-sky-500 transition-all duration-300 rounded-lg absolute -right-1 -bottom-1 "
       />
       <button
         onClick={() => {
@@ -54,7 +54,7 @@ const Position: NextComponentType<NextPageContext, {}, PositionProps> = ({
             },
           });
         }}
-        className=" h-12 aspect-video border border-zinc-800 hover:border-blue-500 transition-all duration-300 rounded-lg absolute -left-1 -bottom-1 "
+        className=" h-12 aspect-video border border-zinc-800 hover:border-sky-500 transition-all duration-300 rounded-lg absolute -left-1 -bottom-1 "
       />
       <button
         onClick={() => {
@@ -65,7 +65,7 @@ const Position: NextComponentType<NextPageContext, {}, PositionProps> = ({
             },
           });
         }}
-        className=" h-12 aspect-video border border-zinc-800 hover:border-blue-500 transition-all duration-300 rounded-lg absolute left-1/2 -bottom-1 -translate-x-1/2 "
+        className=" h-12 aspect-video border border-zinc-800 hover:border-sky-500 transition-all duration-300 rounded-lg absolute left-1/2 -bottom-1 -translate-x-1/2 "
       />
       <button
         onClick={() => {
@@ -76,7 +76,7 @@ const Position: NextComponentType<NextPageContext, {}, PositionProps> = ({
             },
           });
         }}
-        className=" h-12 aspect-video border border-zinc-800 hover:border-blue-500 transition-all duration-300 rounded-lg absolute left-1/2 bottom-1/2 -translate-x-1/2 translate-y-1/2 "
+        className=" h-12 aspect-video border border-zinc-800 hover:border-sky-500 transition-all duration-300 rounded-lg absolute left-1/2 bottom-1/2 -translate-x-1/2 translate-y-1/2 "
       />
       <button
         onClick={() => {
@@ -87,7 +87,7 @@ const Position: NextComponentType<NextPageContext, {}, PositionProps> = ({
             },
           });
         }}
-        className=" h-12 aspect-video border border-zinc-800 hover:border-blue-500 transition-all duration-300 rounded-lg absolute left-1/2 -top-1 -translate-x-1/2 "
+        className=" h-12 aspect-video border border-zinc-800 hover:border-sky-500 transition-all duration-300 rounded-lg absolute left-1/2 -top-1 -translate-x-1/2 "
       />
       <button
         onClick={() => {
@@ -98,7 +98,7 @@ const Position: NextComponentType<NextPageContext, {}, PositionProps> = ({
             },
           });
         }}
-        className=" h-12 aspect-video border border-zinc-800 hover:border-blue-500 transition-all duration-300 rounded-lg absolute -left-1 bottom-1/2  translate-y-1/2 "
+        className=" h-12 aspect-video border border-zinc-800 hover:border-sky-500 transition-all duration-300 rounded-lg absolute -left-1 bottom-1/2  translate-y-1/2 "
       />
       <button
         onClick={() => {
@@ -109,7 +109,7 @@ const Position: NextComponentType<NextPageContext, {}, PositionProps> = ({
             },
           });
         }}
-        className=" h-12 aspect-video border border-zinc-800 hover:border-blue-500 transition-all duration-300 rounded-lg absolute -right-1 bottom-1/2  translate-y-1/2 "
+        className=" h-12 aspect-video border border-zinc-800 hover:border-sky-500 transition-all duration-300 rounded-lg absolute -right-1 bottom-1/2  translate-y-1/2 "
       />
     </div> */}
     <div className="space-y-14">
