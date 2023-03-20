@@ -53,9 +53,9 @@ const Watermarks: NextComponentType<NextPageContext, {}, WatermarksProps> = ({
             });
           }}
           className={clsx(
-            " h-8 aspect-video border hover:border-blue-500 transition-all duration-300 rounded-lg absolute right-3 top-3 ",
+            " h-8 aspect-video border hover:border-sky-500 transition-all duration-300 rounded-lg absolute right-3 top-3 ",
             config.watermark.placement === "top-right"
-              ? "border-blue-500"
+              ? "border-sky-500"
               : "border-zinc-800"
           )}
         />
@@ -69,9 +69,9 @@ const Watermarks: NextComponentType<NextPageContext, {}, WatermarksProps> = ({
             });
           }}
           className={clsx(
-            " h-8 aspect-video border hover:border-blue-500 transition-all duration-300 rounded-lg absolute left-3 top-3 ",
+            " h-8 aspect-video border hover:border-sky-500 transition-all duration-300 rounded-lg absolute left-3 top-3 ",
             config.watermark.placement === "top-left"
-              ? "border-blue-500"
+              ? "border-sky-500"
               : "border-zinc-800"
           )}
         />
@@ -85,9 +85,9 @@ const Watermarks: NextComponentType<NextPageContext, {}, WatermarksProps> = ({
             });
           }}
           className={clsx(
-            " h-8 aspect-video border hover:border-blue-500 transition-all duration-300 rounded-lg absolute right-3 bottom-3 ",
+            " h-8 aspect-video border hover:border-sky-500 transition-all duration-300 rounded-lg absolute right-3 bottom-3 ",
             config.watermark.placement === "bottom-right"
-              ? "border-blue-500"
+              ? "border-sky-500"
               : "border-zinc-800"
           )}
         />
@@ -101,9 +101,9 @@ const Watermarks: NextComponentType<NextPageContext, {}, WatermarksProps> = ({
             });
           }}
           className={clsx(
-            "h-8 aspect-video border hover:border-blue-500 transition-all duration-300 rounded-lg absolute left-3 bottom-3 ",
+            "h-8 aspect-video border hover:border-sky-500 transition-all duration-300 rounded-lg absolute left-3 bottom-3 ",
             config.watermark.placement === "bottom-left"
-              ? "border-blue-500"
+              ? "border-sky-500"
               : "border-zinc-800"
           )}
         />

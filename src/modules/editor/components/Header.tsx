@@ -55,7 +55,7 @@ const Header: NextComponentType<NextPageContext, {}, HeaderProps> = ({
         }
         placeholder="An all-in-on tool fo..."
         type="text"
-        className="appearance-none form-input focus:outline-none flex w-full justify-between items-center space-x-2 border border-zinc-800 hover:border-blue-500 text-zinc-200 bg-zinc-900 hover:bg-blue-900 bg-opacity-25 hover:bg-opacity-25 transition-all cursor-pointer bg py-2 px-4 rounded-lg"
+        className="appearance-none form-input focus:outline-none flex w-full justify-between items-center space-x-2 border border-zinc-800 hover:border-sky-500 text-zinc-200 bg-zinc-900 hover:bg-sky-900 bg-opacity-25 hover:bg-opacity-25 transition-all cursor-pointer bg py-2 px-4 rounded-lg"
       />
     </div>
     <div className="space-y-2">
@@ -75,7 +75,7 @@ const Header: NextComponentType<NextPageContext, {}, HeaderProps> = ({
         }
         placeholder="Amazing features for..."
         type="text"
-        className="appearance-none form-input focus:outline-none flex w-full justify-between items-center space-x-2 border border-zinc-800 hover:border-blue-500 text-zinc-200 bg-zinc-900 hover:bg-blue-900 bg-opacity-25 hover:bg-opacity-25 transition-all cursor-pointer bg py-2 px-4 rounded-lg"
+        className="appearance-none form-input focus:outline-none flex w-full justify-between items-center space-x-2 border border-zinc-800 hover:border-sky-500 text-zinc-200 bg-zinc-900 hover:bg-sky-900 bg-opacity-25 hover:bg-opacity-25 transition-all cursor-pointer bg py-2 px-4 rounded-lg"
       />
     </div>
     <div className="space-y-2">
@@ -92,9 +92,9 @@ const Header: NextComponentType<NextPageContext, {}, HeaderProps> = ({
           }
           className={clsx(
             "flex w-full items-center justify-center rounded-lg py-2.5 text-center text-sm font-medium capitalize leading-5 space-x-1 ",
-            "ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2 dark:ring-transparent",
+            "ring-white ring-opacity-60 ring-offset-2 ring-offset-sky-400 focus:outline-none focus:ring-2 dark:ring-transparent",
             config.header.align === "horizontal"
-              ? "bg-white text-blue-700 dark:text-blue-500 shadow dark:bg-zinc-900"
+              ? "bg-white text-sky-700 dark:text-sky-500 shadow dark:bg-zinc-900"
               : "text-gray-700 hover:bg-white/[0.12] hover:text-gray-600 dark:hover:text-zinc-200 dark:text-zinc-300"
           )}
         >
@@ -111,9 +111,9 @@ const Header: NextComponentType<NextPageContext, {}, HeaderProps> = ({
           }
           className={clsx(
             "flex w-full items-center justify-center rounded-lg py-2.5 text-center text-sm font-medium capitalize leading-5 ",
-            "ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2 dark:ring-transparent",
+            "ring-white ring-opacity-60 ring-offset-2 ring-offset-sky-400 focus:outline-none focus:ring-2 dark:ring-transparent",
             config.header.align === "vertical"
-              ? "bg-white text-blue-700 dark:text-blue-500 shadow dark:bg-zinc-900"
+              ? "bg-white text-sky-700 dark:text-sky-500 shadow dark:bg-zinc-900"
               : "text-gray-700 hover:bg-white/[0.12] hover:text-gray-600 dark:hover:text-zinc-200 dark:text-zinc-300"
           )}
         >

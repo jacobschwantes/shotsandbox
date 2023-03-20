@@ -191,7 +191,7 @@ const Rotation: NextComponentType<NextPageContext, {}, RotationProps> = ({
             });
           }}
           style={{ perspective: "800px" }}
-          className="border  border-zinc-800 rounded-lg flex items-center justify-center p-4  hover:border-blue-500 transition-all duration-300"
+          className="border  border-zinc-800 rounded-lg flex items-center justify-center p-4  hover:border-sky-500 transition-all duration-300"
         >
           <div
             style={{ transform: "rotateX(50deg)" }}
@@ -218,7 +218,7 @@ const Rotation: NextComponentType<NextPageContext, {}, RotationProps> = ({
             });
           }}
           style={{ perspective: "800px" }}
-          className="border  border-zinc-800 rounded-lg flex items-center justify-center p-4  hover:border-blue-500 transition-all duration-300"
+          className="border  border-zinc-800 rounded-lg flex items-center justify-center p-4  hover:border-sky-500 transition-all duration-300"
         >
           <div
             style={{

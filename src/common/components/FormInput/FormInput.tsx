@@ -36,7 +36,7 @@ const FormInput: NextComponentType<NextPageContext, {}, FormInputProps> = ({
       id={id}
       className={clsx(
         "form-input p-4 font-medium rounded-lg focus:outline-none bg-white text-zinc-600 border-zinc-300 border w-full",
-        error ? "border-red-500" : "focus:border-blue-500"
+        error ? "border-red-500" : "focus:border-sky-500"
       )}
     />
     <p className="text-red-500 font-medium text-sm">{error}</p>

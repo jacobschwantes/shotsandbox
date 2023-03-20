@@ -104,7 +104,7 @@ export default function Notifications() {
                         : `You have ${unread.length} unread messages`}
                     </span>
                   </div>
-                  <CheckIcon className="h-6 w-6 cursor-pointer text-blue-500 hover:scale-110 hover:text-blue-600" />
+                  <CheckIcon className="h-6 w-6 cursor-pointer text-sky-500 hover:scale-110 hover:text-sky-600" />
                 </div>
               )}
             </Menu.Item>
@@ -119,10 +119,10 @@ export default function Notifications() {
                       return (
                         <div
                           key={index}
-                          className="flex cursor-pointer items-center space-x-3 bg-blue-50 dark:bg-zinc-700 p-3 hover:bg-gray-100 dark:hover:bg-zinc-600 "
+                          className="flex cursor-pointer items-center space-x-3 bg-sky-50 dark:bg-zinc-700 p-3 hover:bg-gray-100 dark:hover:bg-zinc-600 "
                         >
                           <MailIcon
-                            className="h-10 w-10 flex-shrink-0 rounded-full  text-blue-500 transition-colors"
+                            className="h-10 w-10 flex-shrink-0 rounded-full  text-sky-500 transition-colors"
                             aria-hidden="true"
                           />
                           <div className="flex flex-col space-y-1">
@@ -158,7 +158,7 @@ export default function Notifications() {
                         className="flex cursor-pointer items-start space-x-3 p-3 hover:bg-gray-100 dark:hover:bg-zinc-700 "
                       >
                         <item.icon
-                          className="h-10 w-10 flex-shrink-0 rounded-full  text-blue-500 transition-colors"
+                          className="h-10 w-10 flex-shrink-0 rounded-full  text-sky-500 transition-colors"
                           aria-hidden="true"
                         />
                         <div className="flex flex-col space-y-1">
@@ -189,7 +189,7 @@ export default function Notifications() {
                   }}
                   className={clsx(
                     active ? "bg-gray-100 dark:bg-zinc-700" : "",
-                    "block cursor-pointer rounded-b-lg border-t dark:border-zinc-700 px-4 py-2 text-center text-sm transition-colors dark:text-blue-500"
+                    "block cursor-pointer rounded-b-lg border-t dark:border-zinc-700 px-4 py-2 text-center text-sm transition-colors dark:text-sky-500"
                   )}
                 >
                   View All

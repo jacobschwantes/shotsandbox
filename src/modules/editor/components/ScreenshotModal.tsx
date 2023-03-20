@@ -68,7 +68,7 @@ export default function ScreenshotModal({
                       value={url}
                       onChange={(e) => setUrl(e.target.value)}
                       type="text"
-                      className="appearance-none form-input focus:outline-none flex w-full justify-between items-center space-x-2 border border-zinc-800 hover:border-blue-500 text-zinc-200 bg-zinc-900 hover:bg-blue-900 bg-opacity-25 hover:bg-opacity-25 transition-all cursor-pointer bg py-2 px-4 rounded-lg"
+                      className="appearance-none form-input focus:outline-none flex w-full justify-between items-center space-x-2 border border-zinc-800 hover:border-sky-500 text-zinc-200 bg-zinc-900 hover:bg-sky-900 bg-opacity-25 hover:bg-opacity-25 transition-all cursor-pointer bg py-2 px-4 rounded-lg"
                     />
                   </div>
                   <div className="space-y-2">
@@ -80,7 +80,7 @@ export default function ScreenshotModal({
                       value={token}
                       onChange={(e) => setToken(e.target.value)}
                       type="text"
-                      className="appearance-none form-input focus:outline-none flex w-full justify-between items-center space-x-2 border border-zinc-800 hover:border-blue-500 text-zinc-200 bg-zinc-900 hover:bg-blue-900 bg-opacity-25 hover:bg-opacity-25 transition-all cursor-pointer bg py-2 px-4 rounded-lg"
+                      className="appearance-none form-input focus:outline-none flex w-full justify-between items-center space-x-2 border border-zinc-800 hover:border-sky-500 text-zinc-200 bg-zinc-900 hover:bg-sky-900 bg-opacity-25 hover:bg-opacity-25 transition-all cursor-pointer bg py-2 px-4 rounded-lg"
                     />
                   </div>
                   <div className="flex space-x-5 items-end">
@@ -100,7 +100,7 @@ export default function ScreenshotModal({
                           type="number"
                           name="email"
                           id="email"
-                          className="form-input flex w-full justify-between focus:outline-none items-center space-x-2 border border-zinc-800 hover:border-blue-500 text-zinc-200 bg-zinc-900 hover:bg-blue-900 bg-opacity-25 hover:bg-opacity-25 transition-all cursor-pointer bg py-2 px-4 rounded-lg"
+                          className="form-input flex w-full justify-between focus:outline-none items-center space-x-2 border border-zinc-800 hover:border-sky-500 text-zinc-200 bg-zinc-900 hover:bg-sky-900 bg-opacity-25 hover:bg-opacity-25 transition-all cursor-pointer bg py-2 px-4 rounded-lg"
                         />
                       </div>
                     </div>
@@ -121,7 +121,7 @@ export default function ScreenshotModal({
                           type="number"
                           name="email"
                           id="email"
-                          className="appearance-none form-input focus:outline-none flex w-full justify-between items-center space-x-2 border border-zinc-800 hover:border-blue-500 text-zinc-200 bg-zinc-900 hover:bg-blue-900 bg-opacity-25 hover:bg-opacity-25 transition-all cursor-pointer bg py-2 px-4 rounded-lg"
+                          className="appearance-none form-input focus:outline-none flex w-full justify-between items-center space-x-2 border border-zinc-800 hover:border-sky-500 text-zinc-200 bg-zinc-900 hover:bg-sky-900 bg-opacity-25 hover:bg-opacity-25 transition-all cursor-pointer bg py-2 px-4 rounded-lg"
                         />
                       </div>
                     </div>
@@ -140,7 +140,7 @@ export default function ScreenshotModal({
                     <button
                     disabled={isLoading}
                       type="submit"
-                      className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 "
+                      className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-sky-600 hover:bg-sky-700 "
                     >
                       {isLoading ? <span>Loading</span> : <span>Take Screenshot</span>} {isLoading && <Spinner className="h-4 w-4 ml-2" />}
                     </button>

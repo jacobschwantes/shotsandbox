@@ -6,7 +6,7 @@ const Page: NextPage = () => {
       <div className="bg-white min-h-full px-4 py-16 sm:px-6 sm:py-24 md:grid md:place-items-center lg:px-8">
         <div className="max-w-max mx-auto">
           <main className="sm:flex">
-            <p className="text-4xl font-extrabold text-blue-600 sm:text-5xl">
+            <p className="text-4xl font-extrabold text-sky-600 sm:text-5xl">
               404
             </p>
             <div className="sm:ml-6">
@@ -20,12 +20,12 @@ const Page: NextPage = () => {
               </div>
               <div className="mt-10 flex space-x-3 sm:border-l sm:border-transparent sm:pl-6">
                 <Link href="/">
-                  <a className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                  <a className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-sky-600 hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500">
                     Go back home
                   </a>
                 </Link>
                 <Link href="/">
-                  <a className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                  <a className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-sky-700 bg-sky-100 hover:bg-sky-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500">
                     Contact support
                   </a>
                 </Link>

@@ -13,7 +13,7 @@ export const dispatchToast = ({
 }: ToastProps) => {
   toast(
     <div className="flex items-center space-x-3">
-      <CheckCircleIcon className="h-6 w-6 text-blue-500" />
+      <CheckCircleIcon className="h-6 w-6 text-sky-500" />
       <span>
         <h1 className=" font-medium">{heading}</h1>
         <p className="text-sm font-extralight">{message}</p>
@@ -21,7 +21,7 @@ export const dispatchToast = ({
     </div>,
     {
       theme: "dark",
-      progressClassName: "toastProgressBlue",
+      progressClassName: "toastProgresssky",
     }
   );
 };
