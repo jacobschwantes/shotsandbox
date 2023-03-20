@@ -22,12 +22,10 @@ interface Props {
   placement?: Placement;
   children: JSX.Element;
   gap?: number;
-  open: boolean;
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const Popover = ({ children, render, placement, gap = 5, open, setOpen }: Props) => {
-
+const Popover = ({ children, render, placement, gap = 5 }: Props) => {
+  const [open, setOpen] = useState(false)
   const { x, y, reference, floating, strategy, context } = useFloating({
     open,
     onOpenChange: setOpen,

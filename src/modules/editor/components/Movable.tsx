@@ -1,3 +1,4 @@
+//@ts-nocheck
 import * as React from "react";
 import Moveable from "react-moveable";
 import { Frame } from "scenejs";

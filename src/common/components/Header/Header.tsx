@@ -23,17 +23,12 @@ import clsx from "clsx";
 import logo from "../../../../public/logo.png";
 import logo_short from "../../../../public/logo_short.png";
 import logo_light from "@public/logo_light.png";
-import logo_short_blue from "@public/logo_short_blue.png";
+import logo_short_sky from "@public/logo_short_sky.png";
 import Image from "next/future/image";
-import { signOut, getAuth } from "firebase/auth";
-import { firebaseApp } from "@modules/auth/firebase/client";
-import { User } from "firebase/auth";
 import { ChevronDownIcon } from "@heroicons/react/solid";
-const auth = getAuth(firebaseApp);
-interface HeaderProps {
-  user: User;
-}
-const Header: NextPage<HeaderProps> = ({ user }) => {
+
+interface HeaderProps {}
+const Header: NextPage<HeaderProps> = ({}) => {
   const router = useRouter();
   const [navOpen, setNavOpen] = useState(false);
   const navigation = [
@@ -42,31 +37,6 @@ const Header: NextPage<HeaderProps> = ({ user }) => {
       href: "/",
       icon: HomeIcon,
       current: router.asPath === "/",
-    },
-    {
-      name: "Dashboard",
-      href: "/dashboard",
-      icon: ChartBarIcon,
-      current: router.asPath === "/dashboard",
-    },
-    {
-      name: "Tokens",
-      href: "/tokens",
-      icon: KeyIcon,
-      current: router.asPath.includes("tokens"),
-    },
-    {
-      name: "History",
-      href: "/history",
-      icon: ArchiveIcon,
-      current: router.asPath.includes("history"),
-    },
-    {
-      name: "Logout",
-      href: "/settings/account",
-      action: () => signOut(auth),
-      icon: CogIcon,
-      current: router.asPath.includes("settings"),
     },
   ];
   return (
@@ -106,54 +76,15 @@ const Header: NextPage<HeaderProps> = ({ user }) => {
                   </span>
                 </Link>
                 {/* <Link href="/editor">
-                      <a className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:ring-offset-black">
+                      <a className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-sky-600 hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 dark:ring-offset-black">
                         Editor
                         <ArrowRightIcon className="h-5 w-5 ml-1" />
                       </a>
                     </Link> */}
 
-                <div className="hidden sm:flex space-x-5">
-                  <Popover
-                    open={navOpen}
-                    setOpen={setNavOpen}
-                    gap={10}
-                    placement="bottom-end"
-                    render={() => (
-                      <div className="border py-1 rounded-lg bg-white shadow-md min-w-[200px] mr-5 flex flex-col items-start ">
-                        {navigation.map((item) => {
-                          return item.action ? (
-                            <button
-                              onClick={() => item.action()}
-                              className=" px-3 py-1 hover:bg-zinc-100 cursor-pointer font-medium text-zinc-800 w-full text-left"
-                            >
-                              {item.name}
-                            </button>
-                          ) : (
-                            <Link href={item.href}>
-                              <button onClick={() => setNavOpen(false)} className=" px-3 py-1 hover:bg-zinc-100 cursor-pointer font-medium text-zinc-800 w-full text-left">
-                                {item.name}
-                              </button>
-                            </Link>
-                          );
-                        })}
-                      </div>
-                    )}
-                  >
-                    <div className="flex space-x-2 items-center cursor-pointer select-none">
-                      <h1 className="text-lg truncate max-w-[150px]">
-                        {user.email}
-                      </h1>
-
-                      <ChevronDownIcon className="h-5" />
-                    </div>
-                  </Popover>
-                  {/* <div className="flex space-x-4 z-20 items-center">
-                    <Notifications />
-                  </div> */}
-                </div>
                 <div className="sm:hidden">
                   <Link href="/editor">
-                    <a className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:ring-offset-black">
+                    <a className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-sky-600 hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 dark:ring-offset-black">
                       Open Editor
                       <PencilIcon className="h-4 ml-1" />
                     </a>
@@ -161,7 +92,7 @@ const Header: NextPage<HeaderProps> = ({ user }) => {
                 </div>
                 <div className="flex items-center sm:hidden">
                   {/* Mobile menu button*/}
-                  <Disclosure.Button className="inline-flex items-center justify-center p-2 rounded-md text-black dark:text-white hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-600">
+                  <Disclosure.Button className="inline-flex items-center justify-center p-2 rounded-md text-black dark:text-white hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-sky-600">
                     <span className="sr-only">Open main menu</span>
                     {open ? (
                       <XIcon className="block h-6 w-6" aria-hidden="true" />
@@ -182,7 +113,7 @@ const Header: NextPage<HeaderProps> = ({ user }) => {
                       key={item.name}
                       className={clsx(
                         item.current
-                          ? "bg-blue-200 text-blue-600 dark:bg-blue-900 dark:text-blue-600 dark:bg-opacity-30   "
+                          ? "bg-sky-200 text-sky-600 dark:bg-sky-900 dark:text-sky-600 dark:bg-opacity-30   "
                           : "text-gray-300  ",
                         " flex items-center  p-3 rounded-lg border border-transparent text-center transition-all  hover:bg-gray-100 dark:hover:bg-zinc-900 dark:bg-opacity-50 w-full space-x-2"
                       )}
@@ -193,7 +124,7 @@ const Header: NextPage<HeaderProps> = ({ user }) => {
                       />
                       <span
                         className={clsx(
-                          item.current ? "text-blue-500" : "text-white"
+                          item.current ? "text-sky-500" : "text-white"
                         )}
                       >
                         {item.name}
@@ -201,14 +132,7 @@ const Header: NextPage<HeaderProps> = ({ user }) => {
                     </button>
                   </Link>
                 ))}
-                <div className="flex w-full space-x-3 p-2">
-                  <Disclosure.Button
-                    onClick={() => signOut(auth)}
-                    className="block text-center w-full  rounded-md border border-transparent px-3 py-1.5  bg-blue-600 text-sm font-medium text-white shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-300"
-                  >
-                    Log out
-                  </Disclosure.Button>
-                </div>
+                <div className="flex w-full space-x-3 p-2"></div>
               </div>
             </Disclosure.Panel>
           </div>

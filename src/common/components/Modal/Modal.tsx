@@ -3,11 +3,13 @@ import { Dialog, Transition } from "@headlessui/react";
 interface ModalProps {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   open: boolean;
-  content: { message: string };
+  content?: { message: string };
   children?: React.ReactNode;
   heading?: string;
+  action?: string;
+  callback?: () => void;
 }
-export default function Modal({ setOpen, open, content, children, heading = "Modal" }: ModalProps) {
+export default function Modal({ setOpen, open, content, children, heading = "Modal", callback, action = "Submit" }: ModalProps) {
   return (
     <Transition.Root show={open} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={setOpen}>
@@ -47,12 +49,19 @@ export default function Modal({ setOpen, open, content, children, heading = "Mod
                   <div className="flex justify-end">
                     <button
                       type="button"
-                      className="inline-flex items-center px-4 py-2 border border-zinc-400 rounded-md shadow-sm text-sm font-medium text-white bg-black hover:bg-blue-700 transition-all duration-300"
+                      className="inline-flex items-center px-4 py-2 border border-zinc-400 rounded-md shadow-sm text-sm font-medium text-white bg-black hover:bg-sky-700 transition-all duration-300"
                       onClick={() => {
                         setOpen(false);
                       }}
                     >
                       Close
+                    </button>
+                    <button
+                      type="button"
+                      className="inline-flex items-center px-4 py-2 border border-zinc-400 rounded-md shadow-sm text-sm font-medium text-white bg-black hover:bg-sky-700 transition-all duration-300"
+                      onClick={callback}
+                    >
+                      {action}
                     </button>
                   </div>
                 </div>

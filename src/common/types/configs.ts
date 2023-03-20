@@ -75,7 +75,7 @@ export type FrameConfig = {
   };
 };
 export type Config = {
-  preview?: string;
+  preview: Blob | string;
   id: string;
   name: string;
   size: SizeConfig;

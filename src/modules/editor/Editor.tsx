@@ -11,7 +11,13 @@ import clsx from "clsx";
 import { Toolbar } from "./components/Frames";
 import { motion, AnimatePresence } from "framer-motion";
 import { uniqueId } from "lodash";
-import { copyImageToClipboard, downloadJpg, downloadPng } from "./utils/export";
+import {
+  copyImageToClipboard,
+  downloadJpg,
+  downloadPng,
+  getBlob,
+  getPngDataUrl,
+} from "./utils/export";
 import {
   BookmarkAltIcon,
   CollectionIcon,
@@ -34,6 +40,7 @@ import {
   CameraIcon,
   ChevronUpIcon,
   RefreshIcon,
+  SaveIcon,
 } from "@heroicons/react/outline";
 import type { ImageDoc, Config } from "@customTypes/configs";
 import {
@@ -42,7 +49,6 @@ import {
   colorPresets,
   gradientPresets,
   framePresets,
-  defaultConfig,
   dimensionPresets,
 } from "./presets";
 import { Tooltip, Popover } from "@components/index";
@@ -64,8 +70,8 @@ import {
 import { useWindowSize } from "@hooks/window";
 import { Watermark } from "./components/Watermarks";
 import Link from "next/link";
-import { flushSync } from "react-dom";
-import Moveable from "react-moveable";
+import { db } from "src/db";
+import { Project } from "src/db/Project";
 
 const generalNavigation = [
   {
@@ -217,9 +223,9 @@ const generalNavigation = [
   },
 ];
 interface EditorProps {
-  idToken: string;
+  project: Project;
 }
-const Editor: NextPage<EditorProps> = ({ idToken }) => {
+const Editor: NextPage<EditorProps> = ({ project }) => {
   const [imageStack, setImageStack] = useState([
     {
       id: uniqueId(),
@@ -229,7 +235,7 @@ const Editor: NextPage<EditorProps> = ({ idToken }) => {
   ] as ImageDoc[]);
   const [modalOpen, setModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [config, setConfig] = useState(defaultConfig);
+  const [config, setConfig] = useState(project.config);
   const [history, setHistory] = useState([] as Config[]);
   const [historyIdx, setHistoryIdx] = useState(0);
   const [layout, setLayout] = useState(1);
@@ -240,6 +246,40 @@ const Editor: NextPage<EditorProps> = ({ idToken }) => {
   const watermarkRef = useRef<HTMLSpanElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
   const containerSize = useWindowSize(ref, config);
+
+  const saveProject = async () => {
+    try {
+      const newPreview =
+        ref.current &&
+        (await getBlob(ref.current, {
+          width: config.size.dimensions.width,
+          height: config.size.dimensions.height,
+        }));
+      if (newPreview) {
+        await db.projects.put({
+          ...project,
+          config: {
+            ...config,
+            preview: newPreview,
+          },
+        });
+      }
+    } catch (e: any) {
+      console.error(e);
+      toast(
+        <div className="flex items-center space-x-3">
+          <span>
+            <p className="text-sm font-extralight">{e.message}</p>
+          </span>
+        </div>,
+        {
+          type: "error",
+        }
+      );
+    } finally {
+      toast("Saved project", { type: "success" });
+    }
+  };
 
   const getScreenshot = async (options: {
     url: string;
@@ -355,7 +395,7 @@ const Editor: NextPage<EditorProps> = ({ idToken }) => {
       else return true;
     } else return true;
   };
- const getImage = useCallback(
+  const getImage = useCallback(
     (format: string) => {
       if (ref.current === null) {
         return;
@@ -434,7 +474,7 @@ const Editor: NextPage<EditorProps> = ({ idToken }) => {
       />
       <div className="h-16 flex items-center justify-between absolute w-full bg-black px-2 sm:px-6 lg:px-6">
         <Link href="/">
-          <a className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:ring-offset-black">
+          <a className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-sky-600 hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 dark:ring-offset-black">
             <ArrowLeftIcon className="h-5 w-5 sm:mr-1" />
             <span className="hidden sm:block">Dashboard</span>
           </a>
@@ -454,7 +494,7 @@ const Editor: NextPage<EditorProps> = ({ idToken }) => {
                 </h1>
 
                 <Tab.Group>
-                  <Tab.List className="flex space-x-1 rounded-xl bg-blue-900/20 p-1">
+                  <Tab.List className="flex space-x-1 rounded-xl bg-sky-900/20 p-1">
                     {dimensionPresets.map((category) => (
                       <Tab
                         key={category.name}
@@ -500,7 +540,7 @@ const Editor: NextPage<EditorProps> = ({ idToken }) => {
                                     },
                                   })
                                 }
-                                className="flex w-full justify-between items-center space-x-2 border border-zinc-800 hover:border-blue-500 text-zinc-200 bg-zinc-900 hover:bg-blue-900 bg-opacity-25 hover:bg-opacity-25 transition-all cursor-pointer bg py-2 px-4 rounded-lg"
+                                className="flex w-full justify-between items-center space-x-2 border border-zinc-800 hover:border-sky-500 text-zinc-200 bg-zinc-900 hover:bg-sky-900 bg-opacity-25 hover:bg-opacity-25 transition-all cursor-pointer bg py-2 px-4 rounded-lg"
                               >
                                 <p className="text-base text-white font-medium capitalize">
                                   {name}
@@ -546,7 +586,7 @@ const Editor: NextPage<EditorProps> = ({ idToken }) => {
                         type="number"
                         name="email"
                         id="email"
-                        className="form-input flex w-full justify-between items-center space-x-2 border border-zinc-800 hover:border-blue-500 text-zinc-200 bg-zinc-900 hover:bg-blue-900 bg-opacity-25 hover:bg-opacity-25 transition-all cursor-pointer bg py-2 px-4 rounded-lg"
+                        className="form-input flex w-full justify-between items-center space-x-2 border border-zinc-800 hover:border-sky-500 text-zinc-200 bg-zinc-900 hover:bg-sky-900 bg-opacity-25 hover:bg-opacity-25 transition-all cursor-pointer bg py-2 px-4 rounded-lg"
                       />
                     </div>
                   </div>
@@ -579,7 +619,7 @@ const Editor: NextPage<EditorProps> = ({ idToken }) => {
                         }
                         name="email"
                         id="email"
-                        className="appearance-none form-input flex w-full justify-between items-center space-x-2 border border-zinc-800 hover:border-blue-500 text-zinc-200 bg-zinc-900 hover:bg-blue-900 bg-opacity-25 hover:bg-opacity-25 transition-all cursor-pointer bg py-2 px-4 rounded-lg"
+                        className="appearance-none form-input flex w-full justify-between items-center space-x-2 border border-zinc-800 hover:border-sky-500 text-zinc-200 bg-zinc-900 hover:bg-sky-900 bg-opacity-25 hover:bg-opacity-25 transition-all cursor-pointer bg py-2 px-4 rounded-lg"
                       />
                     </div>
                   </div>
@@ -603,8 +643,17 @@ const Editor: NextPage<EditorProps> = ({ idToken }) => {
           </Popover>
           <button
             onClick={() => {
-              updateConfig({ ...defaultConfig });
+              saveProject();
             }}
+            className="flex items-center justify-center space-x-2 border border-zinc-800 text-zinc-200 bg-zinc-900 hover:bg-zinc-800 bg-opacity-25 hover:bg-opacity-25 transition-all cursor-pointer bg py-2 px-4 rounded-lg"
+          >
+            <SaveIcon className="h-4 w-4" />
+            <span className="hidden sm:block">Save</span>
+          </button>
+          <button
+            // onClick={() => {
+            //   updateConfig({ ...defaultConfig });
+            // }}
             className="flex items-center justify-center space-x-2 border border-zinc-800 text-zinc-200 bg-zinc-900 hover:bg-zinc-800 bg-opacity-25 hover:bg-opacity-25 transition-all cursor-pointer bg py-2 px-4 rounded-lg"
           >
             <RefreshIcon className="h-4 w-4" />
@@ -653,7 +702,7 @@ const Editor: NextPage<EditorProps> = ({ idToken }) => {
                     aria-describedby="show-watermark"
                     name="show-watermark"
                     type="checkbox"
-                    className="form-checkbox focus:ring-blue-600 focus:ring-offset-black h-4 w-4 text-blue-600 border-zinc-900 rounded bg-zinc-800"
+                    className="form-checkbox focus:ring-sky-600 focus:ring-offset-black h-4 w-4 text-sky-600 border-zinc-900 rounded bg-zinc-800"
                   />
                 </div>
 
@@ -681,7 +730,7 @@ const Editor: NextPage<EditorProps> = ({ idToken }) => {
               </div>
             )}
           >
-            <button className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 ">
+            <button className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-sky-600 hover:bg-sky-700 ">
               <span className="sm:block hidden">Export</span>
               <DownloadIcon className="h-4 w-4 sm:ml-1" />
             </button>
@@ -690,179 +739,9 @@ const Editor: NextPage<EditorProps> = ({ idToken }) => {
       </div>
       <div className="flex sm:justify-between h-screen pt-[64px] md:flex-row flex-col ">
         {/* Editor preview container */}
-        <div
-          className={clsx(
-            "h-1/2 sm:h-full flex-1 dark:bg-black light:grid-effect-light bg-gray-50 dark:grid-effect-dark xl:p-20 p-3   "
-          )}
-        >
-          <motion.div
-            style={
-              removeBackground
-                ? {
-                    background: "transparent",
-                    aspectRatio: `auto ${config.size.dimensions.aspectRatio}`,
-                  }
-                : {
-                    background:
-                      config.background.type === "gradient"
-                        ? `linear-gradient(${
-                            config.background.gradient?.direction
-                          }deg, ${config.background.gradient?.stops
-                            .map((item) => item.color)
-                            .join(",")})`
-                        : config.background.color,
-                    aspectRatio: config.size.dimensions.aspectRatio,
-                  }
-            }
-            ref={ref}
-            className={clsx(
-              "overflow-hidden relative flex items-center justify-center max-h-full max-w-full sm:rounded-3xl hidden"
-            )}
-          >
-            {config.watermark.show && (
-              <Watermark
-                height={imageRef.current?.clientWidth ?? 1000}
-                ref={watermarkRef}
-                placement={config.watermark.placement}
-                theme={config.watermark.theme}
-              />
-            )}
 
-            <motion.div
-              className={clsx(" aspect-video flex-1 grid grid-cols-8 gap-7 group  ")}
-              style={{ scale: config.size.scale / 100 }}
-              transition={{ type: "spring" }}
-              animate={{
-                x: (config.position.x / 100) * containerSize.width,
-                y: (config.position.y / 100) * containerSize.height,
-                rotateX: 55,
-                rotateY: 0,
-                rotateZ: 25,
-                skewY: 11,
-                transformPerspective: 1500,
-              }}
-            >
-              {/* <Movable/> */}
-              {imageStack.map((url, index) => (
-                <motion.div
-                
-                  // style={
-                  //   index === 0
-                  //     ? {
-                  //         scale: 1.1,
-                  //         boxShadow: "0 0 1.5rem hsl(0 0% 100% / 0.8)",
-                  //       }
-                  //     : {}
-                  // }
-                  key={index}
-                  className={clsx(
-                    
-                    " first:col-span-5 [&:nth-child(2)]:col-span-3 col-span-4 relative  "
-                  )}
-                >
-                  {/* header */}
-                  {/* {config.header.show && (
-                    <motion.div
-                      animate={{
-                        x:
-                          (config.header.content.translateX / 100) *
-                          containerSize.width,
-                      }}
-                      style={{
-                        color: config.header.content.color,
-                        maxWidth:
-                          config.header.align === "horizontal"
-                            ? ref.current?.clientWidth
-                              ? `${ref.current?.clientWidth * 0.35}px`
-                              : "30%"
-                            : "100%",
-                      }}
-                      className={clsx(
-                        config.header.content.italic && "italic",
-                        config.header.align === "horizontal"
-                          ? " text-left"
-                          : "text-center",
-                        " space-y-2"
-                      )}
-                    >
-                      <h1
-                        style={{
-                          fontSize: ref.current?.clientWidth
-                            ? `${
-                                ref.current?.clientWidth *
-                                0.04 *
-                                (config.header.content.size / 100)
-                              }px`
-                            : "2rem",
-                        }}
-                        className={clsx(
-                          config.header.content.bold && "font-bold",
-                          ""
-                        )}
-                      >
-                        {config.header.content.title}
-                      </h1>
-                      <p
-                        style={{
-                          fontSize: ref.current?.clientWidth
-                            ? `${
-                                ref.current?.clientWidth *
-                                0.02 *
-                                (config.header.content.size / 100)
-                              }px`
-                            : "1rem",
-                        }}
-                      >
-                        {config.header.content.subtitle}
-                      </p>
-                    </motion.div>
-                  )} */}
-               
-                  <motion.div
-                    className=" flex flex-col flex-1 overflow-hidden w-full justify-center absolute inset-0  h-full   "
-                    style={{
-                      boxShadow: `${config.shadow.color} ${config.shadow.size}`,
-                      borderRadius: `${
-                        0.037 *
-                        (imageRef?.current?.clientHeight ?? 1000) *
-                        config.border.radius
-                      }px`,
-                      borderColor: config.border.color,
-                      borderWidth: `${config.border.width}px`,
-            
-                          rotate: index === 1 ? -90 : 0
-                    }}
-                  >
-                    {/* {config.frame.show && (
-                      <Toolbar
-                        width={imageRef.current?.clientWidth ?? 1000}
-                        height={imageRef.current?.clientHeight ?? 1000}
-                        options={config.frame}
-                      />
-                    )} */}
-                    <motion.div
-                      
-                      ref={imageRef}
-                      className={clsx(
-                        config.frame.show && "",
-                        "flex"
-                      )}
-                    >
-                      <Image
-                        alt="editor image"
-                        priority
-                        layout="fill"
-                        src={url.src}
-                      />
-                    </motion.div>
-                  </motion.div>
-                </motion.div>
-              ))}
-            </motion.div>
-          </motion.div>
-          <Moveable flushSync={flushSync} />
-        </div>
-        {/* <div
+        {/* Editor preview container */}
+        <div
           className={clsx(
             "h-1/2 sm:h-full flex-1 dark:bg-black light:grid-effect-light bg-gray-50 dark:grid-effect-dark xl:p-20 p-3   "
           )}
@@ -904,7 +783,6 @@ const Editor: NextPage<EditorProps> = ({ idToken }) => {
               className={clsx(" w-full h-full ")}
               style={{ scale: config.size.scale / 100 }}
             >
-            
               {imageStack.map((url, index) => (
                 <motion.div
                   transition={{ type: "spring" }}
@@ -920,7 +798,7 @@ const Editor: NextPage<EditorProps> = ({ idToken }) => {
                     "relative flex flex-1"
                   )}
                 >
-                  
+                  {/* header */}
                   {config.header.show && (
                     <motion.div
                       animate={{
@@ -977,7 +855,7 @@ const Editor: NextPage<EditorProps> = ({ idToken }) => {
                       </p>
                     </motion.div>
                   )}
-                 
+                  {/* image container */}
                   <motion.div
                     animate={{
                       rotateX: config.orientation.rotateX,
@@ -1035,10 +913,10 @@ const Editor: NextPage<EditorProps> = ({ idToken }) => {
               ))}
             </motion.div>
           </motion.div>
-        </div> */}
+        </div>
 
         {/* Controls column start */}
-        <div className="flex sm:flex-row flex-col sm:border-l border-blue-900 sm:h-full h-1/2 ">
+        <div className="flex sm:flex-row flex-col sm:border-l border-sky-900 sm:h-full h-1/2 ">
           {/* Editor navigation start */}
           <div className="sm:flex sm:flex-col sm:h-full sm:pl-2 sm:overflow-y-auto overflow-x-auto ">
             <div className="flex sm:flex-col  bg-zinc-900 bg-opacity-50">
@@ -1063,7 +941,7 @@ const Editor: NextPage<EditorProps> = ({ idToken }) => {
                   >
                     <div
                       className={clsx(
-                        active === item ? "text-blue-600" : "text-zinc-600",
+                        active === item ? "text-sky-600" : "text-zinc-600",
                         "flex flex-col items-center  p-3 rounded-lg border border-transparent text-center   "
                       )}
                     >
@@ -1096,7 +974,7 @@ const Editor: NextPage<EditorProps> = ({ idToken }) => {
 
           {/* Settings panel start */}
           <div className=" sm:w-[320px] w-full p-5 space-y-3 overflow-y-auto overflow-x-hidden bg-zinc-900 bg-opacity-50 flex-1  ">
-            <AnimatePresence exitBeforeEnter>
+            <AnimatePresence mode="wait">
               <motion.div
                 key={active.id}
                 animate={{ opacity: 1, y: 0 }}
@@ -1131,11 +1009,12 @@ const Editor: NextPage<EditorProps> = ({ idToken }) => {
                         );
                       case "presets":
                         return (
-                          <Presets
-                            idToken={idToken}
-                            updateConfig={updateConfig}
-                            presets={templates}
-                          />
+                          // <Presets
+                          //   idToken={idToken}
+                          //   updateConfig={updateConfig}
+                          //   presets={templates}
+                          // />
+                          <></>
                         );
                       case "position":
                         return (

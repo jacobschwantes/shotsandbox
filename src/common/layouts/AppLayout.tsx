@@ -3,12 +3,10 @@ import { ToastContainer } from "react-toastify";
 import Head from "next/head";
 import { Header, Navigation } from "@components/index";
 import { ReactNode } from "react";
-import { User } from "firebase/auth";
 interface AppLayoutProps {
   children: ReactNode;
-  user: User;
 }
-const AppLayout: NextPage<AppLayoutProps> = ({ children, user }) => {
+const AppLayout: NextPage<AppLayoutProps> = ({ children }) => {
   return (
     <div className="h-full flex overflow-hidden dark:bg-black">
       <Head>
@@ -28,7 +26,7 @@ const AppLayout: NextPage<AppLayoutProps> = ({ children, user }) => {
         pauseOnHover
       />
       <div className="fixed w-full z-10 ">
-        <Header user={user} />
+        <Header />
       </div>
       {/* <div className=" pt-20 dark:bg-black dark:border-zinc-900 dark:border-r sm:block hidden h-screen ">
         <Navigation wideNav={false} />
