@@ -74,3 +74,47 @@ export const copyImageToClipboard = (
       console.log(err);
     });
 };
+export const getPngDataUrl = async (
+  elementRef: HTMLElement,
+  options: ExportOptions
+) => {
+ return await toPng(elementRef, {
+    canvasWidth: options.width,
+    canvasHeight: options.height,
+    pixelRatio: 1,
+    style: {
+      borderRadius: "0px",
+    },
+  })
+    .then((dataUrl) => {
+      if (dataUrl) {
+        console.log(dataUrl)
+        return dataUrl
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+export const getBlob = async (
+  elementRef: HTMLElement,
+  options: ExportOptions
+) => {
+ return await toBlob(elementRef, {
+    canvasWidth: options.width,
+    canvasHeight: options.height,
+    pixelRatio: 1,
+    style: {
+      borderRadius: "0px",
+    },
+  })
+    .then((dataUrl) => {
+      if (dataUrl) {
+        console.log(dataUrl)
+        return dataUrl
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
