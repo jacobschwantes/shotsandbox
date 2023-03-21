@@ -12,9 +12,11 @@ export const deleteProject = async (
       await db.folders
         .where("id")
         .equals(folderId)
-        .modify((x) => x.projects.filter((item) => item !== projectId));
+        .modify((x) => {
+          x.projects = x.projects.filter((item) => item !== projectId);
+        });
     }).catch((err) => {
-      console.error("I failed to spread my love :( " + err.stack);
+      console.error(err.stack);
     });
   }
 };

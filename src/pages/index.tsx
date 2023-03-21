@@ -27,8 +27,8 @@ import { deleteDb, deleteProject } from "src/db/utils/delete";
 import { AnimatePresence } from "framer-motion";
 const Home: NextPage = () => {
   const [selected, setSelected] = useState("projects");
-  const folders = useLiveQuery(() => db.folders.toArray());
-  const projects = useLiveQuery(() => db.projects.toArray());
+  const folders = useLiveQuery(() => db.folders.toArray(), [], false);
+  const projects = useLiveQuery(() => db.projects.toArray(), [], false);
   const [folderInput, setFolderInput] = useState("");
   const [selectedFolder, setSelectedFolder] = useState(0);
   const [openFolder, setOpenFolder] = useState(false);
@@ -104,30 +104,31 @@ const Home: NextPage = () => {
                           <h1 className="font-medium text-lg">
                             Folders{" "}
                             <span className="text-zinc-500">
-                              ∙ {folders?.length}
+                              ∙ {folders && folders.length}
                             </span>
                           </h1>
                           <div className="grid grid-cols-3 xl:grid-cols-3 2xl:grid-cols-6 gap-6">
-                            {folders?.map((item, idx) => (
-                              <button
-                                key={item.id}
-                                onClick={() => setSelectedFolder(idx)}
-                                className={clsx(
-                                  "border rounded-xl space-y-3 p-5 bg-white min-h-[125px] flex flex-col justify-between",
-                                  idx === selectedFolder
-                                    ? "border-sky-500 border-2"
-                                    : ""
-                                )}
-                              >
-                                <div className="flex justify-between text-zinc-400">
-                                  <FolderIcon className="h-7" />
-                                  <DotsHorizontalIcon className="h-7" />
-                                </div>
-                                <h2 className="font-medium text-zinc-700 whitespace-nowrap truncate">
-                                  {item.name}
-                                </h2>
-                              </button>
-                            ))}
+                            {folders &&
+                              folders?.map((item, idx) => (
+                                <button
+                                  key={item.id}
+                                  onClick={() => setSelectedFolder(idx)}
+                                  className={clsx(
+                                    "border rounded-xl space-y-3 p-5 bg-white min-h-[125px] flex flex-col justify-between",
+                                    idx === selectedFolder
+                                      ? "border-sky-500 border-2"
+                                      : ""
+                                  )}
+                                >
+                                  <div className="flex justify-between text-zinc-400">
+                                    <FolderIcon className="h-7" />
+                                    <DotsHorizontalIcon className="h-7" />
+                                  </div>
+                                  <h2 className="font-medium text-zinc-700 whitespace-nowrap truncate">
+                                    {item.name}
+                                  </h2>
+                                </button>
+                              ))}
                             <button
                               onClick={() => setOpenFolder(true)}
                               className="border rounded-xl space-x-3 p-5 bg-white min-h-[125px] flex  items-center justify-center  hover:border-zinc-400 transition-all duration-300 cursor-pointer"
@@ -145,115 +146,122 @@ const Home: NextPage = () => {
                           <h1 className="font-medium text-lg">
                             Projects{" "}
                             <span className="text-zinc-500">
-                              ∙ {projects?.length}
+                              ∙{" "}
+                              {folders &&
+                                folders[selectedFolder].projects?.length}
                             </span>
                           </h1>
-                          <ul className="grid grid-cols-3 lg:grid-cols-3 2xl:grid-cols-6  gap-6 w-full">
+                          <motion.ul className="grid grid-cols-3 lg:grid-cols-3 2xl:grid-cols-6  gap-6 w-full">
                             {folders && (
                               <AnimatePresence initial={false} mode="sync">
-                                {projects?.map(
-                                  (item) =>
-                                    item.id &&
-                                    folders[selectedFolder].projects.includes(
-                                      item.id
-                                    ) && (
-                                      <motion.li
-                                        layout
-                                        initial={{ scale: 0.8, opacity: 0 }}
-                                        animate={{ scale: 1, opacity: 1 }}
-                                        exit={{ scale: 0.8, opacity: 0 }}
-                                        transition={{ ease: "easeInOut" }}
-                                        key={`${item.id}`}
-                                        className=" border rounded-xl overflow-hidden  bg-white min-h-[150px] flex flex-col aspect-square group relative"
-                                      >
-                                        <div className="absolute group-hover:flex hidden top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 bg-white p-2 rounded-lg flex-col space-y-1 min-w-[50%] border border-zinc-300 shadow-xl">
-                                          <Link href={`/editor/${item.id}`}>
-                                            <button className=" hover:bg-zinc-100 rounded-lg font-medium text-zinc-800 py-2 px-3 w-full text-center duration-200 transition-all">
-                                              Open
+                                {projects &&
+                                  projects.map(
+                                    (item, idx) =>
+                                      item.id &&
+                                      folders[selectedFolder].projects.includes(
+                                        item.id
+                                      ) && (
+                                        <motion.li
+                                          layout
+                                          initial={{ scale: 0.8, opacity: 0 }}
+                                          animate={{ scale: 1, opacity: 1 }}
+                                          exit={{ scale: 0.8, opacity: 0 }}
+                                          transition={{
+                                            ease: "easeInOut",
+                                          }}
+                                          key={`${item.id}`}
+                                          className=" border rounded-xl overflow-hidden  bg-white min-h-[150px] flex flex-col aspect-square group relative"
+                                        >
+                                          <div className="absolute group-hover:flex hidden top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 bg-white p-2 rounded-lg flex-col space-y-1 min-w-[50%] border border-zinc-300 shadow-xl">
+                                            <Link href={`/editor/${item.id}`}>
+                                              <button className=" hover:bg-zinc-100 rounded-lg font-medium text-zinc-800 py-2 px-3 w-full text-center duration-200 transition-all">
+                                                Open
+                                              </button>
+                                            </Link>
+                                            <button
+                                              onClick={() =>
+                                                folders &&
+                                                duplicate(
+                                                  folders[selectedFolder].id,
+                                                  item,
+                                                  `${item.name} Duplicate`
+                                                )
+                                              }
+                                              className=" hover:bg-zinc-100 rounded-lg font-medium text-zinc-800 py-2 px-3 w-full text-center duration-200 transition-all"
+                                            >
+                                              Duplicate
                                             </button>
-                                          </Link>
-                                          <button
-                                            onClick={() =>
-                                              folders &&
-                                              duplicate(
-                                                folders[selectedFolder].id,
-                                                item,
-                                                `${item.name} Duplicate`
-                                              )
-                                            }
-                                            className=" hover:bg-zinc-100 rounded-lg font-medium text-zinc-800 py-2 px-3 w-full text-center duration-200 transition-all"
-                                          >
-                                            Duplicate
-                                          </button>
-                                          <button
-                                            onClick={() =>
-                                              deleteProject(
-                                                folders[selectedFolder].id,
-                                                item.id
-                                              )
-                                            }
-                                            className=" hover:bg-zinc-100 rounded-lg font-medium text-zinc-800 py-2 px-3 w-full text-center duration-200 transition-all"
-                                          >
-                                            Delete
-                                          </button>
-                                        </div>
-                                        <div className=" min-h-[150px] flex flex-col group-hover:blur-sm group-hover:brightness-90 duration-300 transition-all">
-                                          <img
-                                            className="object-cover h-2/3"
-                                            src={
-                                              item.config.preview instanceof
-                                              Blob
-                                                ? URL.createObjectURL(
-                                                    item.config.preview
-                                                  )
-                                                : item.config.preview
-                                            }
-                                          />
-                                          <div className="px-5 flex flex-col justify-between flex-1 py-4">
-                                            <h2 className="font-medium text-zinc-700 whitespace-nowrap truncate">
-                                              {item.name}
-                                            </h2>
-                                            <p className="text-sm">
-                                              {new Date(
-                                                item.date
-                                              ).toLocaleDateString("en-US", {
-                                                year: "numeric",
-                                                month: "short",
-                                                day: "numeric",
-                                              })}
-                                            </p>
+                                            <button
+                                              onClick={() =>
+                                                deleteProject(
+                                                  folders[selectedFolder].id,
+                                                  item.id
+                                                )
+                                              }
+                                              className=" hover:bg-zinc-100 rounded-lg font-medium text-zinc-800 py-2 px-3 w-full text-center duration-200 transition-all"
+                                            >
+                                              Delete
+                                            </button>
                                           </div>
-                                        </div>
-                                      </motion.li>
-                                    )
-                                )}
+                                          <div className=" min-h-[150px] flex flex-col group-hover:blur-sm group-hover:brightness-90 duration-300 transition-all">
+                                            <img
+                                              className="object-cover h-2/3"
+                                              src={
+                                                item.config.preview instanceof
+                                                Blob
+                                                  ? URL.createObjectURL(
+                                                      item.config.preview
+                                                    )
+                                                  : item.config.preview
+                                              }
+                                            />
+                                            <div className="px-5 flex flex-col justify-between flex-1 py-4">
+                                              <h2 className="font-medium text-zinc-700 whitespace-nowrap truncate">
+                                                {item.name}
+                                              </h2>
+                                              <p className="text-sm">
+                                                {new Date(
+                                                  item.date
+                                                ).toLocaleDateString("en-US", {
+                                                  year: "numeric",
+                                                  month: "short",
+                                                  day: "numeric",
+                                                })}
+                                              </p>
+                                            </div>
+                                          </div>
+                                        </motion.li>
+                                      )
+                                  )}
 
-                                <motion.li
-                                  layout
-                                  transition={{ ease: "easeInOut" }}
-                                  key={"0"}
-                                  className="relative group border rounded-xl space-x-3 p-5 bg-white hover:bg-zinc-100 flex  items-center justify-center transition-colors duration-300 cursor-pointer"
-                                >
-                                  <div className="absolute group-hover:flex hidden top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 bg-white p-2 rounded-lg flex-col space-y-1 min-w-[50%] border border-zinc-300 shadow-xl">
-                                    <Link href="/editor">
+                                {projects && (
+                                  <motion.li
+                                    layout
+                                    transition={{ ease: "easeInOut" }}
+                                    key={"0"}
+                                    className="relative group border rounded-xl space-x-3 p-5 bg-white hover:bg-zinc-100 flex  items-center justify-center transition-colors duration-300 cursor-pointer aspect-square"
+                                  >
+                                    <div className="absolute group-hover:flex hidden top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 bg-white p-2 rounded-lg flex-col space-y-1 min-w-[50%] border border-zinc-300 shadow-xl">
+                                      <Link href="/editor">
+                                        <button className=" hover:bg-zinc-100 rounded-lg font-medium text-zinc-800 py-2 px-3 w-full text-center duration-200 transition-all">
+                                          Blank
+                                        </button>
+                                      </Link>
                                       <button className=" hover:bg-zinc-100 rounded-lg font-medium text-zinc-800 py-2 px-3 w-full text-center duration-200 transition-all">
-                                        Blank
+                                        Template
                                       </button>
-                                    </Link>
-                                    <button className=" hover:bg-zinc-100 rounded-lg font-medium text-zinc-800 py-2 px-3 w-full text-center duration-200 transition-all">
-                                      Template
-                                    </button>
-                                  </div>
-                                  <span className="bg-zinc-100 rounded-full p-2 flex items-center justify-center">
-                                    <PlusIcon className="h-5 text-zinc-500" />
-                                  </span>
-                                  <h1 className="font-medium text-zinc-700 text-xl whitespace-nowrap truncate">
-                                    New Project
-                                  </h1>
-                                </motion.li>
+                                    </div>
+                                    <span className="bg-zinc-100 rounded-full p-2 flex items-center justify-center">
+                                      <PlusIcon className="h-5 text-zinc-500" />
+                                    </span>
+                                    <h1 className="font-medium text-zinc-700 text-xl whitespace-nowrap truncate">
+                                      New Project
+                                    </h1>
+                                  </motion.li>
+                                )}
                               </AnimatePresence>
                             )}
-                          </ul>
+                          </motion.ul>
                         </div>
                       </div>
                     );

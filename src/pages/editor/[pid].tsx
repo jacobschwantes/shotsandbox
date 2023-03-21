@@ -6,14 +6,21 @@ import { useRouter } from "next/router";
 import { db } from "src/db";
 import { useLiveQuery } from "dexie-react-hooks";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 const Home: NextPage = ({}) => {
   const router = useRouter();
   const { pid } = router.query;
-  const project = useLiveQuery(async () => {
-    return (
-      typeof pid === "string" && (await db.projects.get({ id: parseInt(pid) }))
-    );
-  });
+  const [projectId, setProjectId] = useState("");
+  useEffect(() => {
+    if (typeof pid === "string") {
+      router.isReady && setProjectId(pid);
+    }
+  }, [router.isReady]);
+  const project = useLiveQuery(
+    () => db.projects.get({ id: parseInt(projectId) }),
+    [projectId],
+    false
+  );
   return (
     <>
       <Head>
