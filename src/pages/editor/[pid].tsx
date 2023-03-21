@@ -10,14 +10,14 @@ import { useEffect, useState } from "react";
 const Home: NextPage = ({}) => {
   const router = useRouter();
   const { pid } = router.query;
-  const [projectId, setProjectId] = useState("");
+  const [projectId, setProjectId] = useState(0);
   useEffect(() => {
     if (typeof pid === "string") {
-      router.isReady && setProjectId(pid);
+      router.isReady && setProjectId(parseInt(pid));
     }
   }, [router.isReady]);
   const project = useLiveQuery(
-    () => db.projects.get({ id: parseInt(projectId) }),
+    () => db.projects.get({ id: projectId }),
     [projectId],
     false
   );
