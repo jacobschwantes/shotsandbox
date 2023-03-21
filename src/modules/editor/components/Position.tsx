@@ -125,7 +125,7 @@ const Position: NextComponentType<NextPageContext, {}, PositionProps> = ({
         }
       >
         <div className="flex space-x-2 items-center">
-          <p className=" font-medium text-zinc-300">X</p>
+          <p className="font-medium text-zinc-700">X</p>
           <button
             className="hover:text-zinc-400 transition-colors"
             onClick={() => {
@@ -150,7 +150,7 @@ const Position: NextComponentType<NextPageContext, {}, PositionProps> = ({
         }
       >
         <div className="flex space-x-2 items-center">
-          <p className=" font-medium text-zinc-300">Y</p>
+          <p className="font-medium text-zinc-700">Y</p>
           <button
             className="hover:text-zinc-400 transition-colors"
             onClick={() => {
@@ -179,7 +179,7 @@ const Position: NextComponentType<NextPageContext, {}, PositionProps> = ({
         max={150}
       >
         <div className="flex space-x-2 items-center">
-          <p className=" font-medium text-zinc-300">Scale</p>
+          <p className=" font-medium text-zinc-700">Scale</p>
           <button
             className="hover:text-zinc-400 transition-colors"
             onClick={() => {
@@ -208,7 +208,7 @@ const Position: NextComponentType<NextPageContext, {}, PositionProps> = ({
             },
           });
         }}
-        className="flex items-center justify-center space-x-2 border border-zinc-800 text-zinc-200 bg-zinc-900 hover:bg-zinc-800 bg-opacity-25 hover:bg-opacity-25 transition-all cursor-pointer bg py-2 px-4 rounded-lg"
+        className="flex items-center justify-center space-x-2 border border-zinc-200 text-zinc-800  bg-white hover:bg-zinc-50 transition-all cursor-pointer px-4 py-3 rounded-lg font-medium"
       >
         <RefreshIcon className="h-4 w-4" />
         <span>Reset</span>

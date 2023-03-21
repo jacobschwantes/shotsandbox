@@ -18,7 +18,7 @@ const Frames: NextComponentType<NextPageContext, {}, FramesProps> = ({
   return (
     <>
       <div className="space-y-3">
-        <h2 className="font-medium text-zinc-200 text-base">Toolbar</h2>
+        <h2 className="font-medium text-zinc-800 text-base">Toolbar</h2>
         <Range
           step={0.01}
           showValues={false}
@@ -35,7 +35,7 @@ const Frames: NextComponentType<NextPageContext, {}, FramesProps> = ({
           }
         >
           <div className="flex space-x-2 items-center">
-            <p className=" font-medium text-zinc-300">Opacity</p>
+            <p className=" font-medium text-zinc-700">Opacity</p>
             <button
               className="hover:text-zinc-400 transition-colors"
               onClick={() => {
@@ -62,7 +62,7 @@ const Frames: NextComponentType<NextPageContext, {}, FramesProps> = ({
             })
           }
         >
-          <p className="font-medium text-zinc-300 whitespace-nowrap">Show</p>
+          <p className="font-medium text-zinc-700 whitespace-nowrap">Show</p>
         </Toggle>
         <Toggle
           enabled={config.frame.dark}
@@ -75,12 +75,12 @@ const Frames: NextComponentType<NextPageContext, {}, FramesProps> = ({
             })
           }
         >
-          <p className="font-medium text-zinc-300 whitespace-nowrap">Dark</p>
+          <p className="font-medium text-zinc-700 whitespace-nowrap">Dark</p>
         </Toggle>
       </div>
 
       <div className="space-y-3">
-        <h2 className="font-medium text-zinc-200 text-base">Buttons</h2>
+        <h2 className="font-medium text-zinc-800 text-base">Buttons</h2>
         <Toggle
           enabled={config.frame.buttons.solid}
           setEnabled={(value) =>
@@ -95,7 +95,7 @@ const Frames: NextComponentType<NextPageContext, {}, FramesProps> = ({
             })
           }
         >
-          <p className="font-medium text-zinc-300 whitespace-nowrap">Solid</p>
+          <p className="font-medium text-zinc-700 whitespace-nowrap">Solid</p>
         </Toggle>
         <Toggle
           enabled={config.frame.buttons.dark}
@@ -111,11 +111,11 @@ const Frames: NextComponentType<NextPageContext, {}, FramesProps> = ({
             })
           }
         >
-          <p className="font-medium text-zinc-300 whitespace-nowrap">Dark</p>
+          <p className="font-medium text-zinc-700 whitespace-nowrap">Dark</p>
         </Toggle>
       </div>
       <div className="space-y-3">
-        <h2 className="font-medium text-zinc-200 text-base">Search Bar</h2>
+        <h2 className="font-medium text-zinc-800 text-base">Search Bar</h2>
         <Toggle
           enabled={config.frame.searchBar.show}
           setEnabled={(value) =>
@@ -130,11 +130,11 @@ const Frames: NextComponentType<NextPageContext, {}, FramesProps> = ({
             })
           }
         >
-          <p className="font-medium text-zinc-300 whitespace-nowrap">Show</p>
+          <p className="font-medium text-zinc-700 whitespace-nowrap">Show</p>
         </Toggle>
       </div>
       <div className="space-y-3">
-        <h2 className="font-medium text-zinc-200 text-base">Presets</h2>
+        <h2 className="font-medium text-zinc-800 text-base">Presets</h2>
         <div className="space-y-3">
           {presets.map((item, index) => (
             <button
@@ -148,7 +148,7 @@ const Frames: NextComponentType<NextPageContext, {}, FramesProps> = ({
               }
               className={clsx(
                 item.config === config.frame && "border-sky-600",
-                "p-5 rounded-lg bg-gradient-to-tr bg-zinc-900 border border-zinc-800 hover:border-sky-600 transition-all duration-300 w-full"
+                "p-5 rounded-lg bg-gradient-to-tr bg-white border border-zinc-300 hover:border-sky-600 transition-all duration-300 w-full"
               )}
             >
               <div className=" rounded-t-md overflow-hidden relative h-5">

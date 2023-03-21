@@ -15,7 +15,7 @@ const Shadow: NextComponentType<NextPageContext, {}, ShadowProps> = ({
 }) => (
   <>
     <div className=" space-y-2">
-      <label className="font-medium text-zinc-300">Color</label>
+      <label className="font-medium text-zinc-700">Color</label>
       <div className="flex justify-between items-center">
         <ColorPicker
           type="rgba"
@@ -39,14 +39,14 @@ const Shadow: NextComponentType<NextPageContext, {}, ShadowProps> = ({
               },
             });
           }}
-          className="flex items-center justify-center space-x-2 border border-zinc-800 text-zinc-200 bg-zinc-900 hover:bg-zinc-800 bg-opacity-25 hover:bg-opacity-25 transition-all cursor-pointer bg p-2 rounded-lg"
+          className="flex items-center justify-center space-x-2 border border-zinc-200 text-zinc-800  bg-white hover:bg-zinc-50 transition-all cursor-pointer p-3 rounded-lg font-medium"
         >
           <RefreshIcon className="h-4 w-4" />
         </button>
       </div>
     </div>
     <div className="space-y-2">
-      <label className="font-medium text-zinc-300">Size</label>
+      <label className="font-medium text-zinc-700">Size</label>
       <div className="grid grid-cols-2 gap-5">
         {presets.map((item, index) => (
           <div key={index} className="space-y-2">
@@ -62,8 +62,8 @@ const Shadow: NextComponentType<NextPageContext, {}, ShadowProps> = ({
               className={clsx(
                 config.shadow.type === item.type
                   ? "outline-sky-500"
-                  : "outline-zinc-800",
-                "rounded-lg  bg-zinc-100 p-7 w-full outline  hover:outline-sky-500 transition-all duration-300"
+                  : "outline-zinc-300",
+                "rounded-lg  bg-zinc-100 p-7 w-full outline  hover:outline-sky-500 transition-all duration-300 outline-1"
               )}
             >
               <div

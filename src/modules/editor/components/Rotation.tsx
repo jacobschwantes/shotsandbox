@@ -26,7 +26,7 @@ const Rotation: NextComponentType<NextPageContext, {}, RotationProps> = ({
       max={3000}
     >
       <div className="flex space-x-2 items-center">
-        <p className=" font-medium text-zinc-300 whitespace-nowrap">
+        <p className=" font-medium text-zinc-700 whitespace-nowrap">
           Perspective
         </p>
         <button
@@ -59,7 +59,7 @@ const Rotation: NextComponentType<NextPageContext, {}, RotationProps> = ({
       max={45}
     >
       <div className="flex space-x-2 items-center">
-        <p className=" font-medium text-zinc-300 whitespace-nowrap">Rotate X</p>
+        <p className=" font-medium text-zinc-700 whitespace-nowrap">Rotate X</p>
         <button
           className="hover:text-zinc-400 transition-colors"
           onClick={() => {
@@ -90,7 +90,7 @@ const Rotation: NextComponentType<NextPageContext, {}, RotationProps> = ({
       max={45}
     >
       <div className="flex space-x-2 items-center">
-        <p className=" font-medium text-zinc-300 whitespace-nowrap">Rotate Y</p>
+        <p className=" font-medium text-zinc-700 whitespace-nowrap">Rotate Y</p>
         <button
           className="hover:text-zinc-400 transition-colors"
           onClick={() => {
@@ -121,7 +121,7 @@ const Rotation: NextComponentType<NextPageContext, {}, RotationProps> = ({
       max={45}
     >
       <div className="flex space-x-2 items-center">
-        <p className=" font-medium whitespace-nowrap text-zinc-300">Rotate Z</p>
+        <p className=" font-medium whitespace-nowrap text-zinc-700">Rotate Z</p>
         <button
           className="hover:text-zinc-400 transition-colors"
           onClick={() => {
@@ -152,7 +152,7 @@ const Rotation: NextComponentType<NextPageContext, {}, RotationProps> = ({
       max={150}
     >
       <div className="flex space-x-2 items-center">
-        <p className=" font-medium text-zinc-300">Scale</p>
+        <p className=" font-medium text-zinc-700">Scale</p>
         <button
           className="hover:text-zinc-400 transition-colors"
           onClick={() => {
@@ -169,7 +169,7 @@ const Rotation: NextComponentType<NextPageContext, {}, RotationProps> = ({
       </div>
     </Range>
     <div className="space-y-2">
-      <p className=" font-medium text-zinc-300">Presets</p>
+      <p className=" font-medium text-zinc-700">Presets</p>
       <div className="grid grid-cols-2 gap-5">
         <button
           onClick={() => {
@@ -191,11 +191,11 @@ const Rotation: NextComponentType<NextPageContext, {}, RotationProps> = ({
             });
           }}
           style={{ perspective: "800px" }}
-          className="border  border-zinc-800 rounded-lg flex items-center justify-center p-4  hover:border-sky-500 transition-all duration-300"
+          className="border  border-zinc-300 rounded-lg flex items-center justify-center p-4  hover:border-sky-500 transition-all duration-300"
         >
           <div
             style={{ transform: "rotateX(50deg)" }}
-            className="bg-zinc-600 rounded flex-1 aspect-video"
+            className="bg-zinc-400 rounded flex-1 aspect-video"
           ></div>
         </button>
         <button
@@ -218,13 +218,13 @@ const Rotation: NextComponentType<NextPageContext, {}, RotationProps> = ({
             });
           }}
           style={{ perspective: "800px" }}
-          className="border  border-zinc-800 rounded-lg flex items-center justify-center p-4  hover:border-sky-500 transition-all duration-300"
+          className="border  border-zinc-300 rounded-lg flex items-center justify-center p-4  hover:border-sky-500 transition-all duration-300"
         >
           <div
             style={{
               transform: "rotateZ(-25deg) rotateY(30deg) rotateX(40deg)",
             }}
-            className="bg-zinc-600 rounded flex-1 aspect-video  "
+            className="bg-zinc-400 rounded flex-1 aspect-video  "
           ></div>
         </button>
       </div>
@@ -248,7 +248,7 @@ const Rotation: NextComponentType<NextPageContext, {}, RotationProps> = ({
           },
         });
       }}
-      className="flex items-center justify-center space-x-2 border border-zinc-800 text-zinc-200 bg-zinc-900 hover:bg-zinc-800 bg-opacity-25 hover:bg-opacity-25 transition-all cursor-pointer bg py-2 px-4 rounded-lg"
+      className="flex items-center justify-center space-x-2 border border-zinc-200 text-zinc-800  bg-white hover:bg-zinc-50 transition-all cursor-pointer px-4 py-3 rounded-lg font-medium"
     >
       <RefreshIcon className="h-4 w-4" />
       <span>Reset</span>

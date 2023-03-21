@@ -521,7 +521,7 @@ export const dimensionPresets = [
     icon: ({ className }: Partial<React.SVGProps<SVGElement>>) => (
       <svg
         fill="currentColor"
-        className={clsx("text-white h-6 w-6 bg-orange-500 rounded", className)}
+        className={clsx("text-white h-6 w-6  rounded", className)}
         viewBox="0 0 140 140"
       >
         <path
@@ -530,7 +530,7 @@ export const dimensionPresets = [
         ></path>
         <path
           d="M75.6099 70H63.7087V57.4333H75.6099C79.0747 57.4333 81.9125 60.2678 81.9125 63.7358C81.9125 67.2038 79.0779 70.0384 75.6099 70.0384V70ZM75.6099 49.0384H55.3074V91.0384H63.7087V78.4397H75.6099C83.7297 78.4397 90.3106 71.8588 90.3106 63.739C90.3106 55.6193 83.7297 49.0384 75.6099 49.0384Z"
-          fill="#DA552F"
+          fill="black"
         ></path>
       </svg>
     ),

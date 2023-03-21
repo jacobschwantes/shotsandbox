@@ -23,7 +23,7 @@ const Header: NextComponentType<NextPageContext, {}, HeaderProps> = ({
         })
       }
     >
-      <p className="font-medium text-zinc-300 whitespace-nowrap">Show</p>
+      <p className="font-medium text-zinc-700 whitespace-nowrap">Show</p>
     </Toggle>
     <Toggle
       enabled={config.header.anchored}
@@ -36,10 +36,10 @@ const Header: NextComponentType<NextPageContext, {}, HeaderProps> = ({
         })
       }
     >
-      <p className="font-medium text-zinc-300 whitespace-nowrap">Anchored</p>
+      <p className="font-medium text-zinc-700 whitespace-nowrap">Anchored</p>
     </Toggle>
     <div className="space-y-2">
-      <h1 className="block text-sm font-medium text-zinc-100 ">Title</h1>
+      <h1 className="block text-sm font-medium text-zinc-800 ">Title</h1>
       <input
         value={config.header.content.title}
         onChange={(e) =>
@@ -55,11 +55,11 @@ const Header: NextComponentType<NextPageContext, {}, HeaderProps> = ({
         }
         placeholder="An all-in-on tool fo..."
         type="text"
-        className="appearance-none form-input focus:outline-none flex w-full justify-between items-center space-x-2 border border-zinc-800 hover:border-sky-500 text-zinc-200 bg-zinc-900 hover:bg-sky-900 bg-opacity-25 hover:bg-opacity-25 transition-all cursor-pointer bg py-2 px-4 rounded-lg"
+        className="flex text-center w-full justify-between items-center space-x-2 border border-zinc-200  text-zinc-800 bg-white  hover:bg-zinc-50 transition-all cursor-pointer bg p-3 rounded-lg font-medium "
       />
     </div>
     <div className="space-y-2">
-      <h1 className="block text-sm font-medium text-zinc-100 ">Subtitle</h1>
+      <h1 className="block text-sm font-medium text-zinc-800 ">Subtitle</h1>
       <input
         value={config.header.content.subtitle}
         onChange={(e) =>
@@ -75,11 +75,11 @@ const Header: NextComponentType<NextPageContext, {}, HeaderProps> = ({
         }
         placeholder="Amazing features for..."
         type="text"
-        className="appearance-none form-input focus:outline-none flex w-full justify-between items-center space-x-2 border border-zinc-800 hover:border-sky-500 text-zinc-200 bg-zinc-900 hover:bg-sky-900 bg-opacity-25 hover:bg-opacity-25 transition-all cursor-pointer bg py-2 px-4 rounded-lg"
+        className="flex text-center w-full justify-between items-center space-x-2 border border-zinc-200  text-zinc-800 bg-white  hover:bg-zinc-50 transition-all cursor-pointer bg p-3 rounded-lg font-medium "
       />
     </div>
     <div className="space-y-2">
-      <h1 className="block text-sm font-medium text-zinc-100 ">Align</h1>
+      <h1 className="block text-sm font-medium text-zinc-800 ">Align</h1>
       <div className="flex space-x-2 rounded-xl bg-gray-100 dark:bg-black dark:border dark:border-zinc-900 p-1 max-w-4xl ">
         <button
           onClick={() =>
@@ -95,7 +95,7 @@ const Header: NextComponentType<NextPageContext, {}, HeaderProps> = ({
             "ring-white ring-opacity-60 ring-offset-2 ring-offset-sky-400 focus:outline-none focus:ring-2 dark:ring-transparent",
             config.header.align === "horizontal"
               ? "bg-white text-sky-700 dark:text-sky-500 shadow dark:bg-zinc-900"
-              : "text-gray-700 hover:bg-white/[0.12] hover:text-gray-600 dark:hover:text-zinc-200 dark:text-zinc-300"
+              : "text-gray-700 hover:bg-white/[0.12] hover:text-gray-600 dark:hover:text-zinc-200 dark:text-zinc-700"
           )}
         >
           <h1 className="">Horizontal</h1>
@@ -114,7 +114,7 @@ const Header: NextComponentType<NextPageContext, {}, HeaderProps> = ({
             "ring-white ring-opacity-60 ring-offset-2 ring-offset-sky-400 focus:outline-none focus:ring-2 dark:ring-transparent",
             config.header.align === "vertical"
               ? "bg-white text-sky-700 dark:text-sky-500 shadow dark:bg-zinc-900"
-              : "text-gray-700 hover:bg-white/[0.12] hover:text-gray-600 dark:hover:text-zinc-200 dark:text-zinc-300"
+              : "text-gray-700 hover:bg-white/[0.12] hover:text-gray-600 dark:hover:text-zinc-200 dark:text-zinc-700"
           )}
         >
           <h1 className="">Vertical</h1>
@@ -123,7 +123,7 @@ const Header: NextComponentType<NextPageContext, {}, HeaderProps> = ({
     </div>
 
     <div className=" space-y-2">
-      <label className="font-medium text-zinc-300">Color</label>
+      <label className="font-medium text-zinc-700">Color</label>image
       <div className="flex justify-between items-center">
         <ColorPicker
           type="rgba"
@@ -153,7 +153,7 @@ const Header: NextComponentType<NextPageContext, {}, HeaderProps> = ({
               },
             });
           }}
-          className="flex items-center justify-center space-x-2 border border-zinc-800 text-zinc-200 bg-zinc-900 hover:bg-zinc-800 bg-opacity-25 hover:bg-opacity-25 transition-all cursor-pointer bg p-2 rounded-lg"
+          className="flex items-center justify-center space-x-2 border border-zinc-200 text-zinc-800  bg-white hover:bg-zinc-50 transition-all cursor-pointer p-3 rounded-lg font-medium"
         >
           <RefreshIcon className="h-4 w-4" />
         </button>
@@ -173,7 +173,7 @@ const Header: NextComponentType<NextPageContext, {}, HeaderProps> = ({
         })
       }
     >
-      <p className="font-medium text-zinc-300 whitespace-nowrap">Bold</p>
+      <p className="font-medium text-zinc-700 whitespace-nowrap">Bold</p>
     </Toggle>
     <Toggle
       enabled={config.header.content.italic}
@@ -189,11 +189,11 @@ const Header: NextComponentType<NextPageContext, {}, HeaderProps> = ({
         })
       }
     >
-      <p className="font-medium text-zinc-300 whitespace-nowrap">Italic</p>
+      <p className="font-medium text-zinc-700 whitespace-nowrap">Italic</p>
     </Toggle>
     <Range
-    step={0.1}
-    showValues={false}
+      step={0.1}
+      showValues={false}
       value={config.header.content.size}
       set={(val) =>
         updateConfig({
@@ -210,7 +210,7 @@ const Header: NextComponentType<NextPageContext, {}, HeaderProps> = ({
       max={150}
     >
       <div className="flex space-x-2 items-center">
-        <p className=" font-medium text-zinc-300 whitespace-nowrap">Size</p>
+        <p className=" font-medium text-zinc-700 whitespace-nowrap">Size</p>
         <button
           className="hover:text-zinc-400 transition-colors"
           onClick={() => {
@@ -230,8 +230,8 @@ const Header: NextComponentType<NextPageContext, {}, HeaderProps> = ({
       </div>
     </Range>
     <Range
-    step={0.1}
-    showValues={false}
+      step={0.1}
+      showValues={false}
       value={config.header.content.padding}
       set={(val) =>
         updateConfig({
@@ -248,7 +248,7 @@ const Header: NextComponentType<NextPageContext, {}, HeaderProps> = ({
       max={15}
     >
       <div className="flex space-x-2 items-center">
-        <p className=" font-medium text-zinc-300 whitespace-nowrap">Padding</p>
+        <p className=" font-medium text-zinc-700 whitespace-nowrap">Padding</p>
         <button
           className="hover:text-zinc-400 transition-colors"
           onClick={() => {
@@ -269,7 +269,7 @@ const Header: NextComponentType<NextPageContext, {}, HeaderProps> = ({
     </Range>
     {!config.header.anchored && (
       <Range
-      showValues={false}
+        showValues={false}
         value={config.header.content.translateX}
         set={(val) =>
           updateConfig({
@@ -286,9 +286,7 @@ const Header: NextComponentType<NextPageContext, {}, HeaderProps> = ({
         max={100}
       >
         <div className="flex space-x-2 items-center">
-          <p className=" font-medium text-zinc-300 whitespace-nowrap">
-            X
-          </p>
+          <p className=" font-medium text-zinc-700 whitespace-nowrap">X</p>
           <button
             className="hover:text-zinc-400 transition-colors"
             onClick={() => {

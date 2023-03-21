@@ -4,99 +4,11 @@
 @tailwind components;
 @tailwind utilities;
 
-.screenshot {
-  transform: translate3d(0px, -16px, 0px) rotateX(60deg) rotateZ(30deg);
-  transform-style: preserve-3d;
-}
-.template2 {
-  transform: perspective(20rem) rotateX(5deg) rotateY(-15deg) rotateZ(10deg);
-}
 @layer utilities {
-  .gradient-bg {
-    background: radial-gradient(
-      106.9% 91.8% at 100% 100%,
-      #2563eb 0%,
-      var(--token-8c47652b-dea5-4767-a9f2-5d952dcce49a, rgb(255, 255, 255)) 100%
-    );
-  }
   input[type="number"]::-webkit-inner-spin-button,
   input[type="number"]::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
-  }
-  .template4 {
-    transform: perspective(var(--perspective-var))
-      rotateX(calc(var(--rotateX-var) * -1))
-      rotateY(calc(var(--rotateY-var) * -1))
-      rotateZ(calc(var(--rotateZ-var) * -1)) scale(var(--zoom-var));
-  }
-  .template3 {
-    transform: perspective(var(--perspective-var)) rotateX(var(--rotateX-var))
-      rotateY(var(--rotateY-var)) rotateZ(var(--rotateZ-var))
-      scale(var(--zoom-var));
-  }
-
-  .container {
-    gap: var(--grid-gap);
-    transform: rotateX(var(--container-rotate-x))
-      rotateY(var(--container-rotate-y)) rotateZ(var(--container-rotate-z))
-      scale(var(--container-zoom));
-  }
-
-  .template5 > :not([hidden]) ~ :not([hidden]) {
-    --tw-space-x-reverse: 0;
-    margin-right: calc(var(--gap-x) * var(--tw-space-x-reverse));
-    margin-left: calc(var(--gap-x) * calc(1 - var(--tw-space-x-reverse)));
-  }
-  .template6 div:nth-child(odd) {
-    transform-style: preserve-3d;
-    transform: translate3d(var(--gap-x), var(--gap-y), var(--gap-z))
-      perspective(var(--perspective-var)) rotateX(var(--rotateX-var))
-      rotateY(var(--rotateY-var)) rotateZ(var(--rotateZ-var));
-  }
-  .template6 div:nth-child(even) {
-    transform-style: preserve-3d;
-    transform: rotateX(calc(var(--rotateX-var) * -1))
-      rotateY(calc(var(--rotateY-var) * -1))
-      rotateZ(calc(var(--rotateZ-var) * -1));
-  }
-  .template7 div:nth-child(odd) {
-    transform: rotateX(var(--rotateX-var)) rotateZ(var(--rotateZ-var))
-      scale(var(--zoom-var))
-      translate3d(
-        calc(-1 * var(--gap-x)),
-        calc(-1 * var(--gap-y)),
-        calc(-1 * var(--gap-z))
-      );
-    transform-style: preserve-3d;
-    box-shadow: 1px 1px 0 1px #f9f9fb, -1px 0 28px 0 rgba(34, 33, 81, 0.01),
-      calc(var(--gap-z) * -5.4) calc(var(--gap-z) * -5.4) 28px
-        calc(var(--gap-z) * -0.625)
-        rgba(34, 33, 81, calc(0.5 - ((var(--blur) - 1) * -0.25)));
-  }
-  .template7 div:nth-child(even) {
-    transform: rotateX(var(--rotateX-var)) rotateZ(var(--rotateZ-var))
-      scale(var(--zoom-var))
-      translate3d(
-        calc(-1 * var(--gap-x)),
-        calc(-1 * var(--gap-y)),
-        calc(-1 * var(--gap-z))
-      );
-    transform-style: preserve-3d;
-    box-shadow: 1px 1px 0 1px #f9f9fb, -1px 0 28px 0 rgba(34, 33, 81, 0.01),
-      calc(var(--gap-z) * -5.4) calc(var(--gap-z) * -5.4) 28px
-        calc(var(--gap-z) * -0.625)
-        rgba(34, 33, 81, calc(0.5 - ((var(--blur) - 1) * -0.25)));
-  }
-
-  .grid-effect-dark {
-    background-size: 40px 40px;
-    background-image: linear-gradient(
-        90deg,
-        hsl(240, 6%, 10%) 1px,
-        transparent 0
-      ),
-      linear-gradient(180deg, hsl(240, 6%, 10%) 1px, transparent 0);
   }
   .grid-effect-light {
     background-size: 40px 40px;
@@ -115,20 +27,19 @@
   }
 
   .slider {
-    -webkit-appearance: none; /* Override default CSS styles */
+    -webkit-appearance: none; 
     appearance: none;
-    outline: none; /* Remove outline */
+    outline: none;
   }
 
-  /* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
   .slider::-webkit-slider-thumb {
-    -webkit-appearance: none; /* Override default look */
+    -webkit-appearance: none;
     appearance: none;
-    width: 15px; /* Set a specific slider handle width */
-    height: 15px; /* Slider handle height */
+    width: 15px; 
+    height: 15px; 
     border-radius: 100%;
-    background: white; /* Green background */
-    cursor: pointer; /* Cursor on hover */
+    background: #c4c4c9;
+    cursor: pointer;
   }
   input[type="range"]::-webkit-slider-runnable-track {
     box-shadow: none;
@@ -141,8 +52,8 @@
       linear,
       50% 0%,
       50% 100%,
-      color-stop(0%, #2563eb),
-      color-stop(100%, #2563eb)
+      color-stop(0%, #0ea5e9),
+      color-stop(100%, #0ea5e9)
     );
     background-repeat: no-repeat;
     -webkit-appearance: none;
@@ -157,7 +68,7 @@
 }
 
 .toastProgresssky {
-  background: #1d4ed8 !important;
+  background:#0ea5e9 !important;
 }
 
 .Tooltip {
@@ -168,9 +79,6 @@
   padding: 4px 6px;
   font-size: 14px;
 }
-.token-field {
-  -webkit-text-security: disc;
-}
 
 @layer base {
   html {
@@ -179,31 +87,4 @@
 }
 html {
   height: 100%;
-}
-
-.container {
-  position: relative;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-.moveable {
-  font-family: "Roboto", sans-serif;
-  position: relative;
-  width: 250px;
-  height: 200px;
-  text-align: center;
-  font-size: 40px;
-  margin: 0px auto;
-  font-weight: 100;
-  letter-spacing: 1px;
-}
-
-.moveable span {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  white-space: nowrap;
 }

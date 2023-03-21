@@ -23,7 +23,7 @@ const Watermarks: NextComponentType<NextPageContext, {}, WatermarksProps> = ({
         })
       }
     >
-      <p className="font-medium text-zinc-300 whitespace-nowrap">Show</p>
+      <p className="font-medium text-zinc-700 whitespace-nowrap">Show</p>
     </Toggle>
     <div className="space-y-2">
       <h1 className="block text-sm font-medium text-zinc-100 ">Theme</h1>
@@ -135,7 +135,7 @@ export const Watermark = forwardRef<HTMLSpanElement, WatermarkProps>(
         placement && positions[placement],
         placement && "absolute",
         theme === "dark"
-          ? "bg-black border-zinc-600 text-zinc-300"
+          ? "bg-black border-zinc-600 text-zinc-700"
           : "border-zinc-200 text-black bg-white",
         "border-2 shadow-xl z-10 flex space-x-1 items-start bg-opacity-80 flex-col"
       )}

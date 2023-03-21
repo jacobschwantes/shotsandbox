@@ -33,7 +33,7 @@ const Range: NextComponentType<NextPageContext, {}, RangeProps> = ({
         style={{
           backgroundSize: ((value - min) * 100) / (max - min) + "% 100%",
         }}
-        className="appearance-none h-0.5 p-0 focus:outline-none focus:ring-0 focus:shadow-none bg-zinc-600 rounded-full slider w-full"
+        className="appearance-none h-0.5 p-0 focus:outline-none focus:ring-0 focus:shadow-none bg-zinc-300 rounded-full slider w-full"
         value={value}
         type="range"
         min={min}
@@ -75,7 +75,7 @@ const Range: NextComponentType<NextPageContext, {}, RangeProps> = ({
             type="number"
             name="number-input"
             id="number-input"
-            className="form-input shadow-sm focus:ring-sky-600 focus:border-sky-600 block max-w-[75px] sm:text-sm border-gray-300 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200 rounded-md py-1.5"
+            className="flex text-center w-20 justify-between items-center space-x-2 border border-zinc-200  text-zinc-800 bg-white  hover:bg-zinc-50 transition-all cursor-pointer bg p-3 rounded-lg font-medium "
           />
         </div>
       )}

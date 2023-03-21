@@ -52,7 +52,7 @@ const Background: NextComponentType<NextPageContext, {}, BackgroundProps> = ({
           max={359}
         >
           <div className="flex space-x-2 items-center">
-            <p className=" font-medium text-zinc-300">Direction</p>
+            <p className=" font-medium text-zinc-700">Direction</p>
             <button
               className="hover:text-zinc-400 transition-colors"
               onClick={() => {
@@ -72,7 +72,7 @@ const Background: NextComponentType<NextPageContext, {}, BackgroundProps> = ({
           </div>
         </Range>
         <div className=" space-y-7  ">
-          <label className="font-medium text-zinc-300">Colors</label>
+          <label className="font-medium text-zinc-700">Colors</label>
 
           <GradientList
             list={config.background.gradient.stops}
@@ -90,7 +90,7 @@ const Background: NextComponentType<NextPageContext, {}, BackgroundProps> = ({
           />
         </div>
         <div className="space-y-2">
-          <label className="font-medium text-zinc-300">Presets</label>
+          <label className="font-medium text-zinc-700">Presets</label>
           <div className="grid grid-cols-7 gap-2">
             {gradientPresets.map(({ stops, direction }, index) => (
               <button
@@ -111,7 +111,7 @@ const Background: NextComponentType<NextPageContext, {}, BackgroundProps> = ({
                     },
                   })
                 }
-                className="aspect-square h-full rounded-full border border-zinc-600"
+                className="aspect-square h-full rounded-full border border-zinc-300"
               ></button>
             ))}
           </div>
@@ -120,7 +120,7 @@ const Background: NextComponentType<NextPageContext, {}, BackgroundProps> = ({
     ) : (
       <>
         <div className="space-y-2">
-          <label className="font-medium text-zinc-300">Color</label>
+          <label className="font-medium text-zinc-700">Color</label>
           <ColorPicker
             type="hex"
             color={config.background.color}
@@ -135,7 +135,7 @@ const Background: NextComponentType<NextPageContext, {}, BackgroundProps> = ({
           />
         </div>
         <div className="space-y-2">
-          <label className="font-medium text-zinc-300">Presets</label>
+          <label className="font-medium text-zinc-700">Presets</label>
           <div className="grid grid-cols-7 gap-2">
             {colorPresets.map((color, index) => (
               <button
@@ -149,7 +149,7 @@ const Background: NextComponentType<NextPageContext, {}, BackgroundProps> = ({
                     },
                   })
                 }
-                className="aspect-square h-full rounded-full border border-zinc-600"
+                className="aspect-square h-full rounded-full border border-zinc-300"
               ></button>
             ))}
           </div>
@@ -251,7 +251,7 @@ const Item = ({ item, changeColor, removeStop, canDelete }: ItemProps) => {
         <Tooltip label="Move">
           <div className="cursor-grab active:cursor-grabbing absolute select-none -top-5 rotate-90">
             <svg
-              className="h-4 w-4 text-zinc-400 hover:text-zinc-200 transition-all active:text-zinc-200 select-none"
+              className="h-4 w-4 text-zinc-400 hover:text-zinc-800 transition-all active:text-zinc-800 select-none"
               stroke="currentColor"
               fill="currentColor"
               onPointerDown={(event) => dragControls.start(event)}
@@ -268,7 +268,7 @@ const Item = ({ item, changeColor, removeStop, canDelete }: ItemProps) => {
               className="absolute -bottom-5"
               onClick={() => removeStop(item.id)}
             >
-              <XIcon className="h-4 w-4 text-zinc-400 hover:text-zinc-200 transition-all" />
+              <XIcon className="h-4 w-4 text-zinc-400 hover:text-zinc-800 transition-all" />
             </button>
           </Tooltip>
         )}

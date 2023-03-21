@@ -12,7 +12,7 @@ const Border: NextComponentType<NextPageContext, {}, BorderProps> = ({
 }) => (
   <>
     <div className=" space-y-2">
-      <label className="font-medium  text-zinc-300">Color</label>
+      <label className="font-medium  text-zinc-700">Color</label>
       <div className="flex justify-between items-center">
         <ColorPicker
           type="rgba"
@@ -36,7 +36,7 @@ const Border: NextComponentType<NextPageContext, {}, BorderProps> = ({
               },
             });
           }}
-          className="flex items-center justify-center space-x-2 border border-zinc-800 text-zinc-200 bg-zinc-900 hover:bg-zinc-800 bg-opacity-25 hover:bg-opacity-25 transition-all cursor-pointer bg p-2 rounded-lg"
+          className="flex items-center justify-center space-x-2 border border-zinc-200 text-zinc-800  bg-white hover:bg-zinc-50 transition-all cursor-pointer p-3 rounded-lg font-medium"
         >
           <RefreshIcon className="h-4 w-4" />
         </button>
@@ -58,7 +58,7 @@ const Border: NextComponentType<NextPageContext, {}, BorderProps> = ({
       max={2}
     >
       <div className="flex space-x-2 items-center">
-        <p className=" font-medium text-zinc-300">Border Radius</p>
+        <p className=" font-medium text-zinc-700">Border Radius</p>
         <button
           className="hover:text-zinc-400 transition-colors"
           onClick={() => {
@@ -90,7 +90,7 @@ const Border: NextComponentType<NextPageContext, {}, BorderProps> = ({
       max={10}
     >
       <div className="flex space-x-2 items-center">
-        <p className=" font-medium text-zinc-300">Border Width</p>
+        <p className=" font-medium text-zinc-700">Border Width</p>
         <button
           className="hover:text-zinc-400 transition-colors"
           onClick={() => {
