@@ -25,7 +25,7 @@ interface Props {
 }
 
 const Popover = ({ children, render, placement, gap = 5 }: Props) => {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
   const { x, y, reference, floating, strategy, context } = useFloating({
     open,
     onOpenChange: setOpen,
@@ -58,7 +58,7 @@ const Popover = ({ children, render, placement, gap = 5 }: Props) => {
             initial={{ opacity: 0, scale: 0.85 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.85 }}
-            transition={{ type: "spring", damping: 20, stiffness: 300 }}
+            transition={{ type: "tween", ease: "easeInOut", duration: .125 }}
             {...getFloatingProps({
               ref: floating,
               style: {
