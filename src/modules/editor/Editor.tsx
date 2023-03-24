@@ -910,7 +910,7 @@ const Editor: NextPage<EditorProps> = ({ project }) => {
 
           {/* Settings panel start */}
           <div className=" sm:w-[320px] w-full p-5 space-y-3 overflow-y-auto overflow-x-hidden bg-white flex-1  ">
-            <AnimatePresence mode="wait">
+            <AnimatePresence initial={false} mode="wait">
               <motion.div
                 key={active.id}
                 animate={{ opacity: 1, y: 0 }}

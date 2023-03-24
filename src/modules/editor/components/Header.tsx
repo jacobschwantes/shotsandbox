@@ -123,7 +123,7 @@ const Header: NextComponentType<NextPageContext, {}, HeaderProps> = ({
     </div>
 
     <div className=" space-y-2">
-      <label className="font-medium text-zinc-700">Color</label>image
+      <label className="font-medium text-zinc-700">Color</label>
       <div className="flex justify-between items-center">
         <ColorPicker
           type="rgba"
