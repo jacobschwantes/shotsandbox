@@ -21,12 +21,12 @@ const ColorPicker: NextComponentType<NextPageContext, {}, ColorPickerProps> = ({
       
         render={() =>
           type === "hex" ? (
-            <div className="bg-zinc-900 p-3 rounded-lg space-y-3">
+            <div className="bg-zinc-200 p-3 rounded-lg space-y-3">
               <HexColorPicker color={color} onChange={setColor} className="" />
               <div className="flex items-center space-x-3">
                 <p className="text-zinc-400 font-bold text-base">HEX</p>
                 <HexColorInput
-                  className="form-input shadow-sm focus:ring-sky-500 focus:border-sky-500 block sm:text-sm border-zinc-700 rounded-md bg-zinc-800 w-20 text-zinc-300 font-medium"
+                  className="form-input shadow-sm focus:ring-sky-500 focus:border-sky-500 block sm:text-sm border-none rounded-md bg-zinc-300 w-20 text-zinc-600 font-medium"
                   color={color}
                   onChange={setColor}
                 />

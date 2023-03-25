@@ -3,12 +3,12 @@ import { Config } from "@customTypes/configs";
 import { RefreshIcon } from "@heroicons/react/solid";
 import { Range, ColorPicker } from "@components/index";
 interface BorderProps {
-  config: Config;
-  updateConfig: (newConfig: Partial<Config>) => void;
+  layer: ImageLayer;
+  updateLayer: (newConfig: Partial<Config>) => void;
 }
 const Border: NextComponentType<NextPageContext, {}, BorderProps> = ({
   config,
-  updateConfig,
+  updateLayer,
 }) => (
   <>
     <div className=" space-y-2">
@@ -18,7 +18,7 @@ const Border: NextComponentType<NextPageContext, {}, BorderProps> = ({
           type="rgba"
           color={config.border.color}
           setColor={(val) =>
-            updateConfig({
+            updateLayer({
               border: {
                 ...config.border,
                 color: val,
@@ -29,7 +29,7 @@ const Border: NextComponentType<NextPageContext, {}, BorderProps> = ({
 
         <button
           onClick={() => {
-            updateConfig({
+            updateLayer({
               border: {
                 ...config.border,
                 color: "rgba(0, 0, 0, 1)",
@@ -47,7 +47,7 @@ const Border: NextComponentType<NextPageContext, {}, BorderProps> = ({
       showValues={false}
       value={config.border.radius}
       set={(val) =>
-        updateConfig({
+        updateLayer({
           border: {
             ...config.border,
             radius: val,
@@ -62,7 +62,7 @@ const Border: NextComponentType<NextPageContext, {}, BorderProps> = ({
         <button
           className="hover:text-zinc-400 transition-colors"
           onClick={() => {
-            updateConfig({
+            updateLayer({
               border: {
                 ...config.border,
                 radius: 0.5,
@@ -79,7 +79,7 @@ const Border: NextComponentType<NextPageContext, {}, BorderProps> = ({
       showValues={false}
       value={config.border.width}
       set={(val) =>
-        updateConfig({
+        updateLayer({
           border: {
             ...config.border,
             width: val,
@@ -94,7 +94,7 @@ const Border: NextComponentType<NextPageContext, {}, BorderProps> = ({
         <button
           className="hover:text-zinc-400 transition-colors"
           onClick={() => {
-            updateConfig({
+            updateLayer({
               border: {
                 ...config.border,
                 width: 0,

@@ -4,18 +4,18 @@ import { RefreshIcon } from "@heroicons/react/solid";
 import { Range } from "@components/index";
 interface RotationProps {
   config: Config;
-  updateConfig: (newConfig: Partial<Config>) => void;
+  updateLayer: (newConfig: Partial<Config>) => void;
 }
 const Rotation: NextComponentType<NextPageContext, {}, RotationProps> = ({
   config,
-  updateConfig,
+  updateLayer,
 }) => (
   <div className="space-y-14">
     <Range
       showValues={false}
       value={config.orientation.perspective}
       set={(val) =>
-        updateConfig({
+        updateLayer({
           orientation: {
             ...config.orientation,
             perspective: val,
@@ -32,7 +32,7 @@ const Rotation: NextComponentType<NextPageContext, {}, RotationProps> = ({
         <button
           className="hover:text-zinc-400 transition-colors"
           onClick={() => {
-            updateConfig({
+            updateLayer({
               orientation: {
                 ...config.orientation,
                 perspective: 3000,
@@ -48,7 +48,7 @@ const Rotation: NextComponentType<NextPageContext, {}, RotationProps> = ({
       label="degree"
       value={config.orientation.rotateX}
       set={(val) =>
-        updateConfig({
+        updateLayer({
           orientation: {
             ...config.orientation,
             rotateX: val,
@@ -63,7 +63,7 @@ const Rotation: NextComponentType<NextPageContext, {}, RotationProps> = ({
         <button
           className="hover:text-zinc-400 transition-colors"
           onClick={() => {
-            updateConfig({
+            updateLayer({
               orientation: {
                 ...config.orientation,
                 rotateX: 0,
@@ -79,7 +79,7 @@ const Rotation: NextComponentType<NextPageContext, {}, RotationProps> = ({
       label="degree"
       value={config.orientation.rotateY}
       set={(val) =>
-        updateConfig({
+        updateLayer({
           orientation: {
             ...config.orientation,
             rotateY: val,
@@ -94,7 +94,7 @@ const Rotation: NextComponentType<NextPageContext, {}, RotationProps> = ({
         <button
           className="hover:text-zinc-400 transition-colors"
           onClick={() => {
-            updateConfig({
+            updateLayer({
               orientation: {
                 ...config.orientation,
                 rotateY: 0,
@@ -110,7 +110,7 @@ const Rotation: NextComponentType<NextPageContext, {}, RotationProps> = ({
       label="degree"
       value={config.orientation.rotateZ}
       set={(val) =>
-        updateConfig({
+        updateLayer({
           orientation: {
             ...config.orientation,
             rotateZ: val,
@@ -125,7 +125,7 @@ const Rotation: NextComponentType<NextPageContext, {}, RotationProps> = ({
         <button
           className="hover:text-zinc-400 transition-colors"
           onClick={() => {
-            updateConfig({
+            updateLayer({
               orientation: {
                 ...config.orientation,
                 rotateZ: 0,
@@ -141,7 +141,7 @@ const Rotation: NextComponentType<NextPageContext, {}, RotationProps> = ({
       label="percent"
       value={config.size.scale}
       set={(val) =>
-        updateConfig({
+        updateLayer({
           size: {
             ...config.size,
             scale: val,
@@ -156,7 +156,7 @@ const Rotation: NextComponentType<NextPageContext, {}, RotationProps> = ({
         <button
           className="hover:text-zinc-400 transition-colors"
           onClick={() => {
-            updateConfig({
+            updateLayer({
               size: {
                 ...config.size,
                 scale: 80,
@@ -173,7 +173,7 @@ const Rotation: NextComponentType<NextPageContext, {}, RotationProps> = ({
       <div className="grid grid-cols-2 gap-5">
         <button
           onClick={() => {
-            updateConfig({
+            updateLayer({
               size: {
                 ...config.size,
                 scale: 90,
@@ -200,7 +200,7 @@ const Rotation: NextComponentType<NextPageContext, {}, RotationProps> = ({
         </button>
         <button
           onClick={() => {
-            updateConfig({
+            updateLayer({
               size: {
                 ...config.size,
                 scale: 90,
@@ -231,7 +231,7 @@ const Rotation: NextComponentType<NextPageContext, {}, RotationProps> = ({
     </div>
     <button
       onClick={() => {
-        updateConfig({
+        updateLayer({
           size: {
             ...config.size,
             scale: 80,

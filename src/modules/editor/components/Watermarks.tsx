@@ -5,17 +5,17 @@ import clsx from "clsx";
 import React, { forwardRef } from "react";
 interface WatermarksProps {
   config: Config;
-  updateConfig: (newConfig: Partial<Config>) => void;
+  updateLayer: (newConfig: Partial<Config>) => void;
 }
 const Watermarks: NextComponentType<NextPageContext, {}, WatermarksProps> = ({
   config,
-  updateConfig,
+  updateLayer,
 }) => (
   <>
     <Toggle
       enabled={config.watermark.show}
       setEnabled={(value) =>
-        updateConfig({
+        updateLayer({
           watermark: {
             ...config.watermark,
             show: value,
@@ -31,7 +31,7 @@ const Watermarks: NextComponentType<NextPageContext, {}, WatermarksProps> = ({
         selected={config.watermark.theme}
         tabs={["dark", "light"]}
         setSelected={(theme) =>
-          updateConfig({
+          updateLayer({
             watermark: {
               ...config.watermark,
               theme,
@@ -45,7 +45,7 @@ const Watermarks: NextComponentType<NextPageContext, {}, WatermarksProps> = ({
       <div className="overflow-hidden border border-zinc-800 rounded-xl relative min-w-[230px] min-h-[200px]">
         <button
           onClick={() => {
-            updateConfig({
+            updateLayer({
               watermark: {
                 ...config.watermark,
                 placement: "top-right",
@@ -61,7 +61,7 @@ const Watermarks: NextComponentType<NextPageContext, {}, WatermarksProps> = ({
         />
         <button
           onClick={() => {
-            updateConfig({
+            updateLayer({
               watermark: {
                 ...config.watermark,
                 placement: "top-left",
@@ -77,7 +77,7 @@ const Watermarks: NextComponentType<NextPageContext, {}, WatermarksProps> = ({
         />
         <button
           onClick={() => {
-            updateConfig({
+            updateLayer({
               watermark: {
                 ...config.watermark,
                 placement: "bottom-right",
@@ -93,7 +93,7 @@ const Watermarks: NextComponentType<NextPageContext, {}, WatermarksProps> = ({
         />
         <button
           onClick={() => {
-            updateConfig({
+            updateLayer({
               watermark: {
                 ...config.watermark,
                 placement: "bottom-left",

@@ -5,11 +5,11 @@ import { ColorPicker } from "@components/index";
 import clsx from "clsx";
 interface ShadowProps {
   config: Config;
-  updateConfig: (newConfig: Partial<Config>) => void;
+  updateLayer: (newConfig: Partial<Config>) => void;
   presets: Partial<ShadowConfig>[];
 }
 const Shadow: NextComponentType<NextPageContext, {}, ShadowProps> = ({
-  updateConfig,
+  updateLayer,
   config,
   presets,
 }) => (
@@ -21,7 +21,7 @@ const Shadow: NextComponentType<NextPageContext, {}, ShadowProps> = ({
           type="rgba"
           color={config.shadow.color}
           setColor={(val) => {
-            updateConfig({
+            updateLayer({
               shadow: {
                 ...config.shadow,
                 color: val,
@@ -32,7 +32,7 @@ const Shadow: NextComponentType<NextPageContext, {}, ShadowProps> = ({
 
         <button
           onClick={() => {
-            updateConfig({
+            updateLayer({
               shadow: {
                 ...config.shadow,
                 color: "rgba(17, 12, 46, 0.2)",
@@ -52,7 +52,7 @@ const Shadow: NextComponentType<NextPageContext, {}, ShadowProps> = ({
           <div key={index} className="space-y-2">
             <button
               onClick={() =>
-                updateConfig({
+                updateLayer({
                   shadow: {
                     ...config.shadow,
                     ...item,

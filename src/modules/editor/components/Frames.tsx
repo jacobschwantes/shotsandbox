@@ -5,12 +5,12 @@ import { RefreshIcon } from "@heroicons/react/solid";
 import clsx from "clsx";
 interface FramesProps {
   config: Config;
-  updateConfig: (newConfig: Partial<Config>) => void;
+  updateLayer: (newConfig: Partial<Config>) => void;
   presets: { type: string; config: FrameConfig }[];
 }
 const Frames: NextComponentType<NextPageContext, {}, FramesProps> = ({
   config,
-  updateConfig,
+  updateLayer,
   presets,
 }) => {
   console.log(config);
@@ -26,7 +26,7 @@ const Frames: NextComponentType<NextPageContext, {}, FramesProps> = ({
           max={1}
           value={config.frame.opacity}
           set={(value) =>
-            updateConfig({
+            updateLayer({
               frame: {
                 ...config.frame,
                 opacity: value,
@@ -39,7 +39,7 @@ const Frames: NextComponentType<NextPageContext, {}, FramesProps> = ({
             <button
               className="hover:text-zinc-400 transition-colors"
               onClick={() => {
-                updateConfig({
+                updateLayer({
                   frame: {
                     ...config.frame,
                     opacity: 1,
@@ -54,7 +54,7 @@ const Frames: NextComponentType<NextPageContext, {}, FramesProps> = ({
         <Toggle
           enabled={config.frame.show}
           setEnabled={(value) =>
-            updateConfig({
+            updateLayer({
               frame: {
                 ...config.frame,
                 show: value,
@@ -67,7 +67,7 @@ const Frames: NextComponentType<NextPageContext, {}, FramesProps> = ({
         <Toggle
           enabled={config.frame.dark}
           setEnabled={(value) =>
-            updateConfig({
+            updateLayer({
               frame: {
                 ...config.frame,
                 dark: value,
@@ -84,7 +84,7 @@ const Frames: NextComponentType<NextPageContext, {}, FramesProps> = ({
         <Toggle
           enabled={config.frame.buttons.solid}
           setEnabled={(value) =>
-            updateConfig({
+            updateLayer({
               frame: {
                 ...config.frame,
                 buttons: {
@@ -100,7 +100,7 @@ const Frames: NextComponentType<NextPageContext, {}, FramesProps> = ({
         <Toggle
           enabled={config.frame.buttons.dark}
           setEnabled={(value) =>
-            updateConfig({
+            updateLayer({
               frame: {
                 ...config.frame,
                 buttons: {
@@ -119,7 +119,7 @@ const Frames: NextComponentType<NextPageContext, {}, FramesProps> = ({
         <Toggle
           enabled={config.frame.searchBar.show}
           setEnabled={(value) =>
-            updateConfig({
+            updateLayer({
               frame: {
                 ...config.frame,
                 searchBar: {
@@ -140,7 +140,7 @@ const Frames: NextComponentType<NextPageContext, {}, FramesProps> = ({
             <button
               key={index}
               onClick={() =>
-                updateConfig({
+                updateLayer({
                   frame: {
                     ...item.config,
                   },

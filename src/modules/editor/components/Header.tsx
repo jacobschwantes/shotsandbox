@@ -4,18 +4,18 @@ import { Range, Toggle, ColorPicker } from "@components/index";
 import { RefreshIcon } from "@heroicons/react/solid";
 import clsx from "clsx";
 interface HeaderProps {
-  updateConfig: (newConfig: Partial<Config>) => void;
+  updateLayer: (newConfig: Partial<Config>) => void;
   config: Config;
 }
 const Header: NextComponentType<NextPageContext, {}, HeaderProps> = ({
-  updateConfig,
+  updateLayer,
   config,
 }) => (
   <>
     <Toggle
       enabled={config.header.show}
       setEnabled={(value) =>
-        updateConfig({
+        updateLayer({
           header: {
             ...config.header,
             show: value,
@@ -28,7 +28,7 @@ const Header: NextComponentType<NextPageContext, {}, HeaderProps> = ({
     <Toggle
       enabled={config.header.anchored}
       setEnabled={(value) =>
-        updateConfig({
+        updateLayer({
           header: {
             ...config.header,
             anchored: value,
@@ -43,7 +43,7 @@ const Header: NextComponentType<NextPageContext, {}, HeaderProps> = ({
       <input
         value={config.header.content.title}
         onChange={(e) =>
-          updateConfig({
+          updateLayer({
             header: {
               ...config.header,
               content: {
@@ -63,7 +63,7 @@ const Header: NextComponentType<NextPageContext, {}, HeaderProps> = ({
       <input
         value={config.header.content.subtitle}
         onChange={(e) =>
-          updateConfig({
+          updateLayer({
             header: {
               ...config.header,
               content: {
@@ -83,7 +83,7 @@ const Header: NextComponentType<NextPageContext, {}, HeaderProps> = ({
       <div className="flex space-x-2 rounded-xl bg-gray-100 dark:bg-black dark:border dark:border-zinc-900 p-1 max-w-4xl ">
         <button
           onClick={() =>
-            updateConfig({
+            updateLayer({
               header: {
                 ...config.header,
                 align: "horizontal",
@@ -102,7 +102,7 @@ const Header: NextComponentType<NextPageContext, {}, HeaderProps> = ({
         </button>
         <button
           onClick={() =>
-            updateConfig({
+            updateLayer({
               header: {
                 ...config.header,
                 align: "vertical",
@@ -129,7 +129,7 @@ const Header: NextComponentType<NextPageContext, {}, HeaderProps> = ({
           type="rgba"
           color={config.header.content.color}
           setColor={(val) =>
-            updateConfig({
+            updateLayer({
               header: {
                 ...config.header,
                 content: {
@@ -143,7 +143,7 @@ const Header: NextComponentType<NextPageContext, {}, HeaderProps> = ({
 
         <button
           onClick={() => {
-            updateConfig({
+            updateLayer({
               header: {
                 ...config.header,
                 content: {
@@ -162,7 +162,7 @@ const Header: NextComponentType<NextPageContext, {}, HeaderProps> = ({
     <Toggle
       enabled={config.header.content.bold}
       setEnabled={(value) =>
-        updateConfig({
+        updateLayer({
           header: {
             ...config.header,
             content: {
@@ -178,7 +178,7 @@ const Header: NextComponentType<NextPageContext, {}, HeaderProps> = ({
     <Toggle
       enabled={config.header.content.italic}
       setEnabled={(value) =>
-        updateConfig({
+        updateLayer({
           header: {
             ...config.header,
             content: {
@@ -196,7 +196,7 @@ const Header: NextComponentType<NextPageContext, {}, HeaderProps> = ({
       showValues={false}
       value={config.header.content.size}
       set={(val) =>
-        updateConfig({
+        updateLayer({
           header: {
             ...config.header,
             content: {
@@ -214,7 +214,7 @@ const Header: NextComponentType<NextPageContext, {}, HeaderProps> = ({
         <button
           className="hover:text-zinc-400 transition-colors"
           onClick={() => {
-            updateConfig({
+            updateLayer({
               header: {
                 ...config.header,
                 content: {
@@ -234,7 +234,7 @@ const Header: NextComponentType<NextPageContext, {}, HeaderProps> = ({
       showValues={false}
       value={config.header.content.padding}
       set={(val) =>
-        updateConfig({
+        updateLayer({
           header: {
             ...config.header,
             content: {
@@ -252,7 +252,7 @@ const Header: NextComponentType<NextPageContext, {}, HeaderProps> = ({
         <button
           className="hover:text-zinc-400 transition-colors"
           onClick={() => {
-            updateConfig({
+            updateLayer({
               header: {
                 ...config.header,
                 content: {
@@ -272,7 +272,7 @@ const Header: NextComponentType<NextPageContext, {}, HeaderProps> = ({
         showValues={false}
         value={config.header.content.translateX}
         set={(val) =>
-          updateConfig({
+          updateLayer({
             header: {
               ...config.header,
               content: {
@@ -290,7 +290,7 @@ const Header: NextComponentType<NextPageContext, {}, HeaderProps> = ({
           <button
             className="hover:text-zinc-400 transition-colors"
             onClick={() => {
-              updateConfig({
+              updateLayer({
                 header: {
                   ...config.header,
                   content: {
