@@ -1,12 +1,16 @@
-import { Config } from "@customTypes/configs";
+import { Config, ImageConfig } from "@customTypes/configs";
 import { NextPageContext, NextComponentType } from "next";
 import { Range } from "@components/index";
 import { RefreshIcon } from "@heroicons/react/solid";
 interface PositionProps {
+  layer: ImageConfig;
   config: Config;
+  updateLayer: (newlayer: Partial<ImageConfig>) => void;
   updateConfig: (newConfig: Partial<Config>) => void;
 }
 const Position: NextComponentType<NextPageContext, {}, PositionProps> = ({
+  updateLayer,
+  layer,
   updateConfig,
   config,
 }) => (
@@ -14,7 +18,7 @@ const Position: NextComponentType<NextPageContext, {}, PositionProps> = ({
     {/* <div className="overflow-hidden border border-zinc-800 rounded-xl relative min-w-[230px] min-h-[200px]">
       <button
         onClick={() => {
-          updateConfig({
+          updateLayer({
             position: {
               x: 50,
               y: -50,
@@ -25,7 +29,7 @@ const Position: NextComponentType<NextPageContext, {}, PositionProps> = ({
       />
       <button
         onClick={() => {
-          updateConfig({
+          updateLayer({
             position: {
               x: -50,
               y: -50,
@@ -36,7 +40,7 @@ const Position: NextComponentType<NextPageContext, {}, PositionProps> = ({
       />
       <button
         onClick={() => {
-          updateConfig({
+          updateLayer({
             position: {
               x: 50,
               y: 50,
@@ -47,7 +51,7 @@ const Position: NextComponentType<NextPageContext, {}, PositionProps> = ({
       />
       <button
         onClick={() => {
-          updateConfig({
+          updateLayer({
             position: {
               x: -50,
               y: 50,
@@ -58,7 +62,7 @@ const Position: NextComponentType<NextPageContext, {}, PositionProps> = ({
       />
       <button
         onClick={() => {
-          updateConfig({
+          updateLayer({
             position: {
               x: 0,
               y: 50,
@@ -69,7 +73,7 @@ const Position: NextComponentType<NextPageContext, {}, PositionProps> = ({
       />
       <button
         onClick={() => {
-          updateConfig({
+          updateLayer({
             position: {
               x: 0,
               y: 0,
@@ -80,7 +84,7 @@ const Position: NextComponentType<NextPageContext, {}, PositionProps> = ({
       />
       <button
         onClick={() => {
-          updateConfig({
+          updateLayer({
             position: {
               x: 0,
               y: -50,
@@ -91,7 +95,7 @@ const Position: NextComponentType<NextPageContext, {}, PositionProps> = ({
       />
       <button
         onClick={() => {
-          updateConfig({
+          updateLayer({
             position: {
               x: -50,
               y: 0,
@@ -102,7 +106,7 @@ const Position: NextComponentType<NextPageContext, {}, PositionProps> = ({
       />
       <button
         onClick={() => {
-          updateConfig({
+          updateLayer({
             position: {
               x: 50,
               y: 0,
@@ -117,10 +121,10 @@ const Position: NextComponentType<NextPageContext, {}, PositionProps> = ({
         min={-100}
         max={100}
         label="percent"
-        value={config.position.x}
+        value={layer.position.x}
         set={(val) =>
-          updateConfig({
-            position: { ...config.position, x: val },
+          updateLayer({
+            position: { ...layer.position, x: val },
           })
         }
       >
@@ -129,8 +133,8 @@ const Position: NextComponentType<NextPageContext, {}, PositionProps> = ({
           <button
             className="hover:text-zinc-400 transition-colors"
             onClick={() => {
-              updateConfig({
-                position: { ...config.position, x: 0 },
+              updateLayer({
+                position: { ...layer.position, x: 0 },
               });
             }}
           >
@@ -142,10 +146,10 @@ const Position: NextComponentType<NextPageContext, {}, PositionProps> = ({
         min={-100}
         max={100}
         label="percent"
-        value={config.position.y}
+        value={layer.position.y}
         set={(val) =>
-          updateConfig({
-            position: { ...config.position, y: val },
+          updateLayer({
+            position: { ...layer.position, y: val },
           })
         }
       >
@@ -154,8 +158,8 @@ const Position: NextComponentType<NextPageContext, {}, PositionProps> = ({
           <button
             className="hover:text-zinc-400 transition-colors"
             onClick={() => {
-              updateConfig({
-                position: { ...config.position, y: 0 },
+              updateLayer({
+                position: { ...layer.position, y: 0 },
               });
             }}
           >
@@ -197,15 +201,23 @@ const Position: NextComponentType<NextPageContext, {}, PositionProps> = ({
       </Range>
       <button
         onClick={() => {
-          updateConfig({
-            position: {
-              x: 0,
-              y: 0,
+          const newLayers = [...config.layers];
+          newLayers[0] = {
+            ...newLayers[0],
+            properties: {
+              ...newLayers[0].properties,
+              position: {
+                x: 0,
+                y: 0,
+              },
             },
+          };
+          updateConfig({
             size: {
               ...config.size,
               scale: 80,
             },
+            layers: newLayers,
           });
         }}
         className="flex items-center justify-center space-x-2 border border-zinc-200 text-zinc-800  bg-white hover:bg-zinc-50 transition-all cursor-pointer px-4 py-3 rounded-lg font-medium"

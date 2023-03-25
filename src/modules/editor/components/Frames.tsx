@@ -1,19 +1,19 @@
-import { Config, FrameConfig } from "@customTypes/configs";
+import { ImageConfig, FrameConfig } from "@customTypes/configs";
 import { NextPageContext, NextComponentType } from "next";
 import { Range, Toggle } from "@components/index";
 import { RefreshIcon } from "@heroicons/react/solid";
 import clsx from "clsx";
 interface FramesProps {
-  config: Config;
-  updateConfig: (newConfig: Partial<Config>) => void;
+  layer: ImageConfig;
+  updateLayer: (newlayer: Partial<ImageConfig>) => void;
   presets: { type: string; config: FrameConfig }[];
 }
 const Frames: NextComponentType<NextPageContext, {}, FramesProps> = ({
-  config,
-  updateConfig,
+  layer,
+  updateLayer,
   presets,
 }) => {
-  console.log(config);
+  console.log(layer);
 
   return (
     <>
@@ -24,11 +24,11 @@ const Frames: NextComponentType<NextPageContext, {}, FramesProps> = ({
           showValues={false}
           min={0.3}
           max={1}
-          value={config.frame.opacity}
+          value={layer.frame.opacity}
           set={(value) =>
-            updateConfig({
+            updateLayer({
               frame: {
-                ...config.frame,
+                ...layer.frame,
                 opacity: value,
               },
             })
@@ -39,9 +39,9 @@ const Frames: NextComponentType<NextPageContext, {}, FramesProps> = ({
             <button
               className="hover:text-zinc-400 transition-colors"
               onClick={() => {
-                updateConfig({
+                updateLayer({
                   frame: {
-                    ...config.frame,
+                    ...layer.frame,
                     opacity: 1,
                   },
                 });
@@ -52,11 +52,11 @@ const Frames: NextComponentType<NextPageContext, {}, FramesProps> = ({
           </div>
         </Range>
         <Toggle
-          enabled={config.frame.show}
+          enabled={layer.frame.show}
           setEnabled={(value) =>
-            updateConfig({
+            updateLayer({
               frame: {
-                ...config.frame,
+                ...layer.frame,
                 show: value,
               },
             })
@@ -65,11 +65,11 @@ const Frames: NextComponentType<NextPageContext, {}, FramesProps> = ({
           <p className="font-medium text-zinc-700 whitespace-nowrap">Show</p>
         </Toggle>
         <Toggle
-          enabled={config.frame.dark}
+          enabled={layer.frame.dark}
           setEnabled={(value) =>
-            updateConfig({
+            updateLayer({
               frame: {
-                ...config.frame,
+                ...layer.frame,
                 dark: value,
               },
             })
@@ -82,13 +82,13 @@ const Frames: NextComponentType<NextPageContext, {}, FramesProps> = ({
       <div className="space-y-3">
         <h2 className="font-medium text-zinc-800 text-base">Buttons</h2>
         <Toggle
-          enabled={config.frame.buttons.solid}
+          enabled={layer.frame.buttons.solid}
           setEnabled={(value) =>
-            updateConfig({
+            updateLayer({
               frame: {
-                ...config.frame,
+                ...layer.frame,
                 buttons: {
-                  ...config.frame.buttons,
+                  ...layer.frame.buttons,
                   solid: value,
                 },
               },
@@ -98,13 +98,13 @@ const Frames: NextComponentType<NextPageContext, {}, FramesProps> = ({
           <p className="font-medium text-zinc-700 whitespace-nowrap">Solid</p>
         </Toggle>
         <Toggle
-          enabled={config.frame.buttons.dark}
+          enabled={layer.frame.buttons.dark}
           setEnabled={(value) =>
-            updateConfig({
+            updateLayer({
               frame: {
-                ...config.frame,
+                ...layer.frame,
                 buttons: {
-                  ...config.frame.buttons,
+                  ...layer.frame.buttons,
                   dark: value,
                 },
               },
@@ -117,13 +117,13 @@ const Frames: NextComponentType<NextPageContext, {}, FramesProps> = ({
       <div className="space-y-3">
         <h2 className="font-medium text-zinc-800 text-base">Search Bar</h2>
         <Toggle
-          enabled={config.frame.searchBar.show}
+          enabled={layer.frame.searchBar.show}
           setEnabled={(value) =>
-            updateConfig({
+            updateLayer({
               frame: {
-                ...config.frame,
+                ...layer.frame,
                 searchBar: {
-                  ...config.frame.searchBar,
+                  ...layer.frame.searchBar,
                   show: value,
                 },
               },
@@ -140,14 +140,14 @@ const Frames: NextComponentType<NextPageContext, {}, FramesProps> = ({
             <button
               key={index}
               onClick={() =>
-                updateConfig({
+                updateLayer({
                   frame: {
                     ...item.config,
                   },
                 })
               }
               className={clsx(
-                item.config === config.frame && "border-sky-600",
+                item.config === layer.frame && "border-sky-600",
                 "p-5 rounded-lg bg-gradient-to-tr bg-white border border-zinc-300 hover:border-sky-600 transition-all duration-300 w-full"
               )}
             >
@@ -165,7 +165,7 @@ const Frames: NextComponentType<NextPageContext, {}, FramesProps> = ({
         background: `linear-gradient(70deg, ${gradientStop1}, ${gradientStop2})`,
       }} className="p-6 rounded-lg overflow-hidden aspect-square">
         <div className="rounded-lg overflow-hidden relative aspect-video h-[1080px] w-[1920pc]">
-          <Toolbar options={item.config} />
+          <Toolbar options={item.layer} />
           <img
             className="flex-1 mt-11"
             src={item.preview}
@@ -245,7 +245,7 @@ export const Toolbar: NextComponentType<NextPageContext, {}, ToolbarProps> = ({
               buttons.dark
                 ? "bg-zinc-500  border-zinc-500"
                 : "bg-red-500 border-red-500",
-              !buttons.solid && "bg-transparent",
+              !buttons.solid && "bg-opacity-0",
               "rounded-full aspect-square  "
             )}
           ></span>
@@ -258,7 +258,7 @@ export const Toolbar: NextComponentType<NextPageContext, {}, ToolbarProps> = ({
               buttons.dark
                 ? "bg-zinc-500  border-zinc-500"
                 : "bg-yellow-500 border-yellow-500",
-              !buttons.solid && "bg-transparent",
+              !buttons.solid && "bg-opacity-0",
               "rounded-full aspect-square border "
             )}
           ></span>
@@ -271,7 +271,7 @@ export const Toolbar: NextComponentType<NextPageContext, {}, ToolbarProps> = ({
               buttons.dark
                 ? "bg-zinc-500  border-zinc-500"
                 : "bg-green-500 border-green-500",
-              !buttons.solid && "bg-transparent",
+              !buttons.solid && "bg-opacity-0",
               " rounded-full  aspect-square border"
             )}
           ></span>
@@ -324,7 +324,7 @@ export const PreviewToolbar: NextComponentType<
               buttons.dark
                 ? "bg-zinc-500  border-zinc-500"
                 : "bg-red-500 border-red-500",
-              !buttons.solid && "bg-transparent",
+              !buttons.solid && "bg-opacity-0",
               "p-1 rounded-full border"
             )}
           ></span>
@@ -333,7 +333,7 @@ export const PreviewToolbar: NextComponentType<
               buttons.dark
                 ? "bg-zinc-500  border-zinc-500"
                 : "bg-yellow-500 border-yellow-500",
-              !buttons.solid && "bg-transparent",
+              !buttons.solid && "bg-opacity-0",
               "p-1 rounded-full border"
             )}
           ></span>
@@ -342,7 +342,7 @@ export const PreviewToolbar: NextComponentType<
               buttons.dark
                 ? "bg-zinc-500  border-zinc-500"
                 : "bg-green-500 border-green-500",
-              !buttons.solid && "bg-transparent",
+              !buttons.solid && "bg-opacity-0",
               "p-1 rounded-full border"
             )}
           ></span>

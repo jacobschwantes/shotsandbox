@@ -1,23 +1,23 @@
 import { NextPageContext, NextComponentType } from "next";
-import { Config } from "@customTypes/configs";
+import { ImageConfig } from "@customTypes/configs";
 import { Range, Toggle, ColorPicker } from "@components/index";
 import { RefreshIcon } from "@heroicons/react/solid";
 import clsx from "clsx";
 interface HeaderProps {
-  updateConfig: (newConfig: Partial<Config>) => void;
-  config: Config;
+  updateLayer: (newlayer: Partial<ImageConfig>) => void;
+  layer: ImageConfig;
 }
 const Header: NextComponentType<NextPageContext, {}, HeaderProps> = ({
-  updateConfig,
-  config,
+  updateLayer,
+  layer,
 }) => (
   <>
     <Toggle
-      enabled={config.header.show}
+      enabled={layer.header.show}
       setEnabled={(value) =>
-        updateConfig({
+        updateLayer({
           header: {
-            ...config.header,
+            ...layer.header,
             show: value,
           },
         })
@@ -26,11 +26,11 @@ const Header: NextComponentType<NextPageContext, {}, HeaderProps> = ({
       <p className="font-medium text-zinc-700 whitespace-nowrap">Show</p>
     </Toggle>
     <Toggle
-      enabled={config.header.anchored}
+      enabled={layer.header.anchored}
       setEnabled={(value) =>
-        updateConfig({
+        updateLayer({
           header: {
-            ...config.header,
+            ...layer.header,
             anchored: value,
           },
         })
@@ -41,13 +41,13 @@ const Header: NextComponentType<NextPageContext, {}, HeaderProps> = ({
     <div className="space-y-2">
       <h1 className="block text-sm font-medium text-zinc-800 ">Title</h1>
       <input
-        value={config.header.content.title}
+        value={layer.header.content.title}
         onChange={(e) =>
-          updateConfig({
+          updateLayer({
             header: {
-              ...config.header,
+              ...layer.header,
               content: {
-                ...config.header.content,
+                ...layer.header.content,
                 title: e.target.value,
               },
             },
@@ -61,13 +61,13 @@ const Header: NextComponentType<NextPageContext, {}, HeaderProps> = ({
     <div className="space-y-2">
       <h1 className="block text-sm font-medium text-zinc-800 ">Subtitle</h1>
       <input
-        value={config.header.content.subtitle}
+        value={layer.header.content.subtitle}
         onChange={(e) =>
-          updateConfig({
+          updateLayer({
             header: {
-              ...config.header,
+              ...layer.header,
               content: {
-                ...config.header.content,
+                ...layer.header.content,
                 subtitle: e.target.value,
               },
             },
@@ -83,9 +83,9 @@ const Header: NextComponentType<NextPageContext, {}, HeaderProps> = ({
       <div className="flex space-x-2 rounded-xl bg-gray-100 dark:bg-black dark:border dark:border-zinc-900 p-1 max-w-4xl ">
         <button
           onClick={() =>
-            updateConfig({
+            updateLayer({
               header: {
-                ...config.header,
+                ...layer.header,
                 align: "horizontal",
               },
             })
@@ -93,7 +93,7 @@ const Header: NextComponentType<NextPageContext, {}, HeaderProps> = ({
           className={clsx(
             "flex w-full items-center justify-center rounded-lg py-2.5 text-center text-sm font-medium capitalize leading-5 space-x-1 ",
             "ring-white ring-opacity-60 ring-offset-2 ring-offset-sky-400 focus:outline-none focus:ring-2 dark:ring-transparent",
-            config.header.align === "horizontal"
+            layer.header.align === "horizontal"
               ? "bg-white text-sky-700 dark:text-sky-500 shadow dark:bg-zinc-900"
               : "text-gray-700 hover:bg-white/[0.12] hover:text-gray-600 dark:hover:text-zinc-200 dark:text-zinc-700"
           )}
@@ -102,9 +102,9 @@ const Header: NextComponentType<NextPageContext, {}, HeaderProps> = ({
         </button>
         <button
           onClick={() =>
-            updateConfig({
+            updateLayer({
               header: {
-                ...config.header,
+                ...layer.header,
                 align: "vertical",
               },
             })
@@ -112,7 +112,7 @@ const Header: NextComponentType<NextPageContext, {}, HeaderProps> = ({
           className={clsx(
             "flex w-full items-center justify-center rounded-lg py-2.5 text-center text-sm font-medium capitalize leading-5 ",
             "ring-white ring-opacity-60 ring-offset-2 ring-offset-sky-400 focus:outline-none focus:ring-2 dark:ring-transparent",
-            config.header.align === "vertical"
+            layer.header.align === "vertical"
               ? "bg-white text-sky-700 dark:text-sky-500 shadow dark:bg-zinc-900"
               : "text-gray-700 hover:bg-white/[0.12] hover:text-gray-600 dark:hover:text-zinc-200 dark:text-zinc-700"
           )}
@@ -127,13 +127,13 @@ const Header: NextComponentType<NextPageContext, {}, HeaderProps> = ({
       <div className="flex justify-between items-center">
         <ColorPicker
           type="rgba"
-          color={config.header.content.color}
+          color={layer.header.content.color}
           setColor={(val) =>
-            updateConfig({
+            updateLayer({
               header: {
-                ...config.header,
+                ...layer.header,
                 content: {
-                  ...config.header.content,
+                  ...layer.header.content,
                   color: val,
                 },
               },
@@ -143,11 +143,11 @@ const Header: NextComponentType<NextPageContext, {}, HeaderProps> = ({
 
         <button
           onClick={() => {
-            updateConfig({
+            updateLayer({
               header: {
-                ...config.header,
+                ...layer.header,
                 content: {
-                  ...config.header.content,
+                  ...layer.header.content,
                   color: "rgba(0, 0, 0, 1)",
                 },
               },
@@ -160,13 +160,13 @@ const Header: NextComponentType<NextPageContext, {}, HeaderProps> = ({
       </div>
     </div>
     <Toggle
-      enabled={config.header.content.bold}
+      enabled={layer.header.content.bold}
       setEnabled={(value) =>
-        updateConfig({
+        updateLayer({
           header: {
-            ...config.header,
+            ...layer.header,
             content: {
-              ...config.header.content,
+              ...layer.header.content,
               bold: value,
             },
           },
@@ -176,13 +176,13 @@ const Header: NextComponentType<NextPageContext, {}, HeaderProps> = ({
       <p className="font-medium text-zinc-700 whitespace-nowrap">Bold</p>
     </Toggle>
     <Toggle
-      enabled={config.header.content.italic}
+      enabled={layer.header.content.italic}
       setEnabled={(value) =>
-        updateConfig({
+        updateLayer({
           header: {
-            ...config.header,
+            ...layer.header,
             content: {
-              ...config.header.content,
+              ...layer.header.content,
               italic: value,
             },
           },
@@ -194,31 +194,31 @@ const Header: NextComponentType<NextPageContext, {}, HeaderProps> = ({
     <Range
       step={0.1}
       showValues={false}
-      value={config.header.content.size}
+      value={layer.header.content.size}
       set={(val) =>
-        updateConfig({
+        updateLayer({
           header: {
-            ...config.header,
+            ...layer.header,
             content: {
-              ...config.header.content,
+              ...layer.header.content,
               size: val,
             },
           },
         })
       }
-      min={0}
-      max={150}
+      min={50}
+      max={300}
     >
       <div className="flex space-x-2 items-center">
         <p className=" font-medium text-zinc-700 whitespace-nowrap">Size</p>
         <button
           className="hover:text-zinc-400 transition-colors"
           onClick={() => {
-            updateConfig({
+            updateLayer({
               header: {
-                ...config.header,
+                ...layer.header,
                 content: {
-                  ...config.header.content,
+                  ...layer.header.content,
                   size: 100,
                 },
               },
@@ -232,13 +232,13 @@ const Header: NextComponentType<NextPageContext, {}, HeaderProps> = ({
     <Range
       step={0.1}
       showValues={false}
-      value={config.header.content.padding}
+      value={layer.header.content.padding}
       set={(val) =>
-        updateConfig({
+        updateLayer({
           header: {
-            ...config.header,
+            ...layer.header,
             content: {
-              ...config.header.content,
+              ...layer.header.content,
               padding: val,
             },
           },
@@ -252,11 +252,11 @@ const Header: NextComponentType<NextPageContext, {}, HeaderProps> = ({
         <button
           className="hover:text-zinc-400 transition-colors"
           onClick={() => {
-            updateConfig({
+            updateLayer({
               header: {
-                ...config.header,
+                ...layer.header,
                 content: {
-                  ...config.header.content,
+                  ...layer.header.content,
                   padding: 1,
                 },
               },
@@ -267,16 +267,16 @@ const Header: NextComponentType<NextPageContext, {}, HeaderProps> = ({
         </button>
       </div>
     </Range>
-    {!config.header.anchored && (
+    {!layer.header.anchored && (
       <Range
         showValues={false}
-        value={config.header.content.translateX}
+        value={layer.header.content.translateX}
         set={(val) =>
-          updateConfig({
+          updateLayer({
             header: {
-              ...config.header,
+              ...layer.header,
               content: {
-                ...config.header.content,
+                ...layer.header.content,
                 translateX: val,
               },
             },
@@ -290,11 +290,11 @@ const Header: NextComponentType<NextPageContext, {}, HeaderProps> = ({
           <button
             className="hover:text-zinc-400 transition-colors"
             onClick={() => {
-              updateConfig({
+              updateLayer({
                 header: {
-                  ...config.header,
+                  ...layer.header,
                   content: {
-                    ...config.header.content,
+                    ...layer.header.content,
                     translateX: 0,
                   },
                 },

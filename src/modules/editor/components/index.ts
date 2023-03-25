@@ -4,10 +4,8 @@ import Frames from "./Frames";
 import Header from "./Header";
 import Images from "./Images";
 import Position from "./Position";
-import Presets from "./Presets";
 import Rotation from "./Rotation";
 import Shadow from "./Shadow";
-import ScreenshotModal from "./ScreenshotModal";
 import List from "./DragList";
 import Watermarks from "./Watermarks";
 export {
@@ -17,10 +15,8 @@ export {
   Header,
   Images,
   Position,
-  Presets,
   Rotation,
   Shadow,
   List,
-  ScreenshotModal,
   Watermarks
 };

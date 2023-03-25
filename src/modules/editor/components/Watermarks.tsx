@@ -1,23 +1,23 @@
 import { NextPageContext, NextComponentType } from "next";
 import { Tabs, Toggle } from "@components/index";
-import { Config } from "@customTypes/configs";
+import { ImageConfig } from "@customTypes/configs";
 import clsx from "clsx";
 import React, { forwardRef } from "react";
 interface WatermarksProps {
-  config: Config;
-  updateConfig: (newConfig: Partial<Config>) => void;
+  layer: ImageConfig;
+  updateLayer: (newlayer: Partial<ImageConfig>) => void;
 }
 const Watermarks: NextComponentType<NextPageContext, {}, WatermarksProps> = ({
-  config,
-  updateConfig,
+  layer,
+  updateLayer,
 }) => (
   <>
     <Toggle
-      enabled={config.watermark.show}
+      enabled={layer.watermark.show}
       setEnabled={(value) =>
-        updateConfig({
+        updateLayer({
           watermark: {
-            ...config.watermark,
+            ...layer.watermark,
             show: value,
           },
         })
@@ -28,12 +28,12 @@ const Watermarks: NextComponentType<NextPageContext, {}, WatermarksProps> = ({
     <div className="space-y-2">
       <h1 className="block text-sm font-medium text-zinc-100 ">Theme</h1>
       <Tabs
-        selected={config.watermark.theme}
+        selected={layer.watermark.theme}
         tabs={["dark", "light"]}
         setSelected={(theme) =>
-          updateConfig({
+          updateLayer({
             watermark: {
-              ...config.watermark,
+              ...layer.watermark,
               theme,
             },
           })
@@ -45,64 +45,64 @@ const Watermarks: NextComponentType<NextPageContext, {}, WatermarksProps> = ({
       <div className="overflow-hidden border border-zinc-800 rounded-xl relative min-w-[230px] min-h-[200px]">
         <button
           onClick={() => {
-            updateConfig({
+            updateLayer({
               watermark: {
-                ...config.watermark,
+                ...layer.watermark,
                 placement: "top-right",
               },
             });
           }}
           className={clsx(
             " h-8 aspect-video border hover:border-sky-500 transition-all duration-300 rounded-lg absolute right-3 top-3 ",
-            config.watermark.placement === "top-right"
+            layer.watermark.placement === "top-right"
               ? "border-sky-500"
               : "border-zinc-800"
           )}
         />
         <button
           onClick={() => {
-            updateConfig({
+            updateLayer({
               watermark: {
-                ...config.watermark,
+                ...layer.watermark,
                 placement: "top-left",
               },
             });
           }}
           className={clsx(
             " h-8 aspect-video border hover:border-sky-500 transition-all duration-300 rounded-lg absolute left-3 top-3 ",
-            config.watermark.placement === "top-left"
+            layer.watermark.placement === "top-left"
               ? "border-sky-500"
               : "border-zinc-800"
           )}
         />
         <button
           onClick={() => {
-            updateConfig({
+            updateLayer({
               watermark: {
-                ...config.watermark,
+                ...layer.watermark,
                 placement: "bottom-right",
               },
             });
           }}
           className={clsx(
             " h-8 aspect-video border hover:border-sky-500 transition-all duration-300 rounded-lg absolute right-3 bottom-3 ",
-            config.watermark.placement === "bottom-right"
+            layer.watermark.placement === "bottom-right"
               ? "border-sky-500"
               : "border-zinc-800"
           )}
         />
         <button
           onClick={() => {
-            updateConfig({
+            updateLayer({
               watermark: {
-                ...config.watermark,
+                ...layer.watermark,
                 placement: "bottom-left",
               },
             });
           }}
           className={clsx(
             "h-8 aspect-video border hover:border-sky-500 transition-all duration-300 rounded-lg absolute left-3 bottom-3 ",
-            config.watermark.placement === "bottom-left"
+            layer.watermark.placement === "bottom-left"
               ? "border-sky-500"
               : "border-zinc-800"
           )}

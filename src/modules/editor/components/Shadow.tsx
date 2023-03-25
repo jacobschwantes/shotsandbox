@@ -1,16 +1,16 @@
 import { NextPageContext, NextComponentType } from "next";
-import { Config, ShadowConfig } from "@customTypes/configs";
+import { ImageConfig, ShadowConfig } from "@customTypes/configs";
 import { RefreshIcon } from "@heroicons/react/solid";
 import { ColorPicker } from "@components/index";
 import clsx from "clsx";
 interface ShadowProps {
-  config: Config;
-  updateConfig: (newConfig: Partial<Config>) => void;
+  layer: ImageConfig;
+  updateLayer: (newlayer: Partial<ImageConfig>) => void;
   presets: Partial<ShadowConfig>[];
 }
 const Shadow: NextComponentType<NextPageContext, {}, ShadowProps> = ({
-  updateConfig,
-  config,
+  updateLayer,
+  layer,
   presets,
 }) => (
   <>
@@ -19,11 +19,11 @@ const Shadow: NextComponentType<NextPageContext, {}, ShadowProps> = ({
       <div className="flex justify-between items-center">
         <ColorPicker
           type="rgba"
-          color={config.shadow.color}
+          color={layer.shadow.color}
           setColor={(val) => {
-            updateConfig({
+            updateLayer({
               shadow: {
-                ...config.shadow,
+                ...layer.shadow,
                 color: val,
               },
             });
@@ -32,9 +32,9 @@ const Shadow: NextComponentType<NextPageContext, {}, ShadowProps> = ({
 
         <button
           onClick={() => {
-            updateConfig({
+            updateLayer({
               shadow: {
-                ...config.shadow,
+                ...layer.shadow,
                 color: "rgba(17, 12, 46, 0.2)",
               },
             });
@@ -52,15 +52,15 @@ const Shadow: NextComponentType<NextPageContext, {}, ShadowProps> = ({
           <div key={index} className="space-y-2">
             <button
               onClick={() =>
-                updateConfig({
+                updateLayer({
                   shadow: {
-                    ...config.shadow,
+                    ...layer.shadow,
                     ...item,
                   },
                 })
               }
               className={clsx(
-                config.shadow.type === item.type
+                layer.shadow.type === item.type
                   ? "outline-sky-500"
                   : "outline-zinc-300",
                 "rounded-lg  bg-zinc-100 p-7 w-full outline  hover:outline-sky-500 transition-all duration-300 outline-1"
@@ -68,7 +68,7 @@ const Shadow: NextComponentType<NextPageContext, {}, ShadowProps> = ({
             >
               <div
                 style={{
-                  boxShadow: `${item.previewSize} ${config.shadow.color}`,
+                  boxShadow: `${item.previewSize} ${layer.shadow.color}`,
                 }}
                 className="bg-white p-5 rounded-lg aspect-square"
               ></div>

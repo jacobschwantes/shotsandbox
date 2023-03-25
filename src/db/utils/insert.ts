@@ -1,4 +1,4 @@
-import { Project } from "../Project";
+import { Project } from "@customTypes/configs";
 import { db } from "..";
 export const duplicate = async (
   folderId: number | undefined,

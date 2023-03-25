@@ -1,24 +1,22 @@
 import Tooltip from "@components/Tooltip";
-import { ImageDoc } from "@customTypes/configs";
+import { ImageDoc, Layer } from "@customTypes/configs";
 import { UploadIcon, XIcon } from "@heroicons/react/outline";
 import { PhotographIcon } from "@heroicons/react/solid";
 import { Reorder, useDragControls, useMotionValue } from "framer-motion";
 import React from "react";
 interface ListProps {
-  list: ImageDoc[];
-  setList: React.Dispatch<React.SetStateAction<ImageDoc[]>>;
+  list: Layer[];
+  setList: (newList: Layer[]) => void;
   replaceImage: (
     event: React.ChangeEvent<HTMLInputElement>,
     idx: number,
     id: string
   ) => void;
-  removeImage: (id: string) => void;
 }
 export default function List({
   list,
   setList,
   replaceImage,
-  removeImage,
 }: ListProps) {
   return (
     <Reorder.Group
@@ -27,9 +25,9 @@ export default function List({
       values={list}
       onReorder={setList}
     >
-      {list.map((item: ImageDoc, index: number) => (
+      {list.map((item: Layer, index: number) => (
         <Item
-          removeImage={removeImage}
+          // removeImage={removeImage}
           replaceImage={replaceImage}
           idx={index}
           key={item.id}
@@ -40,16 +38,16 @@ export default function List({
   );
 }
 interface ItemProps {
-  item: ImageDoc;
+  item: Layer;
   idx: number;
   replaceImage: (
     event: React.ChangeEvent<HTMLInputElement>,
     idx: number,
     id: string
   ) => void;
-  removeImage: (id: string) => void;
+  // removeImage: (id: string) => void;
 }
-export const Item = ({ item, idx, replaceImage, removeImage }: ItemProps) => {
+export const Item = ({ item, idx, replaceImage }: ItemProps) => {
   const y = useMotionValue(0);
   const dragControls = useDragControls();
   return (
@@ -63,7 +61,7 @@ export const Item = ({ item, idx, replaceImage, removeImage }: ItemProps) => {
       <div className="flex space-x-2 items-center">
         <PhotographIcon className="h-6 text-zinc-500" />
         <p className="text-sm truncate max-w-[100px] text-zinc-800">
-          {item.fileName}
+          {item.name}
         </p>
       </div>
 

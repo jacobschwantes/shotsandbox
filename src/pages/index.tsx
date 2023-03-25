@@ -148,7 +148,7 @@ const Home: NextPage = () => {
                             <span className="text-zinc-500">
                               ∙{" "}
                               {folders &&
-                                folders[selectedFolder].projects?.length}
+                                folders[selectedFolder]?.projects?.length}
                             </span>
                           </h1>
                           <motion.ul className="grid grid-cols-3 lg:grid-cols-3 2xl:grid-cols-6  gap-6 w-full">
@@ -207,12 +207,11 @@ const Home: NextPage = () => {
                                             <img
                                               className="object-cover h-2/3"
                                               src={
-                                                item.config.preview instanceof
-                                                Blob
-                                                  ? URL.createObjectURL(
-                                                      item.config.preview
+                                                typeof item.preview === "string"
+                                                  ? item.preview
+                                                  : URL.createObjectURL(
+                                                      item.preview
                                                     )
-                                                  : item.config.preview
                                               }
                                             />
                                             <div className="px-5 flex flex-col justify-between flex-1 py-4">

@@ -75,16 +75,39 @@ export type FrameConfig = {
   };
 };
 export type Config = {
-  preview: Blob | string;
-  id: string;
-  name: string;
+  layers: Layer[];
   size: SizeConfig;
+  background: BackgroundConfig;
+};
+export type ImageConfig = {
+  src: string | Blob;
   header: HeaderConfig;
   orientation: OrientationConfig;
   position: PositionConfig;
   border: BorderConfig;
-  background: BackgroundConfig;
   shadow: ShadowConfig;
   frame: FrameConfig;
   watermark: WatermarkConfig;
 };
+export type ShapeConfig = {};
+
+export type Layer = {
+  id: string;
+  type: "image" | "shape";
+  name: string;
+  properties: ImageConfig;
+};
+
+export interface Project {
+  id?: number;
+  name: string;
+  date: number;
+  config: Config;
+  preview: string | Blob;
+}
+
+export interface Folder {
+  id?: number;
+  name: string;
+  projects: number[];
+}

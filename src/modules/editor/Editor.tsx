@@ -1,12 +1,6 @@
 import type { NextPage } from "next";
 import Image from "next/image";
-import {
-  useEffect,
-  useState,
-  useRef,
-  useCallback,
-  HTMLAttributes,
-} from "react";
+import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import clsx from "clsx";
 import { Toolbar } from "./components/Frames";
 import { motion, AnimatePresence } from "framer-motion";
@@ -16,7 +10,6 @@ import {
   downloadJpg,
   downloadPng,
   getBlob,
-  getPngDataUrl,
 } from "./utils/export";
 import {
   BookmarkAltIcon,
@@ -26,63 +19,50 @@ import {
   DesktopComputerIcon,
   DownloadIcon,
   LocationMarkerIcon,
-  PhotographIcon,
   ReplyIcon,
   SunIcon,
   DuplicateIcon,
-  ChevronDownIcon,
   AnnotationIcon,
 } from "@heroicons/react/solid";
 import { toast } from "react-toastify";
 import {
   AdjustmentsIcon,
-  ArrowLeftIcon,
-  CameraIcon,
   ChevronLeftIcon,
-  ChevronUpIcon,
   RefreshIcon,
   SaveIcon,
   TemplateIcon,
 } from "@heroicons/react/outline";
-import type { ImageDoc, Config } from "@customTypes/configs";
+import type {
+  ImageDoc,
+  Config,
+  Layer,
+  ImageConfig,
+  Project,
+} from "@customTypes/configs";
 import {
   shadowPresets,
-  templates,
   colorPresets,
   gradientPresets,
   framePresets,
   dimensionPresets,
 } from "./presets";
 import { Tooltip, Popover } from "@components/index";
-import { Disclosure, Tab } from "@headlessui/react";
+import { Tab } from "@headlessui/react";
 import {
   Background,
   Border,
   Frames,
   Header,
-  Images,
   Position,
-  Presets,
   Rotation,
   Shadow,
-  ScreenshotModal,
   List,
   Watermarks,
 } from "./components/index";
 import { useWindowSize } from "@hooks/window";
-import { Watermark } from "./components/Watermarks";
 import Link from "next/link";
 import { db } from "src/db";
-import { Project } from "src/db/Project";
-import logo_light from "@public/logo_light.png";
-import logo_short from "@public/logo_short.png";
 const generalNavigation = [
-  // {
-  //   id: 1,
-  //   name: "Presets",
-  //   href: "/",
-  //   icon: CollectionIcon,
-  // },
   {
     id: 1,
     name: "Layers",
@@ -100,12 +80,6 @@ const generalNavigation = [
     href: "/settings/account",
     icon: CubeTransparentIcon,
   },
-  // {
-  //   id: 5,
-  //   name: "Layout",
-  //   href: "/tokens",
-  //   icon: TemplateIcon,
-  // },
   {
     id: 4,
     name: "Header",
@@ -229,28 +203,44 @@ interface EditorProps {
   project: Project;
 }
 const Editor: NextPage<EditorProps> = ({ project }) => {
-  const [imageStack, setImageStack] = useState([
-    {
-      id: uniqueId(),
-      fileName: "sample.jpeg",
-      src: "/sample.jpeg",
-    },
-  ] as ImageDoc[]);
-  const [modalOpen, setModalOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [config, setConfig] = useState(project.config);
   const [history, setHistory] = useState([] as Config[]);
   const [historyIdx, setHistoryIdx] = useState(0);
-  const [layout, setLayout] = useState(1);
   const [active, setActive] = useState(generalNavigation[0]);
   const [showWatermark, setShowWatermark] = useState(true);
   const [removeBackground, setRemoveBackground] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-  const watermarkRef = useRef<HTMLSpanElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
   const containerSize = useWindowSize(ref, config);
-
+  const [activeLayer, setActiveLayer] = useState(0);
+  const updateLayerConfig = (newConfig: Partial<ImageConfig>) => {
+    if (historyIdx > 0) {
+      const newHistory = history.filter((item, index) => index >= historyIdx);
+      setHistory(newHistory);
+    }
+    const layersCopy = [...config.layers];
+    const updatedObj = {
+      ...layersCopy[activeLayer],
+      properties: { ...layersCopy[activeLayer].properties, ...newConfig },
+    };
+    layersCopy[activeLayer] = updatedObj;
+    setConfig({
+      ...config,
+      layers: layersCopy,
+    });
+  };
+  const updateConfig = (newConfig: Partial<Config>) => {
+    if (historyIdx > 0) {
+      const newHistory = history.filter((item, index) => index >= historyIdx);
+      setHistory(newHistory);
+    }
+    setConfig({
+      ...config,
+      ...newConfig,
+    });
+  };
   const saveProject = async () => {
+    console.log(config.layers[0].properties.src);
     try {
       const newPreview =
         ref.current &&
@@ -261,10 +251,8 @@ const Editor: NextPage<EditorProps> = ({ project }) => {
       if (newPreview) {
         await db.projects.put({
           ...project,
-          config: {
-            ...config,
-            preview: newPreview,
-          },
+          preview: newPreview,
+          config,
         });
       }
     } catch (e: any) {
@@ -284,88 +272,34 @@ const Editor: NextPage<EditorProps> = ({ project }) => {
     }
   };
 
-  const getScreenshot = async (options: {
-    url: string;
-    width: string;
-    height: string;
-    token: string;
-  }) => {
-    setIsLoading(true);
-    await fetch(
-      `https://api.screenshotify.io/screenshot?url=${options.url}&width=${options.width}&height=${options.height}&token=${options.token}&json=true`,
-      {
-        method: "GET",
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          cors: "no-cors",
-        },
-      }
-    )
-      .then(async (res) => {
-        if (res.ok) {
-          return res.json();
-        } else {
-          throw new Error(await res.text());
-        }
-      })
-      .then((image) => {
-        const newImage = {
-          id: uniqueId(),
-          fileName: image.meta.url,
-          src: image.src,
-        };
-        setModalOpen(false);
-        setImageStack([...imageStack, newImage]);
-      })
-      .catch((e) =>
-        toast(
-          <div className="flex items-center space-x-3">
-            <span>
-              <p className="text-sm font-extralight">{e.message}</p>
-            </span>
-          </div>,
-          {
-            type: "error",
-          }
-        )
-      );
-    setIsLoading(false);
-  };
-
-  const addImage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files[0]) {
-      const file = event.target.files[0];
-      setImageStack((current: ImageDoc[]) => [
-        ...current,
-        {
-          id: uniqueId(),
-          fileName: file.name,
-          src: URL.createObjectURL(file),
-        },
-      ]);
-    }
-  };
   const replaceImage = (
     event: React.ChangeEvent<HTMLInputElement>,
     idx: number,
     id: string
   ) => {
     if (event.target.files && event.target.files[0]) {
-      const fileName = event.target.files[0].name;
-      const files = [...imageStack];
-      files[idx] = {
-        id,
-        fileName,
-        src: URL.createObjectURL(event.target.files[0]),
+      const layers = [...config.layers];
+      const newFile = event.target.files[0];
+      const fr = new FileReader();
+      fr.readAsArrayBuffer(newFile);
+      fr.onload = function () {
+        if (fr.result) {
+          const blob = new Blob([fr.result]);
+          layers[activeLayer] = {
+            ...layers[activeLayer],
+            id,
+            name: newFile.name,
+            properties: {
+              ...layers[activeLayer].properties,
+              src: blob,
+            },
+          };
+          updateConfig({ layers });
+        }
       };
-      setImageStack(files);
     }
   };
 
-  const removeImage = (id: string) => {
-    const filteredArr = imageStack.filter((item) => item.id !== id);
-    setImageStack(filteredArr);
-  };
   const getImage = useCallback(
     (format: string) => {
       if (ref.current === null) {
@@ -413,17 +347,6 @@ const Editor: NextPage<EditorProps> = ({ project }) => {
     }
   }, [historyIdx]);
 
-  const updateConfig = (newConfig: Partial<Config>) => {
-    console.log(historyIdx);
-    if (historyIdx > 0) {
-      const newHistory = history.filter((item, index) => index >= historyIdx);
-      setHistory(newHistory);
-    }
-    setConfig({
-      ...config,
-      ...newConfig,
-    });
-  };
   const getAspectRatio = (numerator: number, denominator: number) => {
     const gcd = (a: number, b: number): number => {
       return b ? gcd(b, a % b) : a;
@@ -432,19 +355,24 @@ const Editor: NextPage<EditorProps> = ({ project }) => {
     return [numerator / result, denominator / result];
   };
 
+  const imgDataUrl = useMemo(
+    () =>
+      typeof config.layers[0].properties.src === "string"
+        ? config.layers[0].properties.src
+        : URL.createObjectURL(config.layers[0].properties.src),
+    [config.layers[0].properties.src]
+  );
+
   return (
     <div className="h-screen w-screen bg-white flex flex-col overflow-hidden">
-      <ScreenshotModal
-        open={modalOpen}
-        setOpen={setModalOpen}
-        isLoading={isLoading}
-        handleSubmit={getScreenshot}
-      />
       <div className="h-16 flex items-center justify-between absolute w-full bg-white px-2 sm:px-6 lg:px-6 shadow-sm">
-        <div className="flex space-x-6 items-center">
-          <Link href="/">
-            <img className="h-8 w-auto " src="/logo_short.png" alt="logo" />
-          </Link>
+        <div className="flex sm:space-x-6 items-center">
+          <div className="hidden sm:block">
+            <Link href="/">
+              <img className="h-8 w-auto " src="/logo_short.png" alt="logo" />
+            </Link>
+          </div>
+
           <Link href="/">
             <a className="flex items-center justify-center space-x-2 border border-zinc-200 text-zinc-800  bg-white hover:bg-zinc-50 transition-all cursor-pointer p-3 rounded-lg">
               <ChevronLeftIcon className="h-5 w-5" />
@@ -454,9 +382,9 @@ const Editor: NextPage<EditorProps> = ({ project }) => {
         <div className="flex space-x-2">
           <Tooltip label="Reset">
             <button
-              // onClick={() => {
-              //   updateConfig({ ...defaultConfig });
-              // }}
+              onClick={() => {
+                updateConfig(project.config);
+              }}
               className="flex items-center justify-center space-x-2 border border-zinc-200 text-zinc-800  bg-white hover:bg-zinc-50 transition-all cursor-pointer p-3 rounded-lg"
             >
               <RefreshIcon className="h-5 w-5" />
@@ -466,8 +394,8 @@ const Editor: NextPage<EditorProps> = ({ project }) => {
             gap={10}
             placement="bottom"
             render={() => (
-              <div className="bg-zinc-900 bg-opacity-80 backdrop-blur p-4 rounded-lg space-y-3 w-[320px] ">
-                <h1 className="text-zinc-100 text-lg">Dimension Presets</h1>
+              <div className="bg-zinc-200 bg-opacity-80 backdrop-blur p-4 rounded-lg space-y-3 w-[320px] ">
+                <h1 className="text-zinc-700 text-lg">Dimension Presets</h1>
 
                 <Tab.Group>
                   <Tab.List className="flex space-x-1">
@@ -477,9 +405,7 @@ const Editor: NextPage<EditorProps> = ({ project }) => {
                         className="w-full flex items-center justify-center"
                       >
                         {({ selected }) => (
-                          <category.icon
-                            className={clsx("h-6 w-6 bg-transparent")}
-                          />
+                          <category.icon className="h-6 w-6 bg-transparent text-zinc-700" />
                         )}
                       </Tab>
                     ))}
@@ -487,7 +413,7 @@ const Editor: NextPage<EditorProps> = ({ project }) => {
                   <Tab.Panels className="mt-2">
                     {dimensionPresets.map((item, idx) => (
                       <Tab.Panel key={idx}>
-                        <h1 className="text-lg capitalize  text-zinc-800 pb-2">
+                        <h1 className="text capitalize  text-zinc-700 pb-2">
                           {item.name}
                         </h1>
                         <ul className="space-y-2">
@@ -510,9 +436,9 @@ const Editor: NextPage<EditorProps> = ({ project }) => {
                                     },
                                   })
                                 }
-                                className="flex w-full justify-between items-center space-x-2 border border-zinc-800 hover:border-sky-500 text-zinc-200 bg-zinc-900 hover:bg-sky-900 bg-opacity-25 hover:bg-opacity-25 transition-all cursor-pointer bg py-2 px-4 rounded-lg"
+                                className="flex w-full justify-between items-center space-x-2 border border-zinc-400 hover:border-sky-500 text-zinc-600 bg-zinc-500 hover:bg-sky-900 bg-opacity-25 hover:bg-opacity-25 transition-all cursor-pointer bg py-2 px-4 rounded-lg"
                               >
-                                <p className="text-base text-zinc-800 font-medium capitalize">
+                                <p className="text-base text-zinc-700 font-medium capitalize">
                                   {name}
                                 </p>
                                 <p>
@@ -534,7 +460,7 @@ const Editor: NextPage<EditorProps> = ({ project }) => {
             </button>
           </Popover>
 
-          <div className="flex space-x-3 items-center">
+          <div className="space-x-3 items-center hidden sm:flex">
             <input
               value={config.size.dimensions.width}
               onChange={(e) =>
@@ -620,13 +546,13 @@ const Editor: NextPage<EditorProps> = ({ project }) => {
             gap={10}
             placement="bottom-end"
             render={() => (
-              <div className="bg-zinc-900 p-4 rounded-lg space-y-3 max-w-3xl ">
-                <h1 className="text-zinc-100 font-medium text-lg">Export</h1>
+              <div className="bg-zinc-200 p-4 rounded-lg space-y-3 max-w-3xl ">
+                <h1 className="text-zinc-700 text-lg">Export</h1>
                 <div className="relative flex items-start">
                   <div className="min-w-0 flex-1 text-sm">
                     <label
                       htmlFor="show-watermark"
-                      className="font-medium text-zinc-300"
+                      className="font-medium text-zinc-600"
                     >
                       Remove background
                     </label>
@@ -639,27 +565,27 @@ const Editor: NextPage<EditorProps> = ({ project }) => {
                     aria-describedby="show-watermark"
                     name="show-watermark"
                     type="checkbox"
-                    className="form-checkbox focus:ring-sky-600 focus:ring-offset-black h-4 w-4 text-sky-600 border-zinc-900 rounded bg-zinc-800"
+                    className="form-checkbox focus:ring-sky-600 focus:ring-offset-zinc-200 h-4 w-4 text-sky-600 border-zinc-400 rounded bg-zinc-400"
                   />
                 </div>
 
                 <button
                   onClick={() => getImage("jpg")}
-                  className="flex items-center justify-center space-x-2 border w-full border-zinc-800 text-zinc-200 bg-zinc-900 hover:bg-zinc-800 bg-opacity-25 hover:bg-opacity-25 transition-all cursor-pointer bg px-4 py-2 rounded-lg"
+                  className="flex items-center justify-center space-x-2 border w-full border-zinc-400 text-zinc-700 bg-zinc-500 hover:bg-sky-900 hover:border-sky-500 bg-opacity-25 hover:bg-opacity-25 transition-all cursor-pointer bg px-4 py-2 rounded-lg"
                 >
                   <DownloadIcon className="h-5 w-5" />
                   <span className="font-medium">Download JPG</span>
                 </button>
                 <button
                   onClick={() => getImage("png")}
-                  className="flex items-center justify-center space-x-2 border w-full border-zinc-800 text-zinc-200 bg-zinc-900 hover:bg-zinc-800 bg-opacity-25 hover:bg-opacity-25 transition-all cursor-pointer bg px-4 py-2 rounded-lg"
+                  className="flex items-center justify-center space-x-2 border w-full border-zinc-400 text-zinc-700 bg-zinc-500 hover:bg-sky-900 hover:border-sky-500 bg-opacity-25 hover:bg-opacity-25 transition-all cursor-pointer bg px-4 py-2 rounded-lg"
                 >
                   <DownloadIcon className="h-5 w-5" />
                   <span className="font-medium">Download PNG</span>
                 </button>
                 <button
                   onClick={() => getImage("copy")}
-                  className="flex items-center justify-center space-x-2 border w-full border-zinc-800 text-zinc-200 bg-zinc-900 hover:bg-zinc-800 bg-opacity-25 hover:bg-opacity-25 transition-all cursor-pointer bg px-4 py-2 rounded-lg"
+                  className="flex items-center justify-center space-x-2 border w-full border-zinc-400 text-zinc-700 bg-zinc-500 hover:bg-sky-900 hover:border-sky-500 bg-opacity-25 hover:bg-opacity-25 transition-all cursor-pointer bg px-4 py-2 rounded-lg"
                 >
                   <DuplicateIcon className="h-5 w-5" />
                   <span className="font-medium">Copy to Clipboard</span>
@@ -667,19 +593,20 @@ const Editor: NextPage<EditorProps> = ({ project }) => {
               </div>
             )}
           >
-            <button className="flex items-center justify-center space-x-2 border border-zinc-200 text-zinc-800  bg-white hover:bg-zinc-50 transition-all cursor-pointer p-3 rounded-lg font-medium">
-              Export <DownloadIcon className="h-5 w-5 ml-1" />
+            <button className="flex items-center justify-center sm:space-x-2 border border-zinc-200 text-zinc-800  bg-white hover:bg-zinc-50 transition-all cursor-pointer p-3 rounded-lg font-medium">
+              <span className="hidden sm:block">Export</span>
+              <DownloadIcon className="h-5 w-5 ml-0 sm:ml-1" />
             </button>
           </Popover>
         </div>
       </div>
-      <div className="flex sm:justify-between h-screen pt-[64px] md:flex-row flex-col ">
+      <div className="flex lg:justify-between h-screen pt-[64px] lg:flex-row flex-col ">
         {/* Editor preview container */}
 
         {/* Editor preview container */}
         <div
           className={clsx(
-            "h-1/2 sm:h-full flex-1 grid-effect-light bg-white grid-effect-light xl:p-20 p-3   "
+            "h-1/2 lg:h-full flex-1 grid-effect-light bg-white grid-effect-light xl:p-20 p-3   "
           )}
         >
           <motion.div
@@ -706,54 +633,44 @@ const Editor: NextPage<EditorProps> = ({ project }) => {
               "overflow-hidden relative flex items-center justify-center max-h-full max-w-full sm:rounded-3xl"
             )}
           >
-            {config.watermark.show && (
-              <Watermark
-                height={imageRef.current?.clientWidth ?? 1000}
-                ref={watermarkRef}
-                placement={config.watermark.placement}
-                theme={config.watermark.theme}
-              />
-            )}
-
             <motion.div
               className={clsx(" w-full h-full ")}
               style={{ scale: config.size.scale / 100 }}
             >
-              {imageStack.map((url, index) => (
+              {config.layers.map(({ properties }: Layer, index: number) => (
                 <motion.div
-                  transition={{ type: "spring" }}
                   key={index}
-                  animate={{
-                    x: (config.position.x / 100) * containerSize.width,
-                    y: (config.position.y / 100) * containerSize.height,
+                  style={{
+                    x: (properties.position.x / 100) * containerSize.width,
+                    y: (properties.position.y / 100) * containerSize.height,
                   }}
                   className={clsx(
-                    config.header.align === "vertical"
+                    properties.header.align === "vertical"
                       ? "flex-col"
                       : "items-center",
                     "relative flex flex-1"
                   )}
                 >
                   {/* header */}
-                  {config.header.show && (
+                  {properties.header.show && (
                     <motion.div
                       animate={{
                         x:
-                          (config.header.content.translateX / 100) *
+                          (properties.header.content.translateX / 100) *
                           containerSize.width,
                       }}
                       style={{
-                        color: config.header.content.color,
+                        color: properties.header.content.color,
                         maxWidth:
-                          config.header.align === "horizontal"
+                          properties.header.align === "horizontal"
                             ? ref.current?.clientWidth
                               ? `${ref.current?.clientWidth * 0.35}px`
                               : "30%"
                             : "100%",
                       }}
                       className={clsx(
-                        config.header.content.italic && "italic",
-                        config.header.align === "horizontal"
+                        properties.header.content.italic && "italic",
+                        properties.header.align === "horizontal"
                           ? " text-left"
                           : "text-center",
                         " space-y-2"
@@ -765,16 +682,16 @@ const Editor: NextPage<EditorProps> = ({ project }) => {
                             ? `${
                                 ref.current?.clientWidth *
                                 0.04 *
-                                (config.header.content.size / 100)
+                                (properties.header.content.size / 100)
                               }px`
                             : "2rem",
                         }}
                         className={clsx(
-                          config.header.content.bold && "font-bold",
+                          properties.header.content.bold && "font-bold",
                           ""
                         )}
                       >
-                        {config.header.content.title}
+                        {properties.header.content.title}
                       </h1>
                       <p
                         style={{
@@ -782,58 +699,58 @@ const Editor: NextPage<EditorProps> = ({ project }) => {
                             ? `${
                                 ref.current?.clientWidth *
                                 0.02 *
-                                (config.header.content.size / 100)
+                                (properties.header.content.size / 100)
                               }px`
                             : "1rem",
                         }}
                       >
-                        {config.header.content.subtitle}
+                        {properties.header.content.subtitle}
                       </p>
                     </motion.div>
                   )}
                   {/* image container */}
                   <motion.div
                     animate={{
-                      rotateX: config.orientation.rotateX,
-                      rotateY: config.orientation.rotateY,
-                      rotateZ: config.orientation.rotateZ,
+                      rotateX: properties.orientation.rotateX,
+                      rotateY: properties.orientation.rotateY,
+                      rotateZ: properties.orientation.rotateZ,
                     }}
                     transition={{ type: "spring" }}
                     key={index}
                     className="aspect-video relative flex flex-col flex-1 overflow-hidden "
                     style={{
-                      transformPerspective: config.orientation.perspective,
-                      boxShadow: `${config.shadow.color} ${config.shadow.size}`,
+                      transformPerspective: properties.orientation.perspective,
+                      boxShadow: `${properties.shadow.color} ${properties.shadow.size}`,
                       borderRadius: `${
                         0.037 *
                         (imageRef?.current?.clientHeight ?? 1000) *
-                        config.border.radius
+                        properties.border.radius
                       }px`,
-                      borderColor: config.border.color,
-                      borderWidth: `${config.border.width}px`,
+                      borderColor: properties.border.color,
+                      borderWidth: `${properties.border.width}px`,
                       marginTop:
-                        !config.header.show ||
-                        config.header.align === "horizontal"
+                        !properties.header.show ||
+                        properties.header.align === "horizontal"
                           ? 0
-                          : `${config.header.content.padding}rem`,
+                          : `${properties.header.content.padding}rem`,
                       marginLeft:
-                        !config.header.show ||
-                        config.header.align === "vertical"
+                        !properties.header.show ||
+                        properties.header.align === "vertical"
                           ? 0
-                          : `${config.header.content.padding}rem`,
+                          : `${properties.header.content.padding}rem`,
                     }}
                   >
-                    {config.frame.show && (
+                    {properties.frame.show && (
                       <Toolbar
                         width={imageRef.current?.clientWidth ?? 1000}
                         height={imageRef.current?.clientHeight ?? 1000}
-                        options={config.frame}
+                        options={properties.frame}
                       />
                     )}
                     <div
                       ref={imageRef}
                       className={clsx(
-                        config.frame.show && "",
+                        properties.frame.show && "",
                         "relative flex-1 "
                       )}
                     >
@@ -841,7 +758,7 @@ const Editor: NextPage<EditorProps> = ({ project }) => {
                         alt="editor image"
                         priority
                         layout="fill"
-                        src={url.src}
+                        src={imgDataUrl}
                       />
                     </div>
                   </motion.div>
@@ -852,27 +769,27 @@ const Editor: NextPage<EditorProps> = ({ project }) => {
         </div>
 
         {/* Controls column start */}
-        <div className="flex sm:flex-row flex-col sm:h-full h-1/2 border-l ">
+        <div className="flex lg:flex-row flex-col lg:h-full h-1/2 border-l ">
           {/* Editor navigation start */}
-          <div className="sm:flex sm:flex-col sm:h-full sm:overflow-y-auto overflow-x-auto ">
-            <div className="flex sm:flex-col  bg-white">
+          <div className="lg:flex lg:flex-col lg:h-full lg:overflow-y-auto overflow-x-auto ">
+            <div className="flex lg:flex-col  bg-zinc-100 lg:bg-white justify-evenly">
               {generalNavigation.map((item, index) => (
                 <div
                   key={index}
-                  className={clsx(active === item && "bg-zinc-100 w-full")}
+                  className={clsx(active === item && "bg-zinc-100 ")}
                 >
                   <button
                     onClick={() => setActive(item)}
                     className={clsx(
                       "rounded-none",
                       active.id === item.id
-                        ? "bg-white sm:rounded-l-2xl"
+                        ? "bg-white lg:rounded-l-2xl"
                         : "bg-zinc-100",
-                      "flex flex-col items-center space-y-1 w-full  sm:p-2 p-1",
+                      "flex flex-col items-center space-y-1 w-full  lg:p-2 p-1",
                       active.id > 1 &&
                         item.id === active.id - 1 &&
-                        "sm:rounded-br-2xl",
-                      item.id === active.id + 1 && "sm:rounded-tr-2xl"
+                        "lg:rounded-br-2xl",
+                      item.id === active.id + 1 && "lg:rounded-tr-2xl"
                     )}
                   >
                     <div
@@ -888,7 +805,7 @@ const Editor: NextPage<EditorProps> = ({ project }) => {
                     </div>
                     <span
                       className={clsx(
-                        "text-xs font-medium sm:block hidden text-zinc-500",
+                        "text-xs font-medium lg:block hidden text-zinc-500",
                         item.id === active.id && "text-zinc-600"
                       )}
                     >
@@ -898,7 +815,7 @@ const Editor: NextPage<EditorProps> = ({ project }) => {
                 </div>
               ))}
             </div>
-            <div className=" bg-white flex-1 hidden sm:block">
+            <div className=" bg-white flex-1 hidden lg:block">
               <div
                 className={clsx(
                   active.name === "Border" && "rounded-tr-2xl",
@@ -909,7 +826,7 @@ const Editor: NextPage<EditorProps> = ({ project }) => {
           </div>
 
           {/* Settings panel start */}
-          <div className=" sm:w-[320px] w-full p-5 space-y-3 overflow-y-auto overflow-x-hidden bg-white flex-1  ">
+          <div className=" lg:w-[320px] w-full p-5 space-y-3 overflow-y-auto overflow-x-hidden bg-white flex-1  ">
             <AnimatePresence initial={false} mode="wait">
               <motion.div
                 key={active.id}
@@ -918,7 +835,7 @@ const Editor: NextPage<EditorProps> = ({ project }) => {
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.15 }}
               >
-                <div className=" sm:pt-4 pb-2  text-sm text-gray-500 sm:space-y-10 space-y-6 ">
+                <div className=" lg:pt-4 pb-2  text-sm text-gray-500 sm:space-y-10 space-y-6 ">
                   {/* Panel header */}
                   <h1 className="font-medium text-zinc-800 pb-1 text-base flex items-center">
                     <active.icon className="h-6 w-6 text-zinc-500 mr-2" />
@@ -936,54 +853,54 @@ const Editor: NextPage<EditorProps> = ({ project }) => {
                               addImage={addImage}
                             /> */}
                             <List
-                              removeImage={removeImage}
                               replaceImage={replaceImage}
-                              list={imageStack}
-                              setList={setImageStack}
+                              list={config.layers}
+                              setList={(newList) =>
+                                updateConfig({ layers: newList })
+                              }
                             />
                           </>
                         );
-                      case "presets":
-                        return (
-                          // <Presets
-                          //   idToken={idToken}
-                          //   updateConfig={updateConfig}
-                          //   presets={templates}
-                          // />
-                          <></>
-                        );
+
                       case "position":
                         return (
                           <Position
-                            updateConfig={updateConfig}
                             config={config}
+                            updateConfig={updateConfig}
+                            updateLayer={updateLayerConfig}
+                            layer={config.layers[activeLayer].properties}
                           />
                         );
                       case "frames":
                         return (
                           <Frames
-                            updateConfig={updateConfig}
-                            config={config}
+                            updateLayer={updateLayerConfig}
+                            layer={config.layers[activeLayer].properties}
                             presets={framePresets}
                           />
                         );
                       case "header":
                         return (
-                          <Header config={config} updateConfig={updateConfig} />
+                          <Header
+                            layer={config.layers[activeLayer].properties}
+                            updateLayer={updateLayerConfig}
+                          />
                         );
                       case "shadow":
                         return (
                           <Shadow
-                            config={config}
-                            updateConfig={updateConfig}
+                            layer={config.layers[activeLayer].properties}
+                            updateLayer={updateLayerConfig}
                             presets={shadowPresets}
                           />
                         );
                       case "3d":
                         return (
                           <Rotation
-                            config={config}
                             updateConfig={updateConfig}
+                            config={config}
+                            layer={config.layers[activeLayer].properties}
+                            updateLayer={updateLayerConfig}
                           />
                         );
                       case "background":
@@ -997,13 +914,16 @@ const Editor: NextPage<EditorProps> = ({ project }) => {
                         );
                       case "border":
                         return (
-                          <Border config={config} updateConfig={updateConfig} />
+                          <Border
+                            layer={config.layers[activeLayer].properties}
+                            updateLayer={updateLayerConfig}
+                          />
                         );
                       case "watermark":
                         return (
                           <Watermarks
-                            config={config}
-                            updateConfig={updateConfig}
+                            layer={config.layers[activeLayer].properties}
+                            updateLayer={updateLayerConfig}
                           />
                         );
                       default:
