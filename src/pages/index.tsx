@@ -247,18 +247,18 @@ const Home: NextPage = () => {
                               idx === selectedFolder ? "border-sky-500 " : ""
                             )}
                           >
-                            <div className="flex justify-between text-zinc-400 w-full">
-                              <span className="flex items-center">
-                                <FolderIcon className="h-7 mr-1.5" />
-                                <h2 className="font-medium text-zinc-700 whitespace-nowrap truncate">
-                                  {item.name}
-                                </h2>
-                              </span>
-                              <div className="">
+                            <div className="flex items-center  text-zinc-400 w-full">
+                              <div>
+                                <FolderIcon className="h-7 w-7" />
+                              </div>
+                              <p className="font-medium text-zinc-700 select-none  truncate mx-2">
+                                {item.name}
+                              </p>
+                              <div className=" ml-auto">
                                 <Popover
                                   placement="bottom-end"
                                   render={() => (
-                                    <ul className="bg-white text-zinc-800 p-1 border rounded-lg shadow min-w-[150px] flex justify-start flex-col ">
+                                    <ul className="bg-white text-zinc-800 p-1 border rounded-lg shadow min-w-[150px] flex justify-start flex-col cursor-pointer">
                                       <li
                                         onClick={() => {
                                           setFolderName(
@@ -266,7 +266,7 @@ const Home: NextPage = () => {
                                           );
                                           setEditFolder(true);
                                         }}
-                                        className="hover:bg-zinc-100 w-full text-left px-2 py-1 rounded-md flex items-center justify-between"
+                                        className="hover:bg-zinc-100 w-full text-left px-2 py-1 rounded-md flex items-center justify-between "
                                       >
                                         <p>Edit</p>
                                         <PencilIcon className="h-4" />
@@ -283,7 +283,7 @@ const Home: NextPage = () => {
                                     </ul>
                                   )}
                                 >
-                                  <DotsHorizontalIcon className="h-7 hover:text-sky-500" />
+                                  <DotsHorizontalIcon className="h-7 hover:text-sky-500 cursor-pointer" />
                                 </Popover>
                               </div>
                             </div>
@@ -329,13 +329,13 @@ const Home: NextPage = () => {
                               opacity: 1,
                               transition: {
                                 delay: 0.075 * idx,
-                              }
+                              },
                             }}
                             exit={{
-                              
                               opacity: 0,
                               transition: {
-                                duration: 0, delay: 0
+                                duration: 0,
+                                delay: 0,
                               },
                             }}
                             transition={{
