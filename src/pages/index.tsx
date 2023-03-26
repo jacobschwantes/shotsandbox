@@ -116,7 +116,7 @@ const Home: NextPage = () => {
         </Modal>
         <Modal
           callback={() => {
-            if (projects && projects[editProject]) {
+            if (projects) {
               modifyProject(editProject, { name: projectName });
             }
             setProjectName("");
@@ -314,115 +314,99 @@ const Home: NextPage = () => {
                           folders[selectedFolder]?.projects?.length}
                     </span>
                   </motion.h1>
-                  <motion.ul
-                    animate={{
-                      transition: {
-                        staggerChildren: 0.1,
-                      },
-                    }}
-                    className="grid grid-cols-3 lg:grid-cols-4 2xl:grid-cols-6  gap-6 w-full"
-                  >
-                    <AnimatePresence mode="wait">
+                  <motion.ul className="grid grid-cols-3 lg:grid-cols-4 2xl:grid-cols-6  gap-6 w-full">
+                    <AnimatePresence mode="popLayout">
                       {filteredProjects &&
                         (projectQuery
                           ? searchedProjects
                           : filteredProjects
-                        ).map(
-                          (item, idx) =>
-                            item.id &&
-                            folders[selectedFolder] &&
-                            folders[selectedFolder].projects.includes(
-                              item.id
-                            ) && (
-                              <motion.li
-                                layout
-                                initial={{ scale: 0.8, opacity: 0 }}
-                                animate={{
-                                  scale: 1,
-                                  opacity: 1,
-                                  transition: {
-                                    delay:
-                                      Math.max(0.05, 0.1 - idx * 0.05) * idx,
-                                  },
+                        ).map((item, idx) => (
+                          <motion.li
+                            layout
+                            initial={{ scale: 0.6, opacity: 0 }}
+                            animate={{
+                              scale: 1,
+                              opacity: 1,
+                              transition: {
+                                delay: 0.075 * idx,
+                              }
+                            }}
+                            exit={{
+                              
+                              opacity: 0,
+                              transition: {
+                                duration: 0, delay: 0
+                              },
+                            }}
+                            transition={{
+                              ease: "easeInOut",
+                            }}
+                            key={`${item.id}`}
+                            className=" border rounded-xl overflow-hidden  bg-white min-h-[150px] flex flex-col aspect-square group relative"
+                          >
+                            <div className="absolute group-hover:flex hidden top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 bg-white p-2 rounded-lg flex-col space-y-1 min-w-[50%] border border-zinc-300 shadow-xl">
+                              <Link href={`/editor/${item.id}`}>
+                                <button className=" hover:bg-zinc-100 rounded-lg font-medium text-zinc-800 py-2 px-3 w-full text-center duration-200 transition-all">
+                                  Open
+                                </button>
+                              </Link>
+                              <button
+                                onClick={() => {
+                                  setProjectName(item.name);
+                                  item.id && setEditProject(item.id);
                                 }}
-                                exit={{
-                                  scale: 0.8,
-                                  opacity: 0,
-                                  transition: { duration: 0.25, delay: 0 },
-                                }}
-                                transition={{
-                                  ease: "easeInOut",
-                                }}
-                                key={item.id}
-                                className=" border rounded-xl overflow-hidden  bg-white min-h-[150px] flex flex-col aspect-square group relative"
+                                className=" hover:bg-zinc-100 rounded-lg font-medium text-zinc-800 py-2 px-3 w-full text-center duration-200 transition-all"
                               >
-                                <div className="absolute group-hover:flex hidden top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 bg-white p-2 rounded-lg flex-col space-y-1 min-w-[50%] border border-zinc-300 shadow-xl">
-                                  <Link href={`/editor/${item.id}`}>
-                                    <button className=" hover:bg-zinc-100 rounded-lg font-medium text-zinc-800 py-2 px-3 w-full text-center duration-200 transition-all">
-                                      Open
-                                    </button>
-                                  </Link>
-                                  <button
-                                    onClick={() => {
-                                      setProjectName(item.name);
-                                      item.id && setEditProject(item.id);
-                                    }}
-                                    className=" hover:bg-zinc-100 rounded-lg font-medium text-zinc-800 py-2 px-3 w-full text-center duration-200 transition-all"
-                                  >
-                                    Edit
-                                  </button>
-                                  <button
-                                    onClick={() =>
-                                      folders &&
-                                      duplicate(
-                                        folders[selectedFolder].id,
-                                        item.id
-                                      )
+                                Edit
+                              </button>
+                              <button
+                                onClick={() =>
+                                  folders &&
+                                  duplicate(folders[selectedFolder].id, item.id)
+                                }
+                                className=" hover:bg-zinc-100 rounded-lg font-medium text-zinc-800 py-2 px-3 w-full text-center duration-200 transition-all"
+                              >
+                                Duplicate
+                              </button>
+                              <button
+                                onClick={() =>
+                                  deleteProject(
+                                    folders[selectedFolder].id,
+                                    item.id
+                                  )
+                                }
+                                className=" hover:bg-zinc-100 rounded-lg font-medium text-zinc-800 py-2 px-3 w-full text-center duration-200 transition-all"
+                              >
+                                Delete
+                              </button>
+                            </div>
+                            <div className=" min-h-[150px] flex flex-col group-hover:blur-sm group-hover:brightness-90 duration-300 transition-all">
+                              <img
+                                className="object-cover h-2/3"
+                                src={
+                                  typeof item.preview === "string"
+                                    ? item.preview
+                                    : URL.createObjectURL(item.preview)
+                                }
+                              />
+                              <div className="px-5 flex flex-col justify-between flex-1 py-4">
+                                <h2 className="font-medium text-zinc-700 whitespace-nowrap truncate">
+                                  {item.name}
+                                </h2>
+                                <p className="text-sm">
+                                  {new Date(item.date).toLocaleDateString(
+                                    "en-US",
+                                    {
+                                      year: "numeric",
+                                      month: "short",
+                                      day: "numeric",
                                     }
-                                    className=" hover:bg-zinc-100 rounded-lg font-medium text-zinc-800 py-2 px-3 w-full text-center duration-200 transition-all"
-                                  >
-                                    Duplicate
-                                  </button>
-                                  <button
-                                    onClick={() =>
-                                      deleteProject(
-                                        folders[selectedFolder].id,
-                                        item.id
-                                      )
-                                    }
-                                    className=" hover:bg-zinc-100 rounded-lg font-medium text-zinc-800 py-2 px-3 w-full text-center duration-200 transition-all"
-                                  >
-                                    Delete
-                                  </button>
-                                </div>
-                                <div className=" min-h-[150px] flex flex-col group-hover:blur-sm group-hover:brightness-90 duration-300 transition-all">
-                                  <img
-                                    className="object-cover h-2/3"
-                                    src={
-                                      typeof item.preview === "string"
-                                        ? item.preview
-                                        : URL.createObjectURL(item.preview)
-                                    }
-                                  />
-                                  <div className="px-5 flex flex-col justify-between flex-1 py-4">
-                                    <h2 className="font-medium text-zinc-700 whitespace-nowrap truncate">
-                                      {item.name}
-                                    </h2>
-                                    <p className="text-sm">
-                                      {new Date(item.date).toLocaleDateString(
-                                        "en-US",
-                                        {
-                                          year: "numeric",
-                                          month: "short",
-                                          day: "numeric",
-                                        }
-                                      )}
-                                    </p>
-                                  </div>
-                                </div>
-                              </motion.li>
-                            )
-                        )}
+                                  )}
+                                </p>
+                              </div>
+                            </div>
+                          </motion.li>
+                        ))}
                     </AnimatePresence>
                   </motion.ul>
                 </motion.div>
