@@ -18,6 +18,7 @@ interface Props {
     close: () => void;
     labelId: string;
     descriptionId: string;
+    open: boolean;
   }) => React.ReactNode;
   placement?: Placement;
   children: JSX.Element;
@@ -71,6 +72,7 @@ const Popover = ({ children, render, placement, gap = 5 }: Props) => {
             {render({
               labelId,
               descriptionId,
+              open,
               close: () => {
                 setOpen(false);
               },

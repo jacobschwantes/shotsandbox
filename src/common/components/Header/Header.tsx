@@ -1,36 +1,32 @@
-import { Fragment, useState } from "react";
+import { useMemo, useState } from "react";
 import { NextPage } from "next";
-import { Disclosure, Menu, Transition } from "@headlessui/react";
-import { Notifications, Popover } from "@components/index";
+import { Disclosure } from "@headlessui/react";
 import {
-  ArrowRightIcon,
-  BellIcon,
-  BookOpenIcon,
-  ChipIcon,
-  DownloadIcon,
-  ChartBarIcon,
-  KeyIcon,
-  ArchiveIcon,
-  CogIcon,
   MenuIcon,
   XIcon,
   PencilIcon,
   HomeIcon,
+  ViewGridAddIcon,
+  AdjustmentsIcon,
 } from "@heroicons/react/outline";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import clsx from "clsx";
-import logo from "../../../../public/logo.png";
-import logo_short from "../../../../public/logo_short.png";
+import logo from "@public/logo.png";
+import logo_short from "@public/logo_short.png";
 import logo_light from "@public/logo_light.png";
-import logo_short_sky from "@public/logo_short_sky.png";
 import Image from "next/future/image";
-import { ChevronDownIcon } from "@heroicons/react/solid";
-
+import { motion } from "framer-motion";
 interface HeaderProps {}
+const pages = [
+  { name: "projects", href: "/", icon: ViewGridAddIcon },
+  { name: "settings", href: "/settings", icon: AdjustmentsIcon },
+];
 const Header: NextPage<HeaderProps> = ({}) => {
   const router = useRouter();
-  const [navOpen, setNavOpen] = useState(false);
+  const active = useMemo(() => {
+    return router.asPath;
+  }, [router]);
   const navigation = [
     {
       name: "Home",
@@ -40,41 +36,65 @@ const Header: NextPage<HeaderProps> = ({}) => {
     },
   ];
   return (
-    <Disclosure
-      as="nav"
-      className="bg-white shadow-sm z-30 dark:bg-black dark:border-b dark:border-zinc-900"
-    >
+    <Disclosure as="nav" className="bg-white z-30 border-b py-3">
       {({ open, close }) => (
         <>
           <div className=" px-2 sm:px-6 lg:px-6 ">
-            <div className="flex items-center justify-between h-16">
+            <div className="flex items-center justify-between">
               <div className="flex items-center justify-between sm:flex-1 ">
-                <Link href="/">
-                  <span className="flex items-end justify-center space-x-2 dark:text-white  ">
-                    <Image
-                      className=" h-7 hidden sm:block w-auto  "
-                      src={logo_light}
-                      alt="logo"
-                    />
-                    <Image
-                      className="h-8 sm:hidden w-auto "
-                      src={logo_short}
-                      alt="logo"
-                    />
-                    <Image
-                      className=" h-7 hidden dark:sm:block w-auto   "
-                      src={logo}
-                      alt="logo"
-                    />
-                    <Image
-                      className="h-8 w-auto hidden dark:sm:block"
-                      src={logo_short}
-                      alt="logo"
-                    />
+                <div className="flex  items-center space-x-5">
+                  <Link href="/">
+                    <span className="flex items-end justify-center space-x-2 dark:text-white  ">
+                      <Image
+                        className=" h-7 hidden sm:block w-auto  "
+                        src={logo_light}
+                        alt="logo"
+                      />
+                      <Image
+                        className="h-8 sm:hidden w-auto "
+                        src={logo_short}
+                        alt="logo"
+                      />
+                      <Image
+                        className=" h-7 hidden dark:sm:block w-auto   "
+                        src={logo}
+                        alt="logo"
+                      />
+                      <Image
+                        className="h-8 w-auto hidden dark:sm:block"
+                        src={logo_short}
+                        alt="logo"
+                      />
 
-                    {/* <h1 className="text-2xl hidden sm:block">screenshotify</h1> */}
-                  </span>
-                </Link>
+                      {/* <h1 className="text-2xl hidden sm:block">screenshotify</h1> */}
+                    </span>
+                  </Link>
+
+                  <ul className={clsx("flex ")}>
+                    {pages.map((tab, index) => (
+                      <motion.li className="relative" key={tab.name}>
+                        <Link href={tab.href}>
+                          <a
+                            className={clsx(
+                              "flex items-center justify-center px-4 py-3 rounded-lg text-center font-medium capitalize leading-5 transition-all duration-300 select-none outline-none ",
+                              tab.href === active
+                                ? "bg-zinc-100 text-zinc-800    "
+                                : "text-gray-500 hover:text-gray-800"
+                            )}
+                          >
+                            <tab.icon
+                              className={clsx(
+                                tab.href === active && "text-sky-500",
+                                "h-5 mr-1.5"
+                              )}
+                            />{" "}
+                            <h1 className="">{tab.name}</h1>
+                          </a>
+                        </Link>
+                      </motion.li>
+                    ))}
+                  </ul>
+                </div>
                 {/* <Link href="/editor">
                       <a className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-sky-600 hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 dark:ring-offset-black">
                         Editor
@@ -88,7 +108,7 @@ const Header: NextPage<HeaderProps> = ({}) => {
                       Open Editor
                       <PencilIcon className="h-4 ml-1" />
                     </a>
-                  </Link>{" "}
+                  </Link>
                 </div>
                 <div className="flex items-center sm:hidden">
                   {/* Mobile menu button*/}
