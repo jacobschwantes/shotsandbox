@@ -19,19 +19,7 @@ const AppLayout: NextPage<AppLayoutProps> = ({ children }) => {
       <Head>
         <title>screenshotify | app</title>
       </Head>
-      <ToastContainer
-        position="bottom-right"
-        className="text-sm"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        theme="colored"
-        pauseOnHover
-      />
+
       <div className="fixed w-full z-10 ">
         <Header />
       </div>

@@ -26,19 +26,7 @@ const Home: NextPage = ({}) => {
       <Head>
         <title>ShotSandbox - Editor</title>
       </Head>
-      <ToastContainer
-        position="bottom-right"
-        className="text-sm"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        theme="colored"
-        pauseOnHover
-      />
+      
       {project ? (
         <Editor project={project} />
       ) : (

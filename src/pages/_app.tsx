@@ -1,9 +1,11 @@
-import "../common/styles/globals.css";
+import "react-toastify/dist/ReactToastify.css";
+import "@styles/globals.css";
 import type { AppProps } from "next/app";
 import { useRouter } from "next/router";
 import AppLayout from "@layouts/AppLayout";
 import { useEffect, useState } from "react";
 import ProgressBar from "@badrap/bar-of-progress";
+import { ToastContainer } from "react-toastify";
 const progress = new ProgressBar({
   size: 2,
   color: "#0ea5e9",
@@ -20,12 +22,44 @@ function MyApp({ Component, pageProps }: AppProps) {
   }, [router.events]);
 
   if (router.asPath.includes("editor")) {
-    return <Component {...pageProps} />;
+    return (
+      <>
+        <ToastContainer
+          position="bottom-right"
+          className="text-sm"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
+        <Component {...pageProps} />
+      </>
+    );
   } else {
     return (
-      <AppLayout>
-        <Component {...pageProps} />
-      </AppLayout>
+      <>
+        <ToastContainer
+          position="bottom-right"
+          className="text-sm"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
+        <AppLayout>
+          <Component {...pageProps} />
+        </AppLayout>
+      </>
     );
   }
 }
