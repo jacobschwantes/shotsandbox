@@ -21,6 +21,16 @@ import { deleteDb, deleteFolder, deleteProject } from "src/db/utils/delete";
 import { AnimatePresence } from "framer-motion";
 import { modifyFolder, modifyProject } from "src/db/utils/modify";
 import { defaultProject } from "@utils/configs";
+function blobToArrayBuffer(blob) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.addEventListener("loadend", () => {
+      resolve(reader.result);
+    });
+    reader.addEventListener("error", reject);
+    reader.readAsArrayBuffer(blob);
+  });
+}
 
 const Home: NextPage = () => {
   const folders = useLiveQuery(() => db.folders.toArray(), [], false);
@@ -381,14 +391,14 @@ const Home: NextPage = () => {
                               </button>
                             </div>
                             <div className=" min-h-[150px] flex flex-col group-hover:blur-sm group-hover:brightness-90 duration-300 transition-all">
-                              <img
-                                className="object-cover h-2/3"
-                                src={
-                                  typeof item.preview === "string"
-                                    ? item.preview
-                                    : URL.createObjectURL(item.preview)
-                                }
-                              />
+                              {typeof item.preview === "string" ? (
+                                <img
+                                  className="object-cover h-2/3"
+                                  src={item.preview}
+                                />
+                              ) : (
+                                <ProjectImage src={item.preview} />
+                              )}
                               <div className="px-5 flex flex-col justify-between flex-1 py-4">
                                 <h2 className="font-medium text-zinc-700 whitespace-nowrap truncate">
                                   {item.name}
@@ -420,3 +430,13 @@ const Home: NextPage = () => {
 };
 
 export default Home;
+
+const ProjectImage = ({ src }) => {
+  function arrayBufferToBlob(buffer, type) {
+    return new Blob([buffer], { type: type });
+  }
+
+  const blob = arrayBufferToBlob(src, "image/png");
+
+  return <img className="object-cover h-2/3" src={URL.createObjectURL(blob)} />;
+};

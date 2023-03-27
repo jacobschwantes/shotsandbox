@@ -12,6 +12,7 @@ export const downloadPng = (
     canvasWidth: options.width,
     canvasHeight: options.height,
     pixelRatio: 1,
+    includeQueryParams: true,
     style: {
       borderRadius: "0px",
     },
@@ -33,6 +34,7 @@ export const downloadJpg = (
   toJpeg(elementRef, {
     canvasWidth: options.width,
     canvasHeight: options.height,
+    includeQueryParams: true,
     style: {
       borderRadius: "0px",
     },
@@ -55,6 +57,7 @@ export const copyImageToClipboard = (
   toBlob(elementRef, {
     canvasWidth: options.width,
     canvasHeight: options.height,
+    includeQueryParams: true,
     pixelRatio: 1,
     style: {
       borderRadius: "0px",
@@ -78,18 +81,19 @@ export const getPngDataUrl = async (
   elementRef: HTMLElement,
   options: ExportOptions
 ) => {
- return await toPng(elementRef, {
+  return await toPng(elementRef, {
     canvasWidth: options.width,
     canvasHeight: options.height,
     pixelRatio: 1,
+    includeQueryParams: true,
     style: {
       borderRadius: "0px",
     },
   })
     .then((dataUrl) => {
       if (dataUrl) {
-        console.log(dataUrl)
-        return dataUrl
+        console.log(dataUrl);
+        return dataUrl;
       }
     })
     .catch((err) => {
@@ -100,18 +104,22 @@ export const getBlob = async (
   elementRef: HTMLElement,
   options: ExportOptions
 ) => {
- return await toBlob(elementRef, {
+  await toBlob(elementRef);
+  await toBlob(elementRef);
+  await toBlob(elementRef);
+  return await toBlob(elementRef, {
     canvasWidth: options.width,
     canvasHeight: options.height,
     pixelRatio: 1,
+    includeQueryParams: true,
     style: {
       borderRadius: "0px",
     },
   })
     .then((dataUrl) => {
       if (dataUrl) {
-        console.log(dataUrl)
-        return dataUrl
+        console.log(dataUrl);
+        return dataUrl;
       }
     })
     .catch((err) => {

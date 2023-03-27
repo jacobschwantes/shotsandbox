@@ -229,6 +229,17 @@ const Editor: NextPage<EditorProps> = ({ project }) => {
       layers: layersCopy,
     });
   };
+  function blobToArrayBuffer(blob) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.addEventListener("loadend", () => {
+        resolve(reader.result);
+      });
+      reader.addEventListener("error", reject);
+      reader.readAsArrayBuffer(blob);
+    });
+  }
+
   const updateConfig = (newConfig: Partial<Config>) => {
     if (historyIdx > 0) {
       const newHistory = history.filter((item, index) => index >= historyIdx);
@@ -248,27 +259,16 @@ const Editor: NextPage<EditorProps> = ({ project }) => {
           width: config.size.dimensions.width,
           height: config.size.dimensions.height,
         }));
-      if (newPreview) {
+      const convertedToBuffer = await blobToArrayBuffer(newPreview);
+      if (convertedToBuffer) {
         await db.projects.put({
           ...project,
-          preview: newPreview,
+          preview: convertedToBuffer,
           config,
         });
       }
     } catch (e: any) {
       console.error(e);
-      toast(
-        <div className="flex items-center space-x-3">
-          <span>
-            <p className="text-sm font-extralight">{e.message}</p>
-          </span>
-        </div>,
-        {
-          type: "error",
-        }
-      );
-    } finally {
-      toast("Saved project", { type: "success" });
     }
   };
 
@@ -284,14 +284,14 @@ const Editor: NextPage<EditorProps> = ({ project }) => {
       fr.readAsArrayBuffer(newFile);
       fr.onload = function () {
         if (fr.result) {
-          const blob = new Blob([fr.result]);
+          const result = fr.result;
           layers[activeLayer] = {
             ...layers[activeLayer],
             id,
             name: newFile.name,
             properties: {
               ...layers[activeLayer].properties,
-              src: blob,
+              src: result,
             },
           };
           updateConfig({ layers });
@@ -354,12 +354,16 @@ const Editor: NextPage<EditorProps> = ({ project }) => {
     const result = gcd(numerator, denominator);
     return [numerator / result, denominator / result];
   };
-
+  function arrayBufferToBlob(buffer, type) {
+    return new Blob([buffer], { type: type });
+  }
   const imgDataUrl = useMemo(
     () =>
       typeof config.layers[0].properties.src === "string"
         ? config.layers[0].properties.src
-        : URL.createObjectURL(config.layers[0].properties.src),
+        : URL.createObjectURL(
+            arrayBufferToBlob(config.layers[0].properties.src, "image/png")
+          ),
     [config.layers[0].properties.src]
   );
 
@@ -535,7 +539,11 @@ const Editor: NextPage<EditorProps> = ({ project }) => {
           <Tooltip label="Save">
             <button
               onClick={() => {
-                saveProject();
+                toast.promise(saveProject, {
+                  pending: "Saving project...",
+                  success: "Project saved!",
+                  error: "Error saving project",
+                });
               }}
               className="flex items-center justify-center space-x-2 border border-zinc-200 text-zinc-800  bg-white hover:bg-zinc-50 transition-all cursor-pointer p-3 rounded-lg"
             >
