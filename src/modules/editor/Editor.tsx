@@ -229,7 +229,7 @@ const Editor: NextPage<EditorProps> = ({ project }) => {
       layers: layersCopy,
     });
   };
-  function blobToArrayBuffer(blob) {
+  function blobToArrayBuffer(blob: Blob): Promise<ArrayBuffer | string | null> {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.addEventListener("loadend", () => {
@@ -259,7 +259,9 @@ const Editor: NextPage<EditorProps> = ({ project }) => {
           width: config.size.dimensions.width,
           height: config.size.dimensions.height,
         }));
-      const convertedToBuffer = await blobToArrayBuffer(newPreview);
+
+      const convertedToBuffer =
+        newPreview && (await blobToArrayBuffer(newPreview));
       if (convertedToBuffer) {
         await db.projects.put({
           ...project,
@@ -354,7 +356,7 @@ const Editor: NextPage<EditorProps> = ({ project }) => {
     const result = gcd(numerator, denominator);
     return [numerator / result, denominator / result];
   };
-  function arrayBufferToBlob(buffer, type) {
+  function arrayBufferToBlob(buffer: ArrayBuffer, type: string) {
     return new Blob([buffer], { type: type });
   }
   const imgDataUrl = useMemo(

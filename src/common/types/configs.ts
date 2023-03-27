@@ -80,7 +80,7 @@ export type Config = {
   background: BackgroundConfig;
 };
 export type ImageConfig = {
-  src: string | Blob;
+  src: string | ArrayBuffer;
   header: HeaderConfig;
   orientation: OrientationConfig;
   position: PositionConfig;
@@ -103,7 +103,7 @@ export interface Project {
   name: string;
   date: number;
   config: Config;
-  preview: string | Blob;
+  preview: ArrayBuffer | string;
 }
 
 export interface Folder {

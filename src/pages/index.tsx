@@ -21,7 +21,7 @@ import { deleteDb, deleteFolder, deleteProject } from "src/db/utils/delete";
 import { AnimatePresence } from "framer-motion";
 import { modifyFolder, modifyProject } from "src/db/utils/modify";
 import { defaultProject } from "@utils/configs";
-function blobToArrayBuffer(blob) {
+function blobToArrayBuffer(blob: Blob) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.addEventListener("loadend", () => {
@@ -431,8 +431,8 @@ const Home: NextPage = () => {
 
 export default Home;
 
-const ProjectImage = ({ src }) => {
-  function arrayBufferToBlob(buffer, type) {
+const ProjectImage = ({ src }: { src: ArrayBuffer }) => {
+  function arrayBufferToBlob(buffer: ArrayBuffer, type: string) {
     return new Blob([buffer], { type: type });
   }
 
