@@ -27,7 +27,7 @@ db.on("populate", function () {
   db.projects.add({
     id: 1,
     name: "Project 1",
-    preview: "preset_5.png",
+    preview: "/preset_5.png",
     date: Date.now(),
     config: {
       size: {

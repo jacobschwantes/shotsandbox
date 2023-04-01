@@ -12,7 +12,7 @@ import {
   ViewGridAddIcon,
 } from "@heroicons/react/outline";
 import { useMemo, useState } from "react";
-import { DotsHorizontalIcon } from "@heroicons/react/solid";
+import { DotsHorizontalIcon, DotsVerticalIcon } from "@heroicons/react/solid";
 import clsx from "clsx";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "src/db";
@@ -21,16 +21,7 @@ import { deleteDb, deleteFolder, deleteProject } from "src/db/utils/delete";
 import { AnimatePresence } from "framer-motion";
 import { modifyFolder, modifyProject } from "src/db/utils/modify";
 import { defaultProject } from "@utils/configs";
-function blobToArrayBuffer(blob: Blob) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.addEventListener("loadend", () => {
-      resolve(reader.result);
-    });
-    reader.addEventListener("error", reject);
-    reader.readAsArrayBuffer(blob);
-  });
-}
+import Image from "next/image";
 
 const Home: NextPage = () => {
   const folders = useLiveQuery(() => db.folders.toArray(), [], false);
@@ -55,7 +46,6 @@ const Home: NextPage = () => {
     setSelectedFolder(0);
     deleteFolder(id);
   };
-  const handleDeleteProject = (id: number) => {};
 
   const filteredProjects = useMemo(() => {
     if (projects && folders && folders[selectedFolder]) {
@@ -81,19 +71,15 @@ const Home: NextPage = () => {
           setOpen={setOpenFolder}
         >
           <div className="space-y-2">
-            <h1 className="font-medium text-zinc-900 ">Name</h1>
+            <h1 className="font-medium text-zinc-900">Name</h1>
             <input
               value={folderName}
               onChange={(e) => {
                 setFolderName(e.target.value);
               }}
               type="text"
-              className={clsx(
-                "form-input text-sm p-3 sm:w-1/2 w-full font-medium rounded-lg focus:outline-none bg-white text-zinc-600 border-zinc-300 border transition-colors",
-                false ? "border-red-500" : "hover:border-sky-500"
-              )}
+              className="text-sm p-3 sm:w-1/2 w-full font-medium rounded-lg focus:outline-sky-500  bg-white text-zinc-600 border-zinc-300 border transition-colors "
             />
-            <p className="text-red-500 font-medium text-sm">{false}</p>
           </div>
         </Modal>
         <Modal
@@ -116,12 +102,8 @@ const Home: NextPage = () => {
                 setFolderName(e.target.value);
               }}
               type="text"
-              className={clsx(
-                "form-input text-sm p-3 sm:w-1/2 w-full font-medium rounded-lg focus:outline-none bg-white text-zinc-600 border-zinc-300 border transition-colors",
-                false ? "border-red-500" : "hover:border-sky-500"
-              )}
+              className="text-sm p-3 sm:w-1/2 w-full font-medium rounded-lg focus:outline-sky-500  bg-white text-zinc-600 border-zinc-300 border transition-colors "
             />
-            <p className="text-red-500 font-medium text-sm">{false}</p>
           </div>
         </Modal>
         <Modal
@@ -144,12 +126,8 @@ const Home: NextPage = () => {
                 setProjectName(e.target.value);
               }}
               type="text"
-              className={clsx(
-                "form-input text-sm p-3 sm:w-1/2 w-full font-medium rounded-lg focus:outline-none bg-white text-zinc-600 border-zinc-300 border transition-colors",
-                false ? "border-red-500" : "hover:border-sky-500"
-              )}
+              className="text-sm p-3 sm:w-1/2 w-full font-medium rounded-lg focus:outline-sky-500  bg-white text-zinc-600 border-zinc-300 border transition-colors "
             />
-            <p className="text-red-500 font-medium text-sm">{false}</p>
           </div>
         </Modal>
         <Modal
@@ -175,12 +153,8 @@ const Home: NextPage = () => {
                 setProjectName(e.target.value);
               }}
               type="text"
-              className={clsx(
-                "form-input text-sm p-3 sm:w-1/2 w-full font-medium rounded-lg focus:outline-none bg-white text-zinc-600 border-zinc-300 border transition-colors",
-                false ? "border-red-500" : "hover:border-sky-500"
-              )}
+              className="text-sm p-3 sm:w-1/2 w-full font-medium rounded-lg focus:outline-sky-500  bg-white text-zinc-600 border-zinc-300 border transition-colors "
             />
-            <p className="text-red-500 font-medium text-sm">{false}</p>
           </div>
         </Modal>
         <div className="flex justify-between items-center pt-7">
@@ -268,7 +242,7 @@ const Home: NextPage = () => {
                                 <Popover
                                   placement="bottom-end"
                                   render={() => (
-                                    <ul className="bg-white text-zinc-800 p-1 border rounded-lg shadow min-w-[150px] flex justify-start flex-col cursor-pointer">
+                                    <ul className="bg-white p-2 rounded-lg flex-col space-y-1 border border-zinc-300 shadow-xl min-w-[150px]">
                                       <li
                                         onClick={() => {
                                           setFolderName(
@@ -276,19 +250,17 @@ const Home: NextPage = () => {
                                           );
                                           setEditFolder(true);
                                         }}
-                                        className="hover:bg-zinc-100 w-full text-left px-2 py-1 rounded-md flex items-center justify-between "
+                                        className="hover:bg-zinc-100 rounded-lg font-medium text-zinc-800 py-2 px-3 w-full text-center duration-200 transition-all cursor-pointer"
                                       >
-                                        <p>Edit</p>
-                                        <PencilIcon className="h-4" />
+                                        <p>Settings</p>
                                       </li>
                                       <li
                                         onClick={() => {
                                           item.id && removeFolder(item.id);
                                         }}
-                                        className="hover:bg-zinc-100 w-full text-left px-2 py-1 rounded-md flex items-center justify-between"
+                                        className="hover:bg-zinc-100 rounded-lg font-medium text-zinc-800 py-2 px-3 w-full text-center duration-200 transition-all cursor-pointer"
                                       >
                                         <p>Delete</p>
-                                        <TrashIcon className="h-4" />
                                       </li>
                                     </ul>
                                   )}
@@ -324,7 +296,7 @@ const Home: NextPage = () => {
                           folders[selectedFolder]?.projects?.length}
                     </span>
                   </motion.h1>
-                  <motion.ul className="grid grid-cols-3 lg:grid-cols-4 2xl:grid-cols-6  gap-6 w-full">
+                  <motion.ul className="grid md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-6 grid-cols-1  gap-6 w-full">
                     <AnimatePresence mode="popLayout">
                       {filteredProjects &&
                         (projectQuery
@@ -338,7 +310,7 @@ const Home: NextPage = () => {
                               scale: 1,
                               opacity: 1,
                               transition: {
-                                delay: 0.075 * idx,
+                                delay: (0.075 - idx * 0.0025) * idx,
                               },
                             }}
                             exit={{
@@ -355,11 +327,6 @@ const Home: NextPage = () => {
                             className=" border rounded-xl overflow-hidden  bg-white min-h-[150px] flex flex-col aspect-square group relative"
                           >
                             <div className="absolute group-hover:flex hidden top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 bg-white p-2 rounded-lg flex-col space-y-1 min-w-[50%] border border-zinc-300 shadow-xl">
-                              <Link href={`/editor/${item.id}`}>
-                                <button className=" hover:bg-zinc-100 rounded-lg font-medium text-zinc-800 py-2 px-3 w-full text-center duration-200 transition-all">
-                                  Open
-                                </button>
-                              </Link>
                               <button
                                 onClick={() => {
                                   setProjectName(item.name);
@@ -367,8 +334,13 @@ const Home: NextPage = () => {
                                 }}
                                 className=" hover:bg-zinc-100 rounded-lg font-medium text-zinc-800 py-2 px-3 w-full text-center duration-200 transition-all"
                               >
-                                Edit
+                                Settings
                               </button>
+                              <Link href={`/editor/${item.id}`}>
+                                <button className=" hover:bg-zinc-100 rounded-lg font-medium text-zinc-800 py-2 px-3 w-full text-center duration-200 transition-all">
+                                  Open
+                                </button>
+                              </Link>
                               <button
                                 onClick={() =>
                                   folders &&
@@ -390,19 +362,17 @@ const Home: NextPage = () => {
                                 Delete
                               </button>
                             </div>
-                            <div className=" min-h-[150px] flex flex-col group-hover:blur-sm group-hover:brightness-90 duration-300 transition-all">
-                              {typeof item.preview === "string" ? (
-                                <img
-                                  className="object-cover h-2/3"
-                                  src={item.preview}
-                                />
-                              ) : (
+                            <div className=" min-h-[150px]  flex flex-col group-hover:blur-sm group-hover:brightness-90 duration-300 transition-all aspect-square">
+                              <div className="h-2/3 w-full  ">
                                 <ProjectImage src={item.preview} />
-                              )}
+                              </div>
                               <div className="px-5 flex flex-col justify-between flex-1 py-4">
-                                <h2 className="font-medium text-zinc-700 whitespace-nowrap truncate">
-                                  {item.name}
-                                </h2>
+                                <div className="flex justify-between">
+                                  <h2 className="font-medium text-zinc-700 whitespace-nowrap truncate">
+                                    {item.name}
+                                  </h2>
+                                  <DotsHorizontalIcon className="h-7 text-zinc-500"/>
+                                </div>
                                 <p className="text-sm">
                                   {new Date(item.date).toLocaleDateString(
                                     "en-US",
@@ -431,12 +401,21 @@ const Home: NextPage = () => {
 
 export default Home;
 
-const ProjectImage = ({ src }: { src: ArrayBuffer }) => {
+const ProjectImage = ({ src }: { src: ArrayBuffer | string }) => {
   function arrayBufferToBlob(buffer: ArrayBuffer, type: string) {
     return new Blob([buffer], { type: type });
   }
 
+  if (typeof src === "string") {
+    return <img src={src} />;
+  }
+
   const blob = arrayBufferToBlob(src, "image/png");
 
-  return <img className="object-cover h-2/3" src={URL.createObjectURL(blob)} />;
+  return (
+    <img
+      className="h-full w-full object-cover"
+      src={URL.createObjectURL(blob)}
+    />
+  );
 };
