@@ -309,16 +309,24 @@ const Editor: NextPage<EditorProps> = ({ project }) => {
       } else {
         switch (format) {
           case "png":
-            downloadPng(ref.current, {
-              width: config.size.dimensions.width,
-              height: config.size.dimensions.height,
-            });
+            downloadPng(
+              ref.current,
+              {
+                width: config.size.dimensions.width,
+                height: config.size.dimensions.height,
+              },
+              project.name
+            );
             break;
           case "jpg":
-            downloadJpg(ref.current, {
-              width: config.size.dimensions.width,
-              height: config.size.dimensions.height,
-            });
+            downloadJpg(
+              ref.current,
+              {
+                width: config.size.dimensions.width,
+                height: config.size.dimensions.height,
+              },
+              project.name
+            );
             break;
           case "copy":
             copyImageToClipboard(ref.current, {
@@ -373,9 +381,16 @@ const Editor: NextPage<EditorProps> = ({ project }) => {
     <div className="h-screen w-screen bg-white flex flex-col overflow-hidden">
       <div className="h-16 flex items-center justify-between absolute w-full bg-white px-2 sm:px-6 lg:px-6 shadow-sm">
         <div className="flex sm:space-x-6 items-center">
-          <div className="hidden sm:block">
+          <div className="hidden sm:block h-8 w-auto">
             <Link href="/">
-              <img className="h-8 w-auto " src="/logo_short.png" alt="logo" />
+              <div className="relative h-8 w-8 cursor-pointer">
+                <Image
+                  priority
+                  layout="fill"
+                  src="/logo_short.png"
+                  alt="logo"
+                />
+              </div>
             </Link>
           </div>
 

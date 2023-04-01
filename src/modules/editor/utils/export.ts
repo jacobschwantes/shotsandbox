@@ -1,12 +1,20 @@
 import { toPng, toJpeg, toBlob } from "html-to-image";
 import { toast } from "react-toastify";
+
+const cleanString = (str: string) => {
+  str.replace(/[^a-zA-Z0-9]/g, "");
+  str.replace(/\s+/g, "-");
+  return str
+};
+
 interface ExportOptions {
   width: number;
   height: number;
 }
 export const downloadPng = (
   elementRef: HTMLElement,
-  options: ExportOptions
+  options: ExportOptions,
+  fileName: string
 ) => {
   toPng(elementRef, {
     canvasWidth: options.width,
@@ -19,7 +27,7 @@ export const downloadPng = (
   })
     .then((dataUrl) => {
       const link = document.createElement("a");
-      link.download = "my-image-name.png";
+      link.download = cleanString(fileName) + ".png";
       link.href = dataUrl;
       link.click();
     })
@@ -29,7 +37,8 @@ export const downloadPng = (
 };
 export const downloadJpg = (
   elementRef: HTMLElement,
-  options: ExportOptions
+  options: ExportOptions,
+  fileName: string
 ) => {
   toJpeg(elementRef, {
     canvasWidth: options.width,
@@ -42,7 +51,7 @@ export const downloadJpg = (
   })
     .then((dataUrl) => {
       const link = document.createElement("a");
-      link.download = "my-image-name.jpg";
+      link.download = cleanString(fileName) + ".jpg";
       link.href = dataUrl;
       link.click();
     })
@@ -52,7 +61,7 @@ export const downloadJpg = (
 };
 export const copyImageToClipboard = (
   elementRef: HTMLElement,
-  options: ExportOptions
+  options: ExportOptions,
 ) => {
   toBlob(elementRef, {
     canvasWidth: options.width,
