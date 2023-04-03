@@ -6,11 +6,14 @@ import { useRouter } from "next/router";
 import { db } from "src/db";
 import { useLiveQuery } from "dexie-react-hooks";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
+import clsx from "clsx";
+import Loader from "@components/Loader";
 const Home: NextPage = ({}) => {
   const router = useRouter();
   const { pid } = router.query;
   const [projectId, setProjectId] = useState(0);
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     if (typeof pid === "string") {
       router.isReady && setProjectId(parseInt(pid));
@@ -26,19 +29,19 @@ const Home: NextPage = ({}) => {
       <Head>
         <title>ShotSandbox - Editor</title>
       </Head>
-      
-      {project ? (
-        <Editor project={project} />
-      ) : (
-        <div className="flex h-screen w-screen items-center justify-center dark:bg-black  ">
-          <Image
-            alt="loading animation"
-            height={100}
-            width={100}
-            src="/loading.svg"
-          />
+
+      <div>
+        <div
+          className={clsx(
+            "absolute z-50 inset-0 flex flex-col items-center justify-center bg-white",
+           !loading && "hidden"
+          )}
+        >
+         <Loader/>
         </div>
-      )}
+
+        {project && <Editor setLoading={setLoading} project={project} />}
+      </div>
     </>
   );
 };
