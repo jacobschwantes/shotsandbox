@@ -46,7 +46,7 @@ import {
   framePresets,
   dimensionPresets,
 } from "./presets";
-import { Tooltip, Popover } from "@components/index";
+import { Tooltip, Popover, Loader } from "@components/index";
 import { Tab } from "@headlessui/react";
 import {
   Background,
@@ -201,8 +201,9 @@ const generalNavigation = [
 ];
 interface EditorProps {
   project: Project;
+  setLoading: (loading: boolean) => void;
 }
-const Editor: NextPage<EditorProps> = ({ project }) => {
+const Editor: NextPage<EditorProps> = ({ project, setLoading }) => {
   const [config, setConfig] = useState(project.config);
   const [history, setHistory] = useState([] as Config[]);
   const [historyIdx, setHistoryIdx] = useState(0);
@@ -780,8 +781,9 @@ const Editor: NextPage<EditorProps> = ({ project }) => {
                       )}
                     >
                       <Image
+                        onLoadingComplete={() => setLoading(false)}
                         alt="editor image"
-                        priority
+                        unoptimized
                         layout="fill"
                         src={imgDataUrl}
                       />
