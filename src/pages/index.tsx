@@ -6,7 +6,6 @@ import Link from "next/link";
 import {
   FolderAddIcon,
   FolderIcon,
-  PencilIcon,
   SearchIcon,
   TrashIcon,
   ViewGridAddIcon,
@@ -21,7 +20,6 @@ import { deleteDb, deleteFolder, deleteProject } from "src/db/utils/delete";
 import { AnimatePresence } from "framer-motion";
 import { modifyFolder, modifyProject } from "src/db/utils/modify";
 import { defaultProject } from "@utils/configs";
-import Image from "next/image";
 
 const Home: NextPage = () => {
   const folders = useLiveQuery(() => db.folders.toArray(), [], false);
@@ -193,7 +191,7 @@ const Home: NextPage = () => {
           </div>
         </div>
 
-        {folders && projects && (
+        {(folders && projects) ? (
           <div className=" w-full">
             <div className="py-5 space-y-10 w-full">
               <AnimatePresence initial={false} mode="sync">
@@ -393,7 +391,7 @@ const Home: NextPage = () => {
               </AnimatePresence>
             </div>
           </div>
-        )}
+        ): <h1>loading...</h1>}
       </div>
     </>
   );
@@ -407,7 +405,7 @@ const ProjectImage = ({ src }: { src: ArrayBuffer | string }) => {
   }
 
   if (typeof src === "string") {
-    return <img src={src} />;
+    return <img className="h-full w-full object-cover" src={src} />;
   }
 
   const blob = arrayBufferToBlob(src, "image/png");
