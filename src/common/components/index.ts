@@ -10,6 +10,7 @@ import ColorPicker from "./ColorPicker";
 import Popover from "./Popover";
 import Range from "./Range";
 import Tabs from "./Tabs";
+import Loader from "./Loader";
 export {
   Header,
   Navigation,
@@ -22,5 +23,6 @@ export {
   ColorPicker,
   Popover,
   Range,
-  Tabs
+  Tabs,
+  Loader
 };
