@@ -1,6 +1,6 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import { Modal, Popover } from "@components/index";
+import { Loader, Modal, Popover } from "@components/index";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import {
@@ -43,10 +43,6 @@ const Home: NextPage = () => {
       );
     } else return [];
   }, [projectQuery, projects]);
-  const removeFolder = (id: number) => {
-    setSelectedFolder(0);
-    deleteFolder(id);
-  };
 
   const filteredProjects = useMemo(() => {
     if (projects && folders && folders[selectedFolder]) {
@@ -59,8 +55,12 @@ const Home: NextPage = () => {
     <>
       <Head>
         <title>ShotSandbox - Dashboard</title>
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1"
+        />
       </Head>
-      <div className="px-6 bg-zinc-50 min-h-screen ">
+      <div className="sm:px-6 px-3 bg-zinc-50 min-h-screen ">
         <Modal
           callback={() => {
             insertFolder(folderName);
@@ -159,7 +159,7 @@ const Home: NextPage = () => {
             />
           </div>
         </Modal>
-        <div className="flex justify-between items-center pt-7">
+        <div className="flex justify-between space-x-2 items-center pt-7">
           <div className="flex items-center space-x-2 rounded-lg border bg-white px-5 flex-1 max-w-lg">
             <SearchIcon className="h-5 text-zinc-500" />
             <input
@@ -167,7 +167,7 @@ const Home: NextPage = () => {
               onChange={(e) => setProjectQuery(e.target.value)}
               type="text"
               placeholder="Search projects"
-              className="h-12 w-full border-0 bg-transparent text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm focus:outline-none"
+              className="h-[3.25rem] w-full border-0 bg-transparent text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm focus:outline-none"
             ></input>
           </div>
           <div className="flex items-start space-x-2 justify-self-end">
@@ -176,7 +176,7 @@ const Home: NextPage = () => {
                 setFolderName("New folder");
                 setOpenFolder(true);
               }}
-              className=" whitespace-nowrap inline-flex items-center px-4 py-3 border  rounded-lg text-sm font-medium text-black  bg-white hover:bg-zinc-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500  transition-all duration-300"
+              className=" whitespace-nowrap inline-flex items-center px-4 py-4 sm:py-3 border  rounded-lg text-sm font-medium text-black  bg-white hover:bg-zinc-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500  transition-all duration-300"
             >
               <FolderAddIcon className="h-5 w-5 sm:mr-1" />
               <span className="hidden sm:block">New Folder</span>
@@ -187,9 +187,9 @@ const Home: NextPage = () => {
                 setProjectName("New project");
                 setOpenProject(true);
               }}
-              className="inline-flex items-center px-4 py-3 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-sky-500 hover:bg-sky-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500  transition-all duration-300 "
+              className="inline-flex items-center px-4 py-4 sm:py-3 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-sky-500 hover:bg-sky-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500  transition-all duration-300 "
             >
-              <ViewGridAddIcon className="h-4 w-4 sm:mr-1" />
+              <ViewGridAddIcon className="h-5 sm:h-4 w-5 sm:w-4 sm:mr-1" />
               <span className="hidden sm:block">New Project</span>
             </button>
           </div>
@@ -229,7 +229,7 @@ const Home: NextPage = () => {
                             key={item.id}
                             onClick={() => setSelectedFolder(idx)}
                             className={clsx(
-                              "border rounded-lg space-y-3 p-3 bg-white flex flex-col justify-between transition-shadow duration-300 cursor-pointer",
+                              "border rounded-lg space-y-3 p-5 bg-white flex flex-col justify-between transition-shadow duration-300 cursor-pointer",
                               idx === selectedFolder
                                 ? " shadow-lg  shadow-sky-100 border-sky-400"
                                 : ""
@@ -237,14 +237,15 @@ const Home: NextPage = () => {
                           >
                             <div className="flex items-center  text-zinc-400 w-full">
                               <div>
-                                <FolderIcon className="h-12 w-12 text-sky-400" />
+                                <FolderIcon className="h-8 w-8 text-sky-400" />
                               </div>
                               <div className="mx-2">
                                 <p className="font-medium text-zinc-700 select-none  truncate ">
+                                  <span className="text-zinc-600">
+                                    {item.projects.length}{" "}
+                                    <span className="text-lg">∙</span>{" "}
+                                  </span>
                                   {item.name}
-                                </p>
-                                <p className="font-medium text-zinc-500 select-none truncate text-xs">
-                                  Projects ∙ {item.projects.length}
                                 </p>
                               </div>
                               <div className=" ml-auto">
@@ -265,7 +266,8 @@ const Home: NextPage = () => {
                                       </li>
                                       <li
                                         onClick={() => {
-                                          item.id && removeFolder(item.id);
+                                          setSelectedFolder(0);
+                                          item.id && deleteFolder(item.id);
                                         }}
                                         className="hover:bg-zinc-100 rounded-lg font-medium text-zinc-800 py-2 px-3 w-full text-center duration-200 transition-all cursor-pointer"
                                       >
@@ -400,7 +402,7 @@ const Home: NextPage = () => {
             </div>
           </div>
         ) : (
-          <h1>loading...</h1>
+          <></>
         )}
       </div>
     </>

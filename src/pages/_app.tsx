@@ -15,7 +15,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         <ToastContainer
           position="bottom-right"
           className="text-sm"
-          autoClose={5000}
+          autoClose={2000}
           hideProgressBar={false}
           newestOnTop
           closeOnClick
@@ -34,7 +34,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         <ToastContainer
           position="bottom-right"
           className="text-sm"
-          autoClose={5000}
+          autoClose={2000}
           hideProgressBar={false}
           newestOnTop
           closeOnClick
