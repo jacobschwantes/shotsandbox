@@ -6,7 +6,7 @@ import {
   XIcon,
   PencilIcon,
   HomeIcon,
-  ViewGridAddIcon,
+  ViewGridIcon,
   AdjustmentsIcon,
 } from "@heroicons/react/outline";
 import { useRouter } from "next/router";
@@ -19,7 +19,7 @@ import Image from "next/future/image";
 import { motion } from "framer-motion";
 interface HeaderProps {}
 const pages = [
-  { name: "projects", href: "/", icon: ViewGridAddIcon },
+  { name: "projects", href: "/", icon: ViewGridIcon },
   { name: "settings", href: "/settings", icon: AdjustmentsIcon },
 ];
 const Header: NextPage<HeaderProps> = ({}) => {
@@ -39,38 +39,21 @@ const Header: NextPage<HeaderProps> = ({}) => {
     <Disclosure as="nav" className="bg-white z-30 border-b py-3">
       {({ open, close }) => (
         <>
-          <div className=" px-2 sm:px-6 lg:px-6 ">
+          <div className="   ">
             <div className="flex items-center justify-between">
-              <div className="flex items-center justify-between sm:flex-1 ">
+              <div className="flex items-center justify-between flex-1 ">
                 <div className="flex  items-center space-x-5">
                   <Link href="/">
-                    <span className="flex items-end justify-center space-x-2 dark:text-white  ">
+                    <span className="flex items-end justify-center space-x-2   ">
                       <Image
-                        className=" h-7 hidden sm:block w-auto  "
+                        className="h-7 w-auto ml-2 sm:m-0"
                         src={logo_light}
                         alt="logo"
                       />
-                      <Image
-                        className="h-8 sm:hidden w-auto "
-                        src={logo_short}
-                        alt="logo"
-                      />
-                      <Image
-                        className=" h-7 hidden dark:sm:block w-auto   "
-                        src={logo}
-                        alt="logo"
-                      />
-                      <Image
-                        className="h-8 w-auto hidden dark:sm:block"
-                        src={logo_short}
-                        alt="logo"
-                      />
-
-                      {/* <h1 className="text-2xl hidden sm:block">screenshotify</h1> */}
                     </span>
                   </Link>
 
-                  <ul className={clsx("flex ")}>
+                  <ul className="sm:flex hidden ">
                     {pages.map((tab, index) => (
                       <motion.li className="relative" key={tab.name}>
                         <Link href={tab.href}>
@@ -95,24 +78,9 @@ const Header: NextPage<HeaderProps> = ({}) => {
                     ))}
                   </ul>
                 </div>
-                {/* <Link href="/editor">
-                      <a className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-sky-600 hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 dark:ring-offset-black">
-                        Editor
-                        <ArrowRightIcon className="h-5 w-5 ml-1" />
-                      </a>
-                    </Link> */}
-
-                <div className="sm:hidden">
-                  <Link href="/editor">
-                    <a className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-sky-600 hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 dark:ring-offset-black">
-                      Open Editor
-                      <PencilIcon className="h-4 ml-1" />
-                    </a>
-                  </Link>
-                </div>
                 <div className="flex items-center sm:hidden">
                   {/* Mobile menu button*/}
-                  <Disclosure.Button className="inline-flex items-center justify-center p-2 rounded-md text-black dark:text-white hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-sky-600">
+                  <Disclosure.Button className="inline-flex items-center justify-center p-2 rounded-md text-black  hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-sky-600">
                     <span className="sr-only">Open main menu</span>
                     {open ? (
                       <XIcon className="block h-6 w-6" aria-hidden="true" />
@@ -123,28 +91,28 @@ const Header: NextPage<HeaderProps> = ({}) => {
                 </div>
               </div>
             </div>
-
-            <Disclosure.Panel className="sm:hidden absolute z-10 bg-black w-screen">
-              <div className="px-2 pt-2 pb-3 space-y-1">
-                {navigation.map((item, index) => (
+            <Disclosure.Panel className="sm:hidden absolute z-50  mt-3 w-screen">
+              <div className="px-2 pt-2 pb-3 space-y-1 bg-sky-100 ">
+                {pages.map((item, index) => (
                   <Link key={index} href={item.href}>
                     <button
                       onClick={() => close()}
                       key={item.name}
                       className={clsx(
-                        item.current
-                          ? "bg-sky-200 text-sky-600 dark:bg-sky-900 dark:text-sky-600 dark:bg-opacity-30   "
+                        item.href === active
+                          ? "bg-white text-sky-600  "
                           : "text-gray-300  ",
-                        " flex items-center  p-3 rounded-lg border border-transparent text-center transition-all  hover:bg-gray-100 dark:hover:bg-zinc-900 dark:bg-opacity-50 w-full space-x-2"
+                        " flex items-center  p-3 rounded-lg border border-transparent text-center transition-all   w-full space-x-2"
                       )}
                     >
                       <item.icon
-                        className={"h-6 w-6 flex-shrink-0 transition-colors "}
+                        className="h-6 w-6 flex-shrink-0 transition-colors  "
                         aria-hidden="true"
                       />
                       <span
                         className={clsx(
-                          item.current ? "text-sky-500" : "text-white"
+                          item.href === active ? "text-sky-500" : "text-white",
+                          "capitalize"
                         )}
                       >
                         {item.name}

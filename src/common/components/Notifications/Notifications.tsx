@@ -77,7 +77,7 @@ export default function Notifications() {
           </span>
 
           <BellIcon
-            className="h-7 w-7 text-gray-700 hover:text-gray-800 dark:text-zinc-300 dark:hover:text-zinc-400"
+            className="h-7 w-7 text-gray-700 hover:text-gray-800  "
             aria-hidden="true"
           />
         </Menu.Button>
@@ -91,14 +91,14 @@ export default function Notifications() {
         leaveFrom="transform opacity-100 scale-100"
         leaveTo="transform opacity-0 scale-95"
       >
-        <Menu.Items className=" absolute right-8 z-10 mt-2 origin-top-right rounded-md  bg-white dark:bg-zinc-800 shadow-lg ring-1  ring-black  ring-opacity-5 focus:outline-none xs:right-0 xs:left-auto xs:w-80 w-80 ">
+        <Menu.Items className=" absolute right-8 z-10 mt-2 origin-top-right rounded-md  bg-white  shadow-lg ring-1  ring-black  ring-opacity-5 focus:outline-none xs:right-0 xs:left-auto xs:w-80 w-80 ">
           <div className="py-1">
             <Menu.Item>
               {({ active }) => (
-                <div className=" flex items-center justify-between border-b dark:border-zinc-700 px-4 py-2 font-semibold transition-colors ">
-                  <div className="flex flex-col dark:text-zinc-50  ">
+                <div className=" flex items-center justify-between border-b  px-4 py-2 font-semibold transition-colors ">
+                  <div className="flex flex-col   ">
                     Notifications
-                    <span className="text-sm font-normal text-gray-500 dark:text-zinc-400">
+                    <span className="text-sm font-normal text-gray-500 ">
                       {isLoading
                         ? "loading.."
                         : `You have ${unread.length} unread messages`}
@@ -111,7 +111,7 @@ export default function Notifications() {
             <Menu.Item>
               {({ active }) => (
                 <div className="block   text-sm transition-colors">
-                  <h1 className="px-3 py-1 text-sm font-semibold text-gray-500 dark:text-zinc-400">
+                  <h1 className="px-3 py-1 text-sm font-semibold text-gray-500 ">
                     NEW
                   </h1>
                   {!isLoading &&
@@ -119,17 +119,17 @@ export default function Notifications() {
                       return (
                         <div
                           key={index}
-                          className="flex cursor-pointer items-center space-x-3 bg-sky-50 dark:bg-zinc-700 p-3 hover:bg-gray-100 dark:hover:bg-zinc-600 "
+                          className="flex cursor-pointer items-center space-x-3 bg-sky-50  p-3 hover:bg-gray-100  "
                         >
                           <MailIcon
                             className="h-10 w-10 flex-shrink-0 rounded-full  text-sky-500 transition-colors"
                             aria-hidden="true"
                           />
                           <div className="flex flex-col space-y-1">
-                            <h1 className="font-semibold dark:text-zinc-100 ">
+                            <h1 className="font-semibold  ">
                               {item.message}
                             </h1>
-                            <p className="font-normal text-gray-500 dark:text-zinc-400 ">
+                            <p className="font-normal text-gray-500  ">
                               {item.submessage}
                             </p>
                             <h1 className="flex items-center text-xs text-gray-400">
@@ -148,24 +148,24 @@ export default function Notifications() {
             <Menu.Item>
               {({ active }) => (
                 <div className="block   text-sm transition-colors">
-                  <h1 className="px-3 py-1 text-sm font-semibold text-gray-500 dark:text-zinc-400">
+                  <h1 className="px-3 py-1 text-sm font-semibold text-gray-500 ">
                     RECENT
                   </h1>
                   {unread.map((item, index) => {
                     return (
                       <div
                         key={index}
-                        className="flex cursor-pointer items-start space-x-3 p-3 hover:bg-gray-100 dark:hover:bg-zinc-700 "
+                        className="flex cursor-pointer items-start space-x-3 p-3 hover:bg-gray-100  "
                       >
                         <item.icon
                           className="h-10 w-10 flex-shrink-0 rounded-full  text-sky-500 transition-colors"
                           aria-hidden="true"
                         />
                         <div className="flex flex-col space-y-1">
-                          <h1 className="font-semibold dark:text-zinc-100 ">
+                          <h1 className="font-semibold  ">
                             {item.message}
                           </h1>
-                          <p className="font-normal text-gray-500 dark:text-zinc-400 ">
+                          <p className="font-normal text-gray-500  ">
                             {item.submessage}
                           </p>
                           <h1 className="flex items-center text-xs text-gray-400">
@@ -188,8 +188,8 @@ export default function Notifications() {
                     e.preventDefault();
                   }}
                   className={clsx(
-                    active ? "bg-gray-100 dark:bg-zinc-700" : "",
-                    "block cursor-pointer rounded-b-lg border-t dark:border-zinc-700 px-4 py-2 text-center text-sm transition-colors dark:text-sky-500"
+                    active ? "bg-gray-100 " : "",
+                    "block cursor-pointer rounded-b-lg border-t  px-4 py-2 text-center text-sm transition-colors "
                   )}
                 >
                   View All

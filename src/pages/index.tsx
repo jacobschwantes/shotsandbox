@@ -5,13 +5,16 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import {
   FolderAddIcon,
-  FolderIcon,
   SearchIcon,
   TrashIcon,
   ViewGridAddIcon,
 } from "@heroicons/react/outline";
 import { useMemo, useState } from "react";
-import { DotsHorizontalIcon, DotsVerticalIcon } from "@heroicons/react/solid";
+import {
+  DotsHorizontalIcon,
+  DotsVerticalIcon,
+  FolderIcon,
+} from "@heroicons/react/solid";
 import clsx from "clsx";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "src/db";
@@ -63,6 +66,7 @@ const Home: NextPage = () => {
             insertFolder(folderName);
             setFolderName("");
             setOpenFolder(false);
+            setSelectedFolder((folders && folders.length++) || 0);
           }}
           heading="Add folder"
           open={openFolder}
@@ -172,7 +176,7 @@ const Home: NextPage = () => {
                 setFolderName("New folder");
                 setOpenFolder(true);
               }}
-              className=" whitespace-nowrap inline-flex items-center px-4 py-3 border  rounded-lg text-sm font-medium text-black  bg-white hover:bg-zinc-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 dark:ring-offset-black transition-all duration-300"
+              className=" whitespace-nowrap inline-flex items-center px-4 py-3 border  rounded-lg text-sm font-medium text-black  bg-white hover:bg-zinc-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500  transition-all duration-300"
             >
               <FolderAddIcon className="h-5 w-5 sm:mr-1" />
               <span className="hidden sm:block">New Folder</span>
@@ -183,7 +187,7 @@ const Home: NextPage = () => {
                 setProjectName("New project");
                 setOpenProject(true);
               }}
-              className="inline-flex items-center px-4 py-3 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-sky-500 hover:bg-sky-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 dark:ring-offset-black transition-all duration-300 "
+              className="inline-flex items-center px-4 py-3 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-sky-500 hover:bg-sky-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500  transition-all duration-300 "
             >
               <ViewGridAddIcon className="h-4 w-4 sm:mr-1" />
               <span className="hidden sm:block">New Project</span>
@@ -191,7 +195,7 @@ const Home: NextPage = () => {
           </div>
         </div>
 
-        {(folders && projects) ? (
+        {folders && projects ? (
           <div className=" w-full">
             <div className="py-5 space-y-10 w-full">
               <AnimatePresence initial={false} mode="sync">
@@ -211,31 +215,38 @@ const Home: NextPage = () => {
                       Folders{" "}
                       <span className="text-zinc-500">∙ {folders.length}</span>
                     </h1>
-                    <ul className="grid grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-3">
+                    <ul className="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-3">
                       <AnimatePresence initial={false} mode="sync">
                         {folders.map((item, idx) => (
                           <motion.li
                             layout
                             initial={{ scale: 0.8, opacity: 0 }}
                             animate={{ scale: 1, opacity: 1 }}
-                            exit={{ scale: 0.8, opacity: 0 }}
+                            exit={{ opacity: 0, transition: { duration: 0 } }}
                             transition={{
                               ease: "easeInOut",
                             }}
                             key={item.id}
                             onClick={() => setSelectedFolder(idx)}
                             className={clsx(
-                              "border rounded-lg space-y-3 p-5 bg-white flex flex-col justify-between",
-                              idx === selectedFolder ? "border-sky-500 " : ""
+                              "border rounded-lg space-y-3 p-3 bg-white flex flex-col justify-between transition-shadow duration-300 cursor-pointer",
+                              idx === selectedFolder
+                                ? " shadow-lg  shadow-sky-100 border-sky-400"
+                                : ""
                             )}
                           >
                             <div className="flex items-center  text-zinc-400 w-full">
                               <div>
-                                <FolderIcon className="h-7 w-7" />
+                                <FolderIcon className="h-12 w-12 text-sky-400" />
                               </div>
-                              <p className="font-medium text-zinc-700 select-none  truncate mx-2">
-                                {item.name}
-                              </p>
+                              <div className="mx-2">
+                                <p className="font-medium text-zinc-700 select-none  truncate ">
+                                  {item.name}
+                                </p>
+                                <p className="font-medium text-zinc-500 select-none truncate text-xs">
+                                  Projects ∙ {item.projects.length}
+                                </p>
+                              </div>
                               <div className=" ml-auto">
                                 <Popover
                                   placement="bottom-end"
@@ -263,7 +274,7 @@ const Home: NextPage = () => {
                                     </ul>
                                   )}
                                 >
-                                  <DotsHorizontalIcon className="h-7 hover:text-sky-500 cursor-pointer" />
+                                  <DotsVerticalIcon className="h-6 hover:text-sky-500 cursor-pointer" />
                                 </Popover>
                               </div>
                             </div>
@@ -303,13 +314,10 @@ const Home: NextPage = () => {
                         ).map((item, idx) => (
                           <motion.li
                             layout
-                            initial={{ scale: 0.6, opacity: 0 }}
+                            initial={{ scale: 0.9, opacity: 0 }}
                             animate={{
                               scale: 1,
                               opacity: 1,
-                              transition: {
-                                delay: (0.075 - idx * 0.0025) * idx,
-                              },
                             }}
                             exit={{
                               opacity: 0,
@@ -324,7 +332,7 @@ const Home: NextPage = () => {
                             key={`${item.id}`}
                             className=" border rounded-xl overflow-hidden  bg-white min-h-[150px] flex flex-col aspect-square group relative"
                           >
-                            <div className="absolute group-hover:flex hidden top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 bg-white p-2 rounded-lg flex-col space-y-1 min-w-[50%] border border-zinc-300 shadow-xl">
+                            <div className="absolute sm:group-hover:flex hidden top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 bg-white p-2 rounded-lg flex-col space-y-1 min-w-[50%] border border-zinc-300 shadow-xl">
                               <button
                                 onClick={() => {
                                   setProjectName(item.name);
@@ -360,7 +368,7 @@ const Home: NextPage = () => {
                                 Delete
                               </button>
                             </div>
-                            <div className=" min-h-[150px]  flex flex-col group-hover:blur-sm group-hover:brightness-90 duration-300 transition-all aspect-square">
+                            <div className=" min-h-[150px]  flex flex-col sm:group-hover:blur-sm sm:group-hover:brightness-90 duration-300 transition-all aspect-square">
                               <div className="h-2/3 w-full  ">
                                 <ProjectImage src={item.preview} />
                               </div>
@@ -369,7 +377,7 @@ const Home: NextPage = () => {
                                   <h2 className="font-medium text-zinc-700 whitespace-nowrap truncate">
                                     {item.name}
                                   </h2>
-                                  <DotsHorizontalIcon className="h-7 text-zinc-500"/>
+                                  <DotsHorizontalIcon className="h-7 text-zinc-500 sm:hidden " />
                                 </div>
                                 <p className="text-sm">
                                   {new Date(item.date).toLocaleDateString(
@@ -391,7 +399,9 @@ const Home: NextPage = () => {
               </AnimatePresence>
             </div>
           </div>
-        ): <h1>loading...</h1>}
+        ) : (
+          <h1>loading...</h1>
+        )}
       </div>
     </>
   );

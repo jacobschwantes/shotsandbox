@@ -80,7 +80,7 @@ const Header: NextComponentType<NextPageContext, {}, HeaderProps> = ({
     </div>
     <div className="space-y-2">
       <h1 className="block text-sm font-medium text-zinc-800 ">Align</h1>
-      <div className="flex space-x-2 rounded-xl bg-gray-100 dark:bg-black dark:border dark:border-zinc-900 p-1 max-w-4xl ">
+      <div className="flex space-x-2 rounded-xl bg-gray-100    p-1 max-w-4xl ">
         <button
           onClick={() =>
             updateLayer({
@@ -92,10 +92,10 @@ const Header: NextComponentType<NextPageContext, {}, HeaderProps> = ({
           }
           className={clsx(
             "flex w-full items-center justify-center rounded-lg py-2.5 text-center text-sm font-medium capitalize leading-5 space-x-1 ",
-            "ring-white ring-opacity-60 ring-offset-2 ring-offset-sky-400 focus:outline-none focus:ring-2 dark:ring-transparent",
+            "ring-white ring-opacity-60 ring-offset-2 ring-offset-sky-400 focus:outline-none focus:ring-2 ",
             layer.header.align === "horizontal"
-              ? "bg-white text-sky-700 dark:text-sky-500 shadow dark:bg-zinc-900"
-              : "text-gray-700 hover:bg-white/[0.12] hover:text-gray-600 dark:hover:text-zinc-200 dark:text-zinc-700"
+              ? "bg-white text-sky-700  shadow "
+              : "text-gray-700 hover:bg-white/[0.12] hover:text-gray-600  "
           )}
         >
           <h1 className="">Horizontal</h1>
@@ -111,10 +111,10 @@ const Header: NextComponentType<NextPageContext, {}, HeaderProps> = ({
           }
           className={clsx(
             "flex w-full items-center justify-center rounded-lg py-2.5 text-center text-sm font-medium capitalize leading-5 ",
-            "ring-white ring-opacity-60 ring-offset-2 ring-offset-sky-400 focus:outline-none focus:ring-2 dark:ring-transparent",
+            "ring-white ring-opacity-60 ring-offset-2 ring-offset-sky-400 focus:outline-none focus:ring-2 ",
             layer.header.align === "vertical"
-              ? "bg-white text-sky-700 dark:text-sky-500 shadow dark:bg-zinc-900"
-              : "text-gray-700 hover:bg-white/[0.12] hover:text-gray-600 dark:hover:text-zinc-200 dark:text-zinc-700"
+              ? "bg-white text-sky-700  shadow "
+              : "text-gray-700 hover:bg-white/[0.12] hover:text-gray-600  "
           )}
         >
           <h1 className="">Vertical</h1>

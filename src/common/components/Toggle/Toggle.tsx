@@ -19,8 +19,8 @@ const Toggle: NextComponentType<NextPageContext, {}, ToggleProps> = ({
         checked={enabled}
         onChange={setEnabled}
         className={clsx(
-          enabled ? "bg-sky-600" : "bg-zinc-200 dark:bg-zinc-800",
-          "relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 dark:ring-offset-zinc-900 focus:ring-sky-600"
+          enabled ? "bg-sky-600" : "bg-zinc-200 ",
+          "relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2  focus:ring-sky-600"
         )}
       >
         <span className="sr-only">Use setting</span>

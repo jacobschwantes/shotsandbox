@@ -49,9 +49,9 @@ export default function Navigation({ wideNav }: NavigationProps) {
               key={item.name}
               className={clsx(
                 item.current
-                  ? "bg-sky-200 text-sky-600 dark:bg-sky-900 dark:text-sky-600   "
+                  ? "bg-sky-200 text-sky-600     "
                   : "text-gray-300  ",
-                " flex items-center  p-3 rounded-lg border border-transparent text-center transition-all  hover:bg-gray-100 dark:hover:bg-zinc-900 dark:bg-opacity-50 "
+                " flex items-center  p-3 rounded-lg border border-transparent text-center transition-all  hover:bg-gray-100   "
               )}
             >
               <item.icon
