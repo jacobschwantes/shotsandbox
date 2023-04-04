@@ -1,19 +1,15 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { NextPage } from "next";
 import { Disclosure } from "@headlessui/react";
 import {
   MenuIcon,
   XIcon,
-  PencilIcon,
-  HomeIcon,
   ViewGridIcon,
   AdjustmentsIcon,
 } from "@heroicons/react/outline";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import clsx from "clsx";
-import logo from "@public/logo.png";
-import logo_short from "@public/logo_short.png";
 import logo_light from "@public/logo_light.png";
 import Image from "next/future/image";
 import { motion } from "framer-motion";
@@ -22,21 +18,13 @@ const pages = [
   { name: "projects", href: "/", icon: ViewGridIcon },
   { name: "settings", href: "/settings", icon: AdjustmentsIcon },
 ];
-const Header: NextPage<HeaderProps> = ({}) => {
+const Header: NextPage<HeaderProps> = () => {
   const router = useRouter();
   const active = useMemo(() => {
     return router.asPath;
   }, [router]);
-  const navigation = [
-    {
-      name: "Home",
-      href: "/",
-      icon: HomeIcon,
-      current: router.asPath === "/",
-    },
-  ];
   return (
-    <Disclosure as="nav" className="bg-white z-30 border-b py-3">
+    <Disclosure as="nav" className="bg-white z-50 border-b py-3 sm:px-6">
       {({ open, close }) => (
         <>
           <div className="   ">
@@ -80,7 +68,7 @@ const Header: NextPage<HeaderProps> = ({}) => {
                 </div>
                 <div className="flex items-center sm:hidden">
                   {/* Mobile menu button*/}
-                  <Disclosure.Button className="inline-flex items-center justify-center p-2 rounded-md text-black  hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-sky-600">
+                  <Disclosure.Button className="inline-flex items-center justify-center p-2 rounded-md text-black focus:outline-none focus:ring-2 focus:ring-inset focus:ring-sky-500 mr-2">
                     <span className="sr-only">Open main menu</span>
                     {open ? (
                       <XIcon className="block h-6 w-6" aria-hidden="true" />
@@ -91,7 +79,7 @@ const Header: NextPage<HeaderProps> = ({}) => {
                 </div>
               </div>
             </div>
-            <Disclosure.Panel className="sm:hidden absolute z-50  mt-3 w-screen">
+            <Disclosure.Panel className="sm:hidden absolute z-50 mt-3 w-screen">
               <div className="px-2 pt-2 pb-3 space-y-1 bg-sky-100 ">
                 {pages.map((item, index) => (
                   <Link key={index} href={item.href}>
@@ -100,19 +88,19 @@ const Header: NextPage<HeaderProps> = ({}) => {
                       key={item.name}
                       className={clsx(
                         item.href === active
-                          ? "bg-white text-sky-600  "
-                          : "text-gray-300  ",
-                        " flex items-center  p-3 rounded-lg border border-transparent text-center transition-all   w-full space-x-2"
+                          ? "bg-white text-sky-500  "
+                          : "text-sky-900  ",
+                        " flex items-center p-3 rounded-lg border border-transparent text-center  w-full space-x-2"
                       )}
                     >
                       <item.icon
-                        className="h-6 w-6 flex-shrink-0 transition-colors  "
+                        className="h-6 w-6 flex-shrink-0"
                         aria-hidden="true"
                       />
                       <span
                         className={clsx(
-                          item.href === active ? "text-sky-500" : "text-white",
-                          "capitalize"
+                          item.href === active ? "text-zinc-700" : "text-sky-900",
+                          "capitalize font-medium"
                         )}
                       >
                         {item.name}
@@ -120,7 +108,6 @@ const Header: NextPage<HeaderProps> = ({}) => {
                     </button>
                   </Link>
                 ))}
-                <div className="flex w-full space-x-3 p-2"></div>
               </div>
             </Disclosure.Panel>
           </div>
