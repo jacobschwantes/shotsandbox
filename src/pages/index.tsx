@@ -80,6 +80,7 @@ const Home: NextPage = () => {
           <div className="space-y-2">
             <h1 className="font-medium text-zinc-900">Name</h1>
             <input
+              required
               value={folderName}
               onChange={(e) => {
                 setFolderName(e.target.value);
@@ -104,6 +105,7 @@ const Home: NextPage = () => {
           <div className="space-y-2">
             <h1 className="font-medium text-zinc-900 ">Name</h1>
             <input
+              required
               value={folderName}
               onChange={(e) => {
                 setFolderName(e.target.value);
@@ -128,6 +130,7 @@ const Home: NextPage = () => {
           <div className="space-y-2">
             <h1 className="font-medium text-zinc-900 ">Name</h1>
             <input
+              required
               value={projectName}
               onChange={(e) => {
                 setProjectName(e.target.value);
@@ -155,6 +158,7 @@ const Home: NextPage = () => {
           <div className="space-y-2">
             <h1 className="font-medium text-zinc-900 ">Name</h1>
             <input
+              required
               value={projectName}
               onChange={(e) => {
                 setProjectName(e.target.value);
@@ -394,7 +398,60 @@ const Home: NextPage = () => {
                                   <h2 className="font-medium text-zinc-700 whitespace-nowrap truncate">
                                     {item.name}
                                   </h2>
-                                  <DotsHorizontalIcon className="h-7 text-zinc-500 sm:hidden " />
+                                  <Popover
+                                    placement="bottom-end"
+                                    render={() => (
+                                      <div className="flex z-10 bg-white p-2 rounded-lg flex-col space-y-1 min-w-[150px] border border-zinc-300 shadow-xl">
+                                        <button
+                                          onClick={() => {
+                                            setProjectName(item.name);
+                                            item.id && setEditProject(item.id);
+                                          }}
+                                          className=" hover:bg-zinc-100 rounded-lg font-medium text-zinc-800 py-2 px-3 w-full text-center duration-200 transition-all"
+                                        >
+                                          Settings
+                                        </button>
+                                        <Link href={`/editor/${item.id}`}>
+                                          <button
+                                            onClick={() =>
+                                              localStorage.setItem(
+                                                "lastFolder",
+                                                `${selectedFolder}`
+                                              )
+                                            }
+                                            className=" hover:bg-zinc-100 rounded-lg font-medium text-zinc-800 py-2 px-3 w-full text-center duration-200 transition-all"
+                                          >
+                                            Open
+                                          </button>
+                                        </Link>
+                                        <button
+                                          onClick={() =>
+                                            folders &&
+                                            duplicate(
+                                              folders[selectedFolder].id,
+                                              item.id
+                                            )
+                                          }
+                                          className=" hover:bg-zinc-100 rounded-lg font-medium text-zinc-800 py-2 px-3 w-full text-center duration-200 transition-all"
+                                        >
+                                          Duplicate
+                                        </button>
+                                        <button
+                                          onClick={() =>
+                                            deleteProject(
+                                              folders[selectedFolder].id,
+                                              item.id
+                                            )
+                                          }
+                                          className=" hover:bg-zinc-100 rounded-lg font-medium text-zinc-800 py-2 px-3 w-full text-center duration-200 transition-all"
+                                        >
+                                          Delete
+                                        </button>
+                                      </div>
+                                    )}
+                                  >
+                                    <DotsHorizontalIcon className="h-7 text-zinc-500 sm:hidden " />
+                                  </Popover>
                                 </div>
                                 <p className="text-sm">
                                   {new Date(item.created_at).toLocaleDateString(
