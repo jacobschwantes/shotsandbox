@@ -7,7 +7,7 @@ interface ModalProps {
   children?: React.ReactNode;
   heading?: string;
   action?: string;
-  callback?: () => void;
+  callback: () => void;
 }
 export default function Modal({
   setOpen,
@@ -45,7 +45,13 @@ export default function Modal({
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
               <Dialog.Panel className="relative bg-white border border-zinc-400 rounded-2xl px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 max-w-xl w-full sm:p-6">
-                <div className="space-y-4">
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    callback();
+                  }}
+                  className="space-y-4"
+                >
                   <h1 className="font-medium text-black text-lg">{heading}</h1>
                   <div className="space-y-5">{children}</div>
                   <div className="flex justify-end space-x-2">
@@ -59,14 +65,13 @@ export default function Modal({
                       Close
                     </button>
                     <button
-                      type="button"
+                      type="submit"
                       className="inline-flex items-center px-4 py-2 border  rounded-md shadow-sm text-sm font-medium text-white bg-sky-500 hover:bg-sky-600 transition-all duration-300"
-                      onClick={callback}
                     >
                       {action}
                     </button>
                   </div>
-                </div>
+                </form>
               </Dialog.Panel>
             </Transition.Child>
           </div>
