@@ -101,13 +101,16 @@ export type Layer = {
 export interface Project {
   id?: number;
   name: string;
-  date: number;
+  created_at: number;
+  last_modified: number;
   config: Config;
   preview: ArrayBuffer | string;
 }
 
 export interface Folder {
   id?: number;
+  created_at: number;
+  last_modified: number;
   name: string;
   projects: number[];
 }

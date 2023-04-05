@@ -2,7 +2,8 @@ import { Project } from "@customTypes/configs";
 export const defaultProject: Project = {
     name: "Default Project",
     preview: "preset_5.png",
-    date: Date.now(),
+    last_modified: Date.now(),
+    created_at: Date.now(),
     config: {
       size: {
         scale: 88,

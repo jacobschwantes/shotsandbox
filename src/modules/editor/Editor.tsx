@@ -252,7 +252,6 @@ const Editor: NextPage<EditorProps> = ({ project, setLoading }) => {
     });
   };
   const saveProject = async () => {
-    console.log(config.layers[0].properties.src);
     try {
       const newPreview =
         ref.current &&
@@ -267,6 +266,7 @@ const Editor: NextPage<EditorProps> = ({ project, setLoading }) => {
         await db.projects.put({
           ...project,
           preview: convertedToBuffer,
+          last_modified: Date.now(),
           config,
         });
       }

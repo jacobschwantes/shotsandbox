@@ -9,7 +9,7 @@ export const duplicate = async (
 ) => {
   if (folderId && projectId) {
     try {
-      const folder = await db.folders.get(folderId)
+      const folder = await db.folders.get(folderId);
       if (folder && folder?.projects.length >= projectLimit) {
         toast(`You can't have more than ${projectLimit} projects in a folder`, {
           type: "error",
@@ -45,11 +45,18 @@ export const insertFolder = async (name: string) => {
   try {
     const count = await db.folders.count();
     if (count >= folderLimit) {
-      toast(`You can't have more than ${folderLimit} folders`, { type: "error" });
+      toast(`You can't have more than ${folderLimit} folders`, {
+        type: "error",
+      });
       return;
     }
 
-    await db.folders.add({ name, projects: [] });
+    await db.folders.add({
+      name,
+      created_at: Date.now(),
+      last_modified: Date.now(),
+      projects: [],
+    });
     toast("Folder created", { type: "success" });
   } catch (e) {
     toast("Something went wrong", { type: "error" });
