@@ -9,7 +9,7 @@ import {
   TrashIcon,
   ViewGridAddIcon,
 } from "@heroicons/react/outline";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   DotsHorizontalIcon,
   DotsVerticalIcon,
@@ -51,6 +51,11 @@ const Home: NextPage = () => {
       );
     } else return [];
   }, [projects, selectedFolder, folders]);
+
+  useEffect(() => {
+    typeof window !== "undefined" &&
+      setSelectedFolder(parseInt(localStorage.getItem("lastFolder") || "0"));
+  }, []);
   return (
     <>
       <Head>
@@ -227,7 +232,9 @@ const Home: NextPage = () => {
                               ease: "easeInOut",
                             }}
                             key={item.id}
-                            onClick={() => setSelectedFolder(idx)}
+                            onClick={() => {
+                              setSelectedFolder(idx);
+                            }}
                             className={clsx(
                               "border rounded-lg space-y-3 p-5 bg-white flex flex-col justify-between transition-shadow duration-300 cursor-pointer",
                               idx === selectedFolder
@@ -345,7 +352,15 @@ const Home: NextPage = () => {
                                 Settings
                               </button>
                               <Link href={`/editor/${item.id}`}>
-                                <button className=" hover:bg-zinc-100 rounded-lg font-medium text-zinc-800 py-2 px-3 w-full text-center duration-200 transition-all">
+                                <button
+                                  onClick={() =>
+                                    localStorage.setItem(
+                                      "lastFolder",
+                                      `${selectedFolder}`
+                                    )
+                                  }
+                                  className=" hover:bg-zinc-100 rounded-lg font-medium text-zinc-800 py-2 px-3 w-full text-center duration-200 transition-all"
+                                >
                                   Open
                                 </button>
                               </Link>
@@ -382,7 +397,7 @@ const Home: NextPage = () => {
                                   <DotsHorizontalIcon className="h-7 text-zinc-500 sm:hidden " />
                                 </div>
                                 <p className="text-sm">
-                                  {new Date(item.date).toLocaleDateString(
+                                  {new Date(item.created_at).toLocaleDateString(
                                     "en-US",
                                     {
                                       year: "numeric",
