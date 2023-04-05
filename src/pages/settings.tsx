@@ -21,10 +21,11 @@ import {
 } from "@heroicons/react/solid";
 import clsx from "clsx";
 import { useLiveQuery } from "dexie-react-hooks";
-import { db } from "src/db";
+import { db, recreateDB } from "src/db";
 import { duplicate, insertFolder } from "src/db/utils/insert";
 import { deleteDb, deleteProject } from "src/db/utils/delete";
 import { AnimatePresence } from "framer-motion";
+import { toast } from "react-toastify";
 const Home: NextPage = () => {
   const [selected, setSelected] = useState("projects");
   const folders = useLiveQuery(() => db.folders.toArray(), [], false);
@@ -90,7 +91,13 @@ const Home: NextPage = () => {
         <div className="flex justify-between">
           <div className="py-5">
             <button
-              onClick={() => deleteDb()}
+              onClick={() =>
+                toast.promise(recreateDB, {
+                  pending: "Clearning DB...",
+                  success: "DB cleared",
+                  error: "Error clearing DB",
+                })
+              }
               className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-sky-500 hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500  transition-all duration-300 "
             >
               <TrashIcon className="h-4 w-4 sm:mr-1" />
