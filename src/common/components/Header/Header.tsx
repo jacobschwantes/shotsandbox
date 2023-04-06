@@ -35,7 +35,7 @@ const Header: NextPage<HeaderProps> = () => {
                     <span className="flex items-end justify-center space-x-2   ">
                       <Image
                         priority
-                        className="h-7 w-auto ml-2 sm:m-0"
+                        className="h-8 w-auto ml-2 sm:m-0"
                         src={logo_light}
                         alt="logo"
                       />

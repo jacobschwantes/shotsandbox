@@ -224,7 +224,7 @@ const Home: NextPage = () => {
                       Folders{" "}
                       <span className="text-zinc-500">∙ {folders.length}</span>
                     </h1>
-                    <ul className="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-3">
+                    <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-3">
                       <AnimatePresence initial={false} mode="sync">
                         {folders.map((item, idx) => (
                           <motion.li
@@ -318,7 +318,7 @@ const Home: NextPage = () => {
                           folders[selectedFolder]?.projects?.length}
                     </span>
                   </motion.h1>
-                  <motion.ul className="grid md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-6 grid-cols-1  gap-6 w-full">
+                  <motion.ul className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-6 grid-cols-1  gap-6 w-full">
                     <AnimatePresence mode="popLayout">
                       {filteredProjects &&
                         (projectQuery
