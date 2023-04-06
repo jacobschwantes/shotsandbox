@@ -413,21 +413,29 @@ const Editor: NextPage<EditorProps> = ({ project, setLoading }) => {
             </button>
           </Tooltip>
           <Popover
-            gap={10}
+            gap={5}
             placement="bottom"
             render={() => (
-              <div className="bg-zinc-200 bg-opacity-80 backdrop-blur p-4 rounded-lg space-y-3 w-[320px] ">
-                <h1 className="text-zinc-700 text-lg">Dimension Presets</h1>
+              <div className="bg-white border border-zinc-200 p-4 rounded-lg space-y-3 w-[320px] ">
+                <h1 className="text-zinc-700 text-lg font-medium">
+                  Dimension Presets
+                </h1>
 
                 <Tab.Group>
                   <Tab.List className="flex space-x-1">
                     {dimensionPresets.map((category) => (
                       <Tab
+
                         key={category.name}
                         className="w-full flex items-center justify-center"
                       >
                         {({ selected }) => (
-                          <category.icon className="h-6 w-6 bg-transparent text-zinc-700" />
+                          <category.icon
+                            className={clsx(
+                              "h-6 w-6 bg-transparent  hover:text-sky-500 transition-all duration-300",
+                              selected ? "text-sky-500" : "text-zinc-400"
+                            )}
+                          />
                         )}
                       </Tab>
                     ))}
@@ -435,7 +443,7 @@ const Editor: NextPage<EditorProps> = ({ project, setLoading }) => {
                   <Tab.Panels className="mt-2">
                     {dimensionPresets.map((item, idx) => (
                       <Tab.Panel key={idx}>
-                        <h1 className="text capitalize  text-zinc-700 pb-2">
+                        <h1 className="text capitalize font-medium text-zinc-600 pb-2">
                           {item.name}
                         </h1>
                         <ul className="space-y-2">
@@ -458,9 +466,9 @@ const Editor: NextPage<EditorProps> = ({ project, setLoading }) => {
                                     },
                                   })
                                 }
-                                className="flex w-full justify-between items-center space-x-2 border border-zinc-400 hover:border-sky-500 text-zinc-600 bg-zinc-500 hover:bg-sky-900 bg-opacity-25 hover:bg-opacity-25 transition-all cursor-pointer bg py-2 px-4 rounded-lg"
+                                className="flex w-full justify-between items-center space-x-2 border border-zinc-300 hover:border-sky-500 text-zinc-600 bg-white hover:bg-sky-200 hover:bg-opacity-25 bg-opacity-25 transition-all cursor-pointer bg py-2 px-4 rounded-lg"
                               >
-                                <p className="text-base text-zinc-700 font-medium capitalize">
+                                <p className="text-base text-zinc-600 font-medium capitalize">
                                   {name}
                                 </p>
                                 <p>
@@ -572,8 +580,8 @@ const Editor: NextPage<EditorProps> = ({ project, setLoading }) => {
             gap={10}
             placement="bottom-end"
             render={() => (
-              <div className="bg-zinc-200 p-4 rounded-lg space-y-3 max-w-3xl ">
-                <h1 className="text-zinc-700 text-lg">Export</h1>
+              <div className="bg-white border border-zinc-200 p-4 rounded-lg space-y-3 max-w-3xl ">
+                <h1 className="text-zinc-700 text-lg font-medium">Export</h1>
                 <div className="relative flex items-start">
                   <div className="min-w-0 flex-1 text-sm">
                     <label
@@ -591,27 +599,27 @@ const Editor: NextPage<EditorProps> = ({ project, setLoading }) => {
                     aria-describedby="show-watermark"
                     name="show-watermark"
                     type="checkbox"
-                    className="form-checkbox focus:ring-sky-600 focus:ring-offset-zinc-200 h-4 w-4 text-sky-600 border-zinc-400 rounded bg-zinc-400"
+                    className="form-checkbox focus:ring-sky-500 focus:ring-offset-zinc-200 h-4 w-4 text-sky-500 border-zinc-300 rounded bg-white"
                   />
                 </div>
 
                 <button
                   onClick={() => getImage("jpg")}
-                  className="flex items-center justify-center space-x-2 border w-full border-zinc-400 text-zinc-700 bg-zinc-500 hover:bg-sky-900 hover:border-sky-500 bg-opacity-25 hover:bg-opacity-25 transition-all cursor-pointer bg px-4 py-2 rounded-lg"
+                  className="flex items-center justify-center space-x-2 border w-full border-zinc-200 text-zinc-600 bg-white hover:bg-sky-200 hover:border-sky-500 bg-opacity-25 hover:bg-opacity-25 transition-all cursor-pointer bg px-4 py-2 rounded-lg"
                 >
                   <DownloadIcon className="h-5 w-5" />
                   <span className="font-medium">Download JPG</span>
                 </button>
                 <button
                   onClick={() => getImage("png")}
-                  className="flex items-center justify-center space-x-2 border w-full border-zinc-400 text-zinc-700 bg-zinc-500 hover:bg-sky-900 hover:border-sky-500 bg-opacity-25 hover:bg-opacity-25 transition-all cursor-pointer bg px-4 py-2 rounded-lg"
+                  className="flex items-center justify-center space-x-2 border w-full border-zinc-200 text-zinc-600 bg-white hover:bg-sky-200 hover:border-sky-500 bg-opacity-25 hover:bg-opacity-25 transition-all cursor-pointer bg px-4 py-2 rounded-lg"
                 >
                   <DownloadIcon className="h-5 w-5" />
                   <span className="font-medium">Download PNG</span>
                 </button>
                 <button
                   onClick={() => getImage("copy")}
-                  className="flex items-center justify-center space-x-2 border w-full border-zinc-400 text-zinc-700 bg-zinc-500 hover:bg-sky-900 hover:border-sky-500 bg-opacity-25 hover:bg-opacity-25 transition-all cursor-pointer bg px-4 py-2 rounded-lg"
+                  className="flex items-center justify-center space-x-2 border w-full border-zinc-200 text-zinc-600 bg-white hover:bg-sky-200 hover:border-sky-500 bg-opacity-25 hover:bg-opacity-25 transition-all cursor-pointer bg px-4 py-2 rounded-lg"
                 >
                   <DuplicateIcon className="h-5 w-5" />
                   <span className="font-medium">Copy to Clipboard</span>
@@ -812,7 +820,7 @@ const Editor: NextPage<EditorProps> = ({ project, setLoading }) => {
                       active.id === item.id
                         ? "bg-white lg:rounded-l-2xl"
                         : "bg-zinc-100",
-                      "flex flex-col items-center space-y-1 w-full  lg:p-2 p-1",
+                      "flex flex-col items-center space-y-1 w-full px-3 py-5",
                       active.id > 1 &&
                         item.id === active.id - 1 &&
                         "lg:rounded-br-2xl",
@@ -821,7 +829,7 @@ const Editor: NextPage<EditorProps> = ({ project, setLoading }) => {
                   >
                     <div
                       className={clsx(
-                        "flex flex-col items-center  p-3 rounded-lg border border-transparent text-center  text-zinc-400 ",
+                        "flex flex-col items-center justify-center   rounded-lg border border-transparent text-center  text-zinc-400 pb-2 ",
                         active.id == item.id && "text-zinc-500"
                       )}
                     >
