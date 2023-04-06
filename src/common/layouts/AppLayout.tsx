@@ -15,7 +15,7 @@ const AppLayout: NextPage<AppLayoutProps> = ({ children }) => {
 
 
   return (
-    <div className="h-full flex overflow-hidden ">
+    <div className="h-screen flex overflow-hidden ">
       <Head>
         <title>screenshotify | app</title>
       </Head>
@@ -27,7 +27,7 @@ const AppLayout: NextPage<AppLayoutProps> = ({ children }) => {
         <Navigation wideNav={false} />
       </div> */}
 
-      <div className="flex-1 h-full pt-16 bg-zinc-50">
+      <div className="flex-1 h-full pt-16 bg-zinc-50 overflow-y-auto">
         {children}
       </div>
     </div>

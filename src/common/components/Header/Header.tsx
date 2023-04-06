@@ -34,6 +34,7 @@ const Header: NextPage<HeaderProps> = () => {
                   <Link href="/">
                     <span className="flex items-end justify-center space-x-2   ">
                       <Image
+                        priority
                         className="h-7 w-auto ml-2 sm:m-0"
                         src={logo_light}
                         alt="logo"
@@ -99,7 +100,9 @@ const Header: NextPage<HeaderProps> = () => {
                       />
                       <span
                         className={clsx(
-                          item.href === active ? "text-zinc-700" : "text-sky-900",
+                          item.href === active
+                            ? "text-zinc-700"
+                            : "text-sky-900",
                           "capitalize font-medium"
                         )}
                       >

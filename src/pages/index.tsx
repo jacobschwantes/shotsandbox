@@ -65,109 +65,109 @@ const Home: NextPage = () => {
           content="width=device-width, initial-scale=1, maximum-scale=1"
         />
       </Head>
-      <div className="sm:px-6 px-3 bg-zinc-50 min-h-screen ">
-        <Modal
-          callback={() => {
-            insertFolder(folderName);
-            setFolderName("");
-            setOpenFolder(false);
-            setSelectedFolder((folders && folders.length++) || 0);
-          }}
-          heading="Add folder"
-          open={openFolder}
-          setOpen={setOpenFolder}
-        >
-          <div className="space-y-2">
-            <h1 className="font-medium text-zinc-900">Name</h1>
-            <input
-              required
-              value={folderName}
-              onChange={(e) => {
-                setFolderName(e.target.value);
-              }}
-              type="text"
-              className="text-sm p-3 sm:w-1/2 w-full font-medium rounded-lg focus:outline-sky-500  bg-white text-zinc-600 border-zinc-300 border transition-colors "
-            />
-          </div>
-        </Modal>
-        <Modal
-          callback={() => {
-            if (folders && folders[selectedFolder]) {
-              modifyFolder(folders[selectedFolder].id, { name: folderName });
-            }
-            setFolderName("");
-            setEditFolder(false);
-          }}
-          heading="Edit folder"
-          open={editFolder}
-          setOpen={setEditFolder}
-        >
-          <div className="space-y-2">
-            <h1 className="font-medium text-zinc-900 ">Name</h1>
-            <input
-              required
-              value={folderName}
-              onChange={(e) => {
-                setFolderName(e.target.value);
-              }}
-              type="text"
-              className="text-sm p-3 sm:w-1/2 w-full font-medium rounded-lg focus:outline-sky-500  bg-white text-zinc-600 border-zinc-300 border transition-colors "
-            />
-          </div>
-        </Modal>
-        <Modal
-          callback={() => {
-            if (projects) {
-              modifyProject(editProject, { name: projectName });
-            }
+      <Modal
+        callback={() => {
+          insertFolder(folderName);
+          setFolderName("");
+          setOpenFolder(false);
+          setSelectedFolder((folders && folders.length++) || 0);
+        }}
+        heading="Add folder"
+        open={openFolder}
+        setOpen={setOpenFolder}
+      >
+        <div className="space-y-2">
+          <h1 className="font-medium text-zinc-900">Name</h1>
+          <input
+            required
+            value={folderName}
+            onChange={(e) => {
+              setFolderName(e.target.value);
+            }}
+            type="text"
+            className="text-sm p-3 sm:w-1/2 w-full font-medium rounded-lg focus:outline-sky-500  bg-white text-zinc-600 border-zinc-300 border transition-colors "
+          />
+        </div>
+      </Modal>
+      <Modal
+        callback={() => {
+          if (folders && folders[selectedFolder]) {
+            modifyFolder(folders[selectedFolder].id, { name: folderName });
+          }
+          setFolderName("");
+          setEditFolder(false);
+        }}
+        heading="Edit folder"
+        open={editFolder}
+        setOpen={setEditFolder}
+      >
+        <div className="space-y-2">
+          <h1 className="font-medium text-zinc-900 ">Name</h1>
+          <input
+            required
+            value={folderName}
+            onChange={(e) => {
+              setFolderName(e.target.value);
+            }}
+            type="text"
+            className="text-sm p-3 sm:w-1/2 w-full font-medium rounded-lg focus:outline-sky-500  bg-white text-zinc-600 border-zinc-300 border transition-colors "
+          />
+        </div>
+      </Modal>
+      <Modal
+        callback={() => {
+          if (projects) {
+            modifyProject(editProject, { name: projectName });
+          }
+          setProjectName("");
+          setEditProject(0);
+        }}
+        heading="Edit project"
+        open={editProject === 0 ? false : true}
+        setOpen={() => setEditProject(0)}
+      >
+        <div className="space-y-2">
+          <h1 className="font-medium text-zinc-900 ">Name</h1>
+          <input
+            required
+            value={projectName}
+            onChange={(e) => {
+              setProjectName(e.target.value);
+            }}
+            type="text"
+            className="text-sm p-3 sm:w-1/2 w-full font-medium rounded-lg focus:outline-sky-500  bg-white text-zinc-600 border-zinc-300 border transition-colors "
+          />
+        </div>
+      </Modal>
+      <Modal
+        heading="Add project"
+        open={openProject}
+        setOpen={setOpenProject}
+        callback={() => {
+          if (folders && folders[selectedFolder]) {
+            const newProject = { ...defaultProject };
+            newProject.name = projectName;
+            insertProject(newProject, folders[selectedFolder].id);
             setProjectName("");
             setEditProject(0);
-          }}
-          heading="Edit project"
-          open={editProject === 0 ? false : true}
-          setOpen={() => setEditProject(0)}
-        >
-          <div className="space-y-2">
-            <h1 className="font-medium text-zinc-900 ">Name</h1>
-            <input
-              required
-              value={projectName}
-              onChange={(e) => {
-                setProjectName(e.target.value);
-              }}
-              type="text"
-              className="text-sm p-3 sm:w-1/2 w-full font-medium rounded-lg focus:outline-sky-500  bg-white text-zinc-600 border-zinc-300 border transition-colors "
-            />
-          </div>
-        </Modal>
-        <Modal
-          heading="Add project"
-          open={openProject}
-          setOpen={setOpenProject}
-          callback={() => {
-            if (folders && folders[selectedFolder]) {
-              const newProject = { ...defaultProject };
-              newProject.name = projectName;
-              insertProject(newProject, folders[selectedFolder].id);
-              setProjectName("");
-              setEditProject(0);
-              setOpenProject(false);
-            }
-          }}
-        >
-          <div className="space-y-2">
-            <h1 className="font-medium text-zinc-900 ">Name</h1>
-            <input
-              required
-              value={projectName}
-              onChange={(e) => {
-                setProjectName(e.target.value);
-              }}
-              type="text"
-              className="text-sm p-3 sm:w-1/2 w-full font-medium rounded-lg focus:outline-sky-500  bg-white text-zinc-600 border-zinc-300 border transition-colors "
-            />
-          </div>
-        </Modal>
+            setOpenProject(false);
+          }
+        }}
+      >
+        <div className="space-y-2">
+          <h1 className="font-medium text-zinc-900 ">Name</h1>
+          <input
+            required
+            value={projectName}
+            onChange={(e) => {
+              setProjectName(e.target.value);
+            }}
+            type="text"
+            className="text-sm p-3 sm:w-1/2 w-full font-medium rounded-lg focus:outline-sky-500  bg-white text-zinc-600 border-zinc-300 border transition-colors "
+          />
+        </div>
+      </Modal>
+      <div className="sm:px-6 px-3 bg-zinc-50 min-h-screen ">
         <div className="flex justify-between space-x-2 items-center pt-7">
           <div className="flex items-center space-x-2 rounded-lg border bg-white px-5 flex-1 max-w-lg">
             <SearchIcon className="h-5 text-zinc-500" />
