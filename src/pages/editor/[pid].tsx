@@ -27,7 +27,7 @@ const Home: NextPage = ({}) => {
   return (
     <>
       <Head>
-        <title>ShotSandbox - Editor</title>
+        <title>Editor | ShotSandbox</title>
       </Head>
 
       <div>

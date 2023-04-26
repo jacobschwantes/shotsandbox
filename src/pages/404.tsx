@@ -24,11 +24,7 @@ const Page: NextPage = () => {
                     Go back home
                   </a>
                 </Link>
-                <Link href="/">
-                  <a className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-sky-700 bg-sky-100 hover:bg-sky-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500">
-                    Contact support
-                  </a>
-                </Link>
+             
               </div>
             </div>
           </main>

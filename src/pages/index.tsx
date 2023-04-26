@@ -59,7 +59,7 @@ const Home: NextPage = () => {
   return (
     <>
       <Head>
-        <title>ShotSandbox - Dashboard</title>
+        <title>Dashboard | ShotSandbox</title>
         <meta
           name="viewport"
           content="width=device-width, initial-scale=1, maximum-scale=1"

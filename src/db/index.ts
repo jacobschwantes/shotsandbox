@@ -115,7 +115,7 @@ db.on("populate", function () {
               anchored: false,
               align: "vertical",
               content: {
-                title: "The best image editing tool for founders",
+                title: "The best image editing tool",
                 subtitle: "Turn boring screenshots into stunning graphics",
                 color: "rgba(255, 255, 255, 1)",
                 bold: true,

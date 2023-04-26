@@ -7,7 +7,7 @@ const Home: NextPage = () => {
   return (
     <>
       <Head>
-        <title>ShotSandbox - Settings</title>
+        <title>Settings | ShotSandbox</title>
       </Head>
       <div className="p-6 bg-zinc-50 min-h-screen ">
         <div className="flex justify-between">

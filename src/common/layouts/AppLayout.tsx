@@ -17,7 +17,7 @@ const AppLayout: NextPage<AppLayoutProps> = ({ children }) => {
   return (
     <div className="h-screen flex overflow-hidden ">
       <Head>
-        <title>screenshotify | app</title>
+        <title>ShotSandbox</title>
       </Head>
 
       <div className="fixed w-full z-10 ">
