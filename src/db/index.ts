@@ -120,7 +120,7 @@ db.on("populate", function () {
                 color: "rgba(255, 255, 255, 1)",
                 bold: true,
                 italic: false,
-                size: 3.5,
+                size: 150,
                 padding: 5,
                 translateX: 0,
               },
