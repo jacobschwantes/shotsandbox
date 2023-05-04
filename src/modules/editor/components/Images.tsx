@@ -1,5 +1,5 @@
 import { NextPageContext, NextComponentType } from "next";
-import { CameraIcon, UploadIcon } from "@heroicons/react/outline";
+import { CameraIcon, ArrowUpTrayIcon } from "@heroicons/react/24/outline";
 interface ImagesProps {
   addImage: (event: React.ChangeEvent<HTMLInputElement>) => void;
   setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -24,7 +24,7 @@ const Images: NextComponentType<NextPageContext, {}, ImagesProps> = ({
           htmlFor="file-input"
           className="flex items-center justify-center space-x-3 border border-sky-600 text-sky-500 bg-sky-900 bg-opacity-25 hover:bg-opacity-30 transition-all cursor-pointer bg py-2 rounded-lg"
         >
-          <UploadIcon className="h-5 w-5" />
+          <ArrowUpTrayIcon className="h-5 w-5" />
           <span className="font-medium text-base">Upload</span>
         </label>
         <input

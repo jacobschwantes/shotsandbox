@@ -2,21 +2,23 @@ import { useMemo } from "react";
 import { NextPage } from "next";
 import { Disclosure } from "@headlessui/react";
 import {
-  MenuIcon,
-  XIcon,
-  ViewGridIcon,
-  AdjustmentsIcon,
-} from "@heroicons/react/outline";
+  Bars3Icon,
+  XMarkIcon,
+  Squares2X2Icon,
+  AdjustmentsVerticalIcon,
+  BugAntIcon,
+} from "@heroicons/react/24/outline";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import clsx from "clsx";
 import logo_light from "@public/logo_light.png";
 import Image from "next/future/image";
 import { motion } from "framer-motion";
+import { Popover } from "..";
 interface HeaderProps {}
 const pages = [
-  { name: "projects", href: "/", icon: ViewGridIcon },
-  { name: "settings", href: "/settings", icon: AdjustmentsIcon },
+  { name: "projects", href: "/", icon: Squares2X2Icon },
+  { name: "settings", href: "/settings", icon: AdjustmentsVerticalIcon },
 ];
 const Header: NextPage<HeaderProps> = () => {
   const router = useRouter();
@@ -67,14 +69,23 @@ const Header: NextPage<HeaderProps> = () => {
                     ))}
                   </ul>
                 </div>
+                {/* <Popover
+                  render={() => (
+                    <div className="">
+                      find a bug?
+                    </div>
+                  )}
+                >
+                  <BugAntIcon className="h-5" />
+                </Popover> */}
                 <div className="flex items-center sm:hidden">
                   {/* Mobile menu button*/}
                   <Disclosure.Button className="inline-flex items-center justify-center p-2 rounded-md text-black focus:outline-none focus:ring-2 focus:ring-inset focus:ring-sky-500 mr-2">
                     <span className="sr-only">Open main menu</span>
                     {open ? (
-                      <XIcon className="block h-6 w-6" aria-hidden="true" />
+                      <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
                     ) : (
-                      <MenuIcon className="block h-6 w-6" aria-hidden="true" />
+                      <Bars3Icon className="block h-6 w-6" aria-hidden="true" />
                     )}
                   </Disclosure.Button>
                 </div>

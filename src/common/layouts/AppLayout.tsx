@@ -6,7 +6,7 @@ import { ReactNode, useMemo } from "react";
 import clsx from "clsx";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { AdjustmentsIcon, CogIcon, ViewGridAddIcon, ViewGridIcon } from "@heroicons/react/outline";
+import { AdjustmentsVerticalIcon, CogIcon, SquaresPlusIcon, Squares2X2Icon } from "@heroicons/react/24/outline";
 
 interface AppLayoutProps {
   children: ReactNode;

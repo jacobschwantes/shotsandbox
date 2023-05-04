@@ -1,7 +1,7 @@
 import { ImageConfig, FrameConfig } from "@customTypes/configs";
 import { NextPageContext, NextComponentType } from "next";
 import { Range, Toggle } from "@components/index";
-import { RefreshIcon } from "@heroicons/react/solid";
+import { ArrowPathIcon } from "@heroicons/react/24/solid";
 import clsx from "clsx";
 interface FramesProps {
   layer: ImageConfig;
@@ -47,7 +47,7 @@ const Frames: NextComponentType<NextPageContext, {}, FramesProps> = ({
                 });
               }}
             >
-              <RefreshIcon className="h-4" />
+              <ArrowPathIcon className="h-4" />
             </button>
           </div>
         </Range>

@@ -12,26 +12,25 @@ import {
   getBlob,
 } from "./utils/export";
 import {
-  BookmarkAltIcon,
-  CollectionIcon,
-  ColorSwatchIcon,
+  BookmarkSquareIcon,
+  RectangleStackIcon,
+  SwatchIcon,
   CubeTransparentIcon,
-  DesktopComputerIcon,
-  DownloadIcon,
-  LocationMarkerIcon,
-  ReplyIcon,
+  ComputerDesktopIcon,
+  ArrowDownTrayIcon,
+  MapPinIcon,
+  ArrowUturnLeftIcon,
   SunIcon,
-  DuplicateIcon,
-  AnnotationIcon,
-} from "@heroicons/react/solid";
+  Square2StackIcon,
+  ChatBubbleBottomCenterTextIcon,
+} from "@heroicons/react/24/solid";
 import { toast } from "react-toastify";
 import {
-  AdjustmentsIcon,
+  AdjustmentsVerticalIcon,
   ChevronLeftIcon,
-  RefreshIcon,
-  SaveIcon,
-  TemplateIcon,
-} from "@heroicons/react/outline";
+  ArrowPathIcon,
+  ArrowDownOnSquareIcon,
+} from "@heroicons/react/24/outline";
 import type {
   ImageDoc,
   Config,
@@ -66,13 +65,13 @@ const generalNavigation = [
   {
     id: 1,
     name: "Layers",
-    icon: CollectionIcon,
+    icon: RectangleStackIcon,
   },
   {
     id: 2,
     name: "Position",
     href: "/tokens",
-    icon: LocationMarkerIcon,
+    icon: MapPinIcon,
   },
   {
     id: 3,
@@ -84,13 +83,13 @@ const generalNavigation = [
     id: 4,
     name: "Header",
     href: "/history",
-    icon: AnnotationIcon,
+    icon: ChatBubbleBottomCenterTextIcon,
   },
   {
     id: 5,
     name: "Background",
     href: "/history",
-    icon: ColorSwatchIcon,
+    icon: SwatchIcon,
   },
   {
     id: 6,
@@ -102,12 +101,12 @@ const generalNavigation = [
     id: 7,
     name: "Frames",
     href: "/settings/account",
-    icon: DesktopComputerIcon,
+    icon: ComputerDesktopIcon,
   },
   {
     id: 8,
     name: "Border",
-    icon: BookmarkAltIcon,
+    icon: BookmarkSquareIcon,
   },
   // {
   //   id: 11,
@@ -409,7 +408,7 @@ const Editor: NextPage<EditorProps> = ({ project, setLoading }) => {
               }}
               className="flex items-center justify-center space-x-2 border border-zinc-200 text-zinc-800  bg-white hover:bg-zinc-50 transition-all cursor-pointer p-3 rounded-lg"
             >
-              <RefreshIcon className="h-5 w-5" />
+              <ArrowPathIcon className="h-5 w-5" />
             </button>
           </Tooltip>
           <Popover
@@ -486,7 +485,7 @@ const Editor: NextPage<EditorProps> = ({ project, setLoading }) => {
             )}
           >
             <button className="flex items-center justify-center space-x-2 border border-zinc-200 text-zinc-800  bg-white hover:bg-zinc-50 transition-all cursor-pointer p-3 rounded-lg">
-              <AdjustmentsIcon className="h-5 w-5" />
+              <AdjustmentsVerticalIcon className="h-5 w-5" />
             </button>
           </Popover>
 
@@ -547,7 +546,7 @@ const Editor: NextPage<EditorProps> = ({ project, setLoading }) => {
               onClick={() => setHistoryIdx(historyIdx + 1)}
               className=" disabled:cursor-not-allowed disabled:text-zinc-400 disabled:bg-zinc-50 flex items-center justify-center space-x-2 border border-zinc-200 text-zinc-800  bg-white hover:bg-zinc-50 transition-all cursor-pointer p-3 rounded-lg"
             >
-              <ReplyIcon className="h-5 w-5" />
+              <ArrowUturnLeftIcon className="h-5 w-5" />
             </button>
           </Tooltip>
           <Tooltip label="Redo">
@@ -556,7 +555,7 @@ const Editor: NextPage<EditorProps> = ({ project, setLoading }) => {
               onClick={() => setHistoryIdx(historyIdx - 1)}
               className="disabled:cursor-not-allowed disabled:text-zinc-400 disabled:bg-zinc-50 flex items-center justify-center space-x-2 border border-zinc-200 text-zinc-800  bg-white hover:bg-zinc-50 transition-all cursor-pointer p-3 rounded-lg"
             >
-              <ReplyIcon className="h-5 w-5 -scale-x-100" />
+              <ArrowUturnLeftIcon className="h-5 w-5 -scale-x-100" />
             </button>
           </Tooltip>
         </div>
@@ -573,7 +572,7 @@ const Editor: NextPage<EditorProps> = ({ project, setLoading }) => {
               }}
               className="flex items-center justify-center space-x-2 border border-zinc-200 text-zinc-800  bg-white hover:bg-zinc-50 transition-all cursor-pointer p-3 rounded-lg"
             >
-              <SaveIcon className="h-5 w-5" />
+              <ArrowDownOnSquareIcon className="h-5 w-5" />
             </button>
           </Tooltip>
           <Popover
@@ -607,21 +606,21 @@ const Editor: NextPage<EditorProps> = ({ project, setLoading }) => {
                   onClick={() => getImage("jpg")}
                   className="flex items-center justify-center space-x-2 border w-full border-zinc-200 text-zinc-600 bg-white hover:bg-sky-200 hover:border-sky-500 bg-opacity-25 hover:bg-opacity-25 transition-all cursor-pointer bg px-4 py-2 rounded-lg"
                 >
-                  <DownloadIcon className="h-5 w-5" />
+                  <ArrowDownTrayIcon className="h-5 w-5" />
                   <span className="font-medium">Download JPG</span>
                 </button>
                 <button
                   onClick={() => getImage("png")}
                   className="flex items-center justify-center space-x-2 border w-full border-zinc-200 text-zinc-600 bg-white hover:bg-sky-200 hover:border-sky-500 bg-opacity-25 hover:bg-opacity-25 transition-all cursor-pointer bg px-4 py-2 rounded-lg"
                 >
-                  <DownloadIcon className="h-5 w-5" />
+                  <ArrowDownTrayIcon className="h-5 w-5" />
                   <span className="font-medium">Download PNG</span>
                 </button>
                 <button
                   onClick={() => getImage("copy")}
                   className="flex items-center justify-center space-x-2 border w-full border-zinc-200 text-zinc-600 bg-white hover:bg-sky-200 hover:border-sky-500 bg-opacity-25 hover:bg-opacity-25 transition-all cursor-pointer bg px-4 py-2 rounded-lg"
                 >
-                  <DuplicateIcon className="h-5 w-5" />
+                  <Square2StackIcon className="h-5 w-5" />
                   <span className="font-medium">Copy to Clipboard</span>
                 </button>
               </div>
@@ -629,7 +628,7 @@ const Editor: NextPage<EditorProps> = ({ project, setLoading }) => {
           >
             <button className="flex items-center justify-center sm:space-x-2 border border-zinc-200 text-zinc-800  bg-white hover:bg-zinc-50 transition-all cursor-pointer p-3 rounded-lg font-medium">
               <span className="hidden sm:block">Export</span>
-              <DownloadIcon className="h-5 w-5 ml-0 sm:ml-1" />
+              <ArrowDownTrayIcon className="h-5 w-5 ml-0 sm:ml-1" />
             </button>
           </Popover>
         </div>

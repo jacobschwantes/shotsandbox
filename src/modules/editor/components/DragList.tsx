@@ -1,7 +1,7 @@
 import Tooltip from "@components/Tooltip";
 import { ImageDoc, Layer } from "@customTypes/configs";
-import { UploadIcon, XIcon } from "@heroicons/react/outline";
-import { PhotographIcon } from "@heroicons/react/solid";
+import { ArrowUpTrayIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { PhotoIcon } from "@heroicons/react/24/solid";
 import { Reorder, useDragControls, useMotionValue } from "framer-motion";
 import React from "react";
 interface ListProps {
@@ -59,7 +59,7 @@ export const Item = ({ item, idx, replaceImage }: ItemProps) => {
       dragControls={dragControls}
     >
       <div className="flex space-x-2 items-center">
-        <PhotographIcon className="h-6 text-zinc-500" />
+        <PhotoIcon className="h-6 text-zinc-500" />
         <p className="text-sm truncate max-w-[100px] text-zinc-800">
           {item.name}
         </p>
@@ -68,7 +68,7 @@ export const Item = ({ item, idx, replaceImage }: ItemProps) => {
       <div className="flex space-x-2 items-center">
         <label htmlFor={item.id + "file-input"}>
           <Tooltip label="Replace">
-            <UploadIcon className="h-5 w-5 text-zinc-500 cursor-pointer hover:text-zinc-200 transition-all" />
+            <ArrowUpTrayIcon className="h-5 w-5 text-zinc-500 cursor-pointer hover:text-zinc-200 transition-all" />
           </Tooltip>
         </label>
         <input
@@ -80,7 +80,7 @@ export const Item = ({ item, idx, replaceImage }: ItemProps) => {
         {/* 
         <button onClick={() => removeImage(item.id)}>
           <Tooltip label="Remove">
-            <XIcon className="h-5 text-zinc-400 hover:text-zinc-200 transition-all" />
+            <XMarkIcon className="h-5 text-zinc-400 hover:text-zinc-200 transition-all" />
           </Tooltip>
         </button> */}
 {/* 

@@ -1,10 +1,9 @@
 import {
   CogIcon,
-  LogoutIcon,
   KeyIcon,
   ChartBarIcon,
-  ArchiveIcon,
-} from "@heroicons/react/outline";
+  ArchiveBoxIcon,
+} from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import clsx from "clsx";
@@ -29,7 +28,7 @@ export default function Navigation({ wideNav }: NavigationProps) {
     {
       name: "History",
       href: "/history",
-      icon: ArchiveIcon,
+      icon: ArchiveBoxIcon,
       current: router.asPath.includes("history"),
     },
     {

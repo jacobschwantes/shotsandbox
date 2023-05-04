@@ -1,6 +1,6 @@
 import { NextPageContext, NextComponentType } from "next";
 import { ImageConfig, ShadowConfig } from "@customTypes/configs";
-import { RefreshIcon } from "@heroicons/react/solid";
+import { ArrowPathIcon } from "@heroicons/react/24/solid";
 import { ColorPicker } from "@components/index";
 import clsx from "clsx";
 interface ShadowProps {
@@ -41,7 +41,7 @@ const Shadow: NextComponentType<NextPageContext, {}, ShadowProps> = ({
           }}
           className="flex items-center justify-center space-x-2 border border-zinc-200 text-zinc-800  bg-white hover:bg-zinc-50 transition-all cursor-pointer p-3 rounded-lg font-medium"
         >
-          <RefreshIcon className="h-4 w-4" />
+          <ArrowPathIcon className="h-4 w-4" />
         </button>
       </div>
     </div>

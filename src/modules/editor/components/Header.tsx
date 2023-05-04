@@ -1,7 +1,7 @@
 import { NextPageContext, NextComponentType } from "next";
 import { ImageConfig } from "@customTypes/configs";
 import { Range, Toggle, ColorPicker } from "@components/index";
-import { RefreshIcon } from "@heroicons/react/solid";
+import { ArrowPathIcon } from "@heroicons/react/24/solid";
 import clsx from "clsx";
 interface HeaderProps {
   updateLayer: (newlayer: Partial<ImageConfig>) => void;
@@ -155,7 +155,7 @@ const Header: NextComponentType<NextPageContext, {}, HeaderProps> = ({
           }}
           className="flex items-center justify-center space-x-2 border border-zinc-200 text-zinc-800  bg-white hover:bg-zinc-50 transition-all cursor-pointer p-3 rounded-lg font-medium"
         >
-          <RefreshIcon className="h-4 w-4" />
+          <ArrowPathIcon className="h-4 w-4" />
         </button>
       </div>
     </div>
@@ -225,7 +225,7 @@ const Header: NextComponentType<NextPageContext, {}, HeaderProps> = ({
             });
           }}
         >
-          <RefreshIcon className="h-4" />
+          <ArrowPathIcon className="h-4" />
         </button>
       </div>
     </Range>
@@ -263,7 +263,7 @@ const Header: NextComponentType<NextPageContext, {}, HeaderProps> = ({
             });
           }}
         >
-          <RefreshIcon className="h-4" />
+          <ArrowPathIcon className="h-4" />
         </button>
       </div>
     </Range>
@@ -301,7 +301,7 @@ const Header: NextComponentType<NextPageContext, {}, HeaderProps> = ({
               });
             }}
           >
-            <RefreshIcon className="h-4" />
+            <ArrowPathIcon className="h-4" />
           </button>
         </div>
       </Range>

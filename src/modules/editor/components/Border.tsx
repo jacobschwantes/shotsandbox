@@ -1,6 +1,6 @@
 import { NextPageContext, NextComponentType } from "next";
 import { ImageConfig } from "@customTypes/configs";
-import { RefreshIcon } from "@heroicons/react/solid";
+import { ArrowPathIcon } from "@heroicons/react/24/solid";
 import { Range, ColorPicker } from "@components/index";
 interface BorderProps {
   layer: ImageConfig;
@@ -38,7 +38,7 @@ const Border: NextComponentType<NextPageContext, {}, BorderProps> = ({
           }}
           className="flex items-center justify-center space-x-2 border border-zinc-200 text-zinc-800  bg-white hover:bg-zinc-50 transition-all cursor-pointer p-3 rounded-lg font-medium"
         >
-          <RefreshIcon className="h-4 w-4" />
+          <ArrowPathIcon className="h-4 w-4" />
         </button>
       </div>
     </div>
@@ -70,7 +70,7 @@ const Border: NextComponentType<NextPageContext, {}, BorderProps> = ({
             });
           }}
         >
-          <RefreshIcon className="h-4" />
+          <ArrowPathIcon className="h-4" />
         </button>
       </div>
     </Range>
@@ -102,7 +102,7 @@ const Border: NextComponentType<NextPageContext, {}, BorderProps> = ({
             });
           }}
         >
-          <RefreshIcon className="h-4" />
+          <ArrowPathIcon className="h-4" />
         </button>
       </div>
     </Range>

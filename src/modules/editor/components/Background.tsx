@@ -1,9 +1,9 @@
 import { NextPageContext, NextComponentType } from "next";
 import { Config, GradientConfig } from "@customTypes/configs";
-import { RefreshIcon } from "@heroicons/react/solid";
+import { ArrowPathIcon } from "@heroicons/react/24/solid";
 import { Range, Tabs } from "@components/index";
 import clsx from "clsx";
-import { XIcon } from "@heroicons/react/outline";
+import { XMarkIcon } from "@heroicons/react/24/outline";
 import { AnimatePresence, Reorder, useDragControls } from "framer-motion";
 import { uniqueId } from "lodash";
 import { Tooltip, ColorPicker } from "@components/index";
@@ -67,7 +67,7 @@ const Background: NextComponentType<NextPageContext, {}, BackgroundProps> = ({
                 });
               }}
             >
-              <RefreshIcon className="h-4" />
+              <ArrowPathIcon className="h-4" />
             </button>
           </div>
         </Range>
@@ -268,7 +268,7 @@ const Item = ({ item, changeColor, removeStop, canDelete }: ItemProps) => {
               className="absolute -bottom-5"
               onClick={() => removeStop(item.id)}
             >
-              <XIcon className="h-4 w-4 text-zinc-400 hover:text-zinc-800 transition-all" />
+              <XMarkIcon className="h-4 w-4 text-zinc-400 hover:text-zinc-800 transition-all" />
             </button>
           </Tooltip>
         )}

@@ -1,8 +1,8 @@
 import {
   HomeIcon,
-  TrendingDownIcon,
-  TrendingUpIcon,
-} from "@heroicons/react/solid";
+  ArrowTrendingDownIcon,
+  ArrowTrendingUpIcon,
+} from "@heroicons/react/24/solid";
 const numeral = require("numeral");
 interface CardProps {
   count: number;
@@ -37,9 +37,9 @@ export default function Card({
           </h1>
           <div className="flex space-x-2 items-center">
             {change < 0 ? (
-              <TrendingDownIcon className="  h-6 w-6 bg-red-100   text-red-500  rounded-full p-1" />
+              <ArrowTrendingDownIcon className="  h-6 w-6 bg-red-100   text-red-500  rounded-full p-1" />
             ) : (
-              <TrendingUpIcon className="  h-6 w-6 bg-green-100    text-green-500 rounded-full p-1" />
+              <ArrowTrendingUpIcon className="  h-6 w-6 bg-green-100    text-green-500 rounded-full p-1" />
             )}
             <span className=" font-semibold text-sm  ">
               {(change > 0 ? "+" : "") + change.toFixed(1)}%

@@ -4,17 +4,18 @@ import { Loader, Modal, Popover } from "@components/index";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import {
-  FolderAddIcon,
-  SearchIcon,
+  FolderPlusIcon,
+  MagnifyingGlassIcon,
   TrashIcon,
-  ViewGridAddIcon,
-} from "@heroicons/react/outline";
+  SquaresPlusIcon,
+} from "@heroicons/react/24/outline";
 import { useEffect, useMemo, useState } from "react";
 import {
-  DotsHorizontalIcon,
-  DotsVerticalIcon,
+  EllipsisHorizontalIcon,
+  EllipsisVerticalIcon,
+
   FolderIcon,
-} from "@heroicons/react/solid";
+} from "@heroicons/react/24/solid";
 import clsx from "clsx";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "src/db";
@@ -170,7 +171,7 @@ const Home: NextPage = () => {
       <div className="sm:px-6 px-3 bg-zinc-50 min-h-screen ">
         <div className="flex justify-between space-x-2 items-center pt-7">
           <div className="flex items-center space-x-2 rounded-lg border bg-white px-5 flex-1 max-w-lg">
-            <SearchIcon className="h-5 text-zinc-500" />
+            <MagnifyingGlassIcon className="h-5 text-zinc-500" />
             <input
               value={projectQuery}
               onChange={(e) => setProjectQuery(e.target.value)}
@@ -187,7 +188,7 @@ const Home: NextPage = () => {
               }}
               className=" whitespace-nowrap inline-flex items-center px-4 py-4 sm:py-3 border  rounded-lg text-sm font-medium text-black  bg-white hover:bg-zinc-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500  transition-all duration-300"
             >
-              <FolderAddIcon className="h-5 w-5 sm:mr-1" />
+              <FolderPlusIcon className="h-5 w-5 sm:mr-1" />
               <span className="hidden sm:block">New Folder</span>
             </button>
 
@@ -198,7 +199,7 @@ const Home: NextPage = () => {
               }}
               className="inline-flex items-center px-4 py-4 sm:py-3 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-sky-500 hover:bg-sky-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500  transition-all duration-300 "
             >
-              <ViewGridAddIcon className="h-5 sm:h-4 w-5 sm:w-4 sm:mr-1" />
+              <SquaresPlusIcon className="h-5 sm:h-4 w-5 sm:w-4 sm:mr-1" />
               <span className="hidden sm:block">New Project</span>
             </button>
           </div>
@@ -287,7 +288,7 @@ const Home: NextPage = () => {
                                     </ul>
                                   )}
                                 >
-                                  <DotsVerticalIcon className="h-6 hover:text-sky-500 cursor-pointer" />
+                                  <EllipsisVerticalIcon className="h-6 hover:text-sky-500 cursor-pointer" />
                                 </Popover>
                               </div>
                             </div>
@@ -450,7 +451,7 @@ const Home: NextPage = () => {
                                       </div>
                                     )}
                                   >
-                                    <DotsHorizontalIcon className="h-7 text-zinc-500 sm:hidden " />
+                                    <EllipsisHorizontalIcon className="h-7 text-zinc-500 sm:hidden " />
                                   </Popover>
                                 </div>
                                 <p className="text-sm">

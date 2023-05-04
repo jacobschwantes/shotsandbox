@@ -1,5 +1,5 @@
 import { toast } from "react-toastify";
-import { CheckCircleIcon } from "@heroicons/react/outline";
+import { CheckCircleIcon } from "@heroicons/react/24/outline";
 interface ToastProps {
   options: {
     type: string;

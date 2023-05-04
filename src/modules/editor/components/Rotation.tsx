@@ -1,6 +1,6 @@
 import { NextPageContext, NextComponentType } from "next";
 import { Config, ImageConfig } from "@customTypes/configs";
-import { RefreshIcon } from "@heroicons/react/solid";
+import { ArrowPathIcon } from "@heroicons/react/24/solid";
 import { Range } from "@components/index";
 interface RotationProps {
   layer: ImageConfig;
@@ -44,7 +44,7 @@ const Rotation: NextComponentType<NextPageContext, {}, RotationProps> = ({
             });
           }}
         >
-          <RefreshIcon className="h-4" />
+          <ArrowPathIcon className="h-4" />
         </button>
       </div>
     </Range>
@@ -75,7 +75,7 @@ const Rotation: NextComponentType<NextPageContext, {}, RotationProps> = ({
             });
           }}
         >
-          <RefreshIcon className="h-4" />
+          <ArrowPathIcon className="h-4" />
         </button>
       </div>
     </Range>
@@ -106,7 +106,7 @@ const Rotation: NextComponentType<NextPageContext, {}, RotationProps> = ({
             });
           }}
         >
-          <RefreshIcon className="h-4" />
+          <ArrowPathIcon className="h-4" />
         </button>
       </div>
     </Range>
@@ -137,7 +137,7 @@ const Rotation: NextComponentType<NextPageContext, {}, RotationProps> = ({
             });
           }}
         >
-          <RefreshIcon className="h-4" />
+          <ArrowPathIcon className="h-4" />
         </button>
       </div>
     </Range>
@@ -168,7 +168,7 @@ const Rotation: NextComponentType<NextPageContext, {}, RotationProps> = ({
             });
           }}
         >
-          <RefreshIcon className="h-4" />
+          <ArrowPathIcon className="h-4" />
         </button>
       </div>
     </Range>
@@ -278,7 +278,7 @@ const Rotation: NextComponentType<NextPageContext, {}, RotationProps> = ({
       }}
       className="flex items-center justify-center space-x-2 border border-zinc-200 text-zinc-800  bg-white hover:bg-zinc-50 transition-all cursor-pointer px-4 py-3 rounded-lg font-medium"
     >
-      <RefreshIcon className="h-4 w-4" />
+      <ArrowPathIcon className="h-4 w-4" />
       <span>Reset</span>
     </button>
   </div>

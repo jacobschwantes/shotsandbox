@@ -4,11 +4,11 @@ import { Menu } from "@headlessui/react";
 import {
   BellIcon,
   ClockIcon,
-  MailIcon,
+EnvelopeIcon,
   CalendarIcon,
-} from "@heroicons/react/outline";
+} from "@heroicons/react/24/outline";
 import "react-toastify/dist/ReactToastify.css";
-import { CheckIcon } from "@heroicons/react/solid";
+import { CheckIcon } from "@heroicons/react/24/solid";
 import clsx from "clsx";
 function findTime(time: number) {
   let now = Date.now();
@@ -24,7 +24,7 @@ function findTime(time: number) {
 }
 const unread = [
   {
-    icon: MailIcon,
+    icon: EnvelopeIcon,
     message: "You have a new message",
     submessage: "7 unread messages.",
     timestamp: 1643689162,
@@ -38,7 +38,7 @@ const unread = [
 ];
 const read = [
   {
-    icon: MailIcon,
+    icon: EnvelopeIcon,
     message: "You have a new message",
     submessage: "7 unread messages.",
     timestamp: 1643689162,
@@ -121,7 +121,7 @@ export default function Notifications() {
                           key={index}
                           className="flex cursor-pointer items-center space-x-3 bg-sky-50  p-3 hover:bg-gray-100  "
                         >
-                          <MailIcon
+                          <EnvelopeIcon
                             className="h-10 w-10 flex-shrink-0 rounded-full  text-sky-500 transition-colors"
                             aria-hidden="true"
                           />
