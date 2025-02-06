@@ -36,6 +36,7 @@ const Header: NextPage<HeaderProps> = () => {
                   <Link href="/">
                     <span className="flex items-end justify-center space-x-2   ">
                       <Image
+                        loading="eager"
                         priority
                         className="h-8 w-auto ml-2 sm:m-0"
                         src={logo_light}

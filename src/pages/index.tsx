@@ -168,7 +168,7 @@ const Home: NextPage = () => {
           />
         </div>
       </Modal>
-      <div className="sm:px-6 px-3 bg-zinc-50 min-h-screen ">
+      <div className="sm:px-6 px-3 bg-zinc-50 min-h-screen max-w-[1900px] mx-auto ">
         <div className="flex justify-between space-x-2 items-center pt-7">
           <div className="flex items-center space-x-2 rounded-lg border bg-white px-5 flex-1 max-w-lg">
             <MagnifyingGlassIcon className="h-5 text-zinc-500" />
@@ -225,7 +225,7 @@ const Home: NextPage = () => {
                       Folders{" "}
                       <span className="text-zinc-500">∙ {folders.length}</span>
                     </h1>
-                    <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-3">
+                    <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3">
                       <AnimatePresence initial={false} mode="sync">
                         {folders.map((item, idx) => (
                           <motion.li
@@ -319,7 +319,7 @@ const Home: NextPage = () => {
                           folders[selectedFolder]?.projects?.length}
                     </span>
                   </motion.h1>
-                  <motion.ul className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-6 grid-cols-1  gap-6 w-full">
+                  <motion.ul className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 grid-cols-1  gap-6 w-full">
                     <AnimatePresence mode="popLayout">
                       {filteredProjects &&
                         (projectQuery

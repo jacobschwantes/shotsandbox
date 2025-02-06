@@ -385,6 +385,7 @@ const Editor: NextPage<EditorProps> = ({ project, setLoading }) => {
             <Link href="/">
               <div className="relative h-8 w-8 cursor-pointer">
                 <Image
+                  loading="eager"
                   priority
                   layout="fill"
                   src="/logo_short.png"
@@ -750,7 +751,7 @@ const Editor: NextPage<EditorProps> = ({ project, setLoading }) => {
                     }}
                     transition={{ type: "spring" }}
                     key={index}
-                    className="aspect-video relative flex flex-col flex-1 overflow-hidden "
+                    className="aspect-video relative flex flex-col flex-1 overflow-hidden w-full"
                     style={{
                       transformPerspective: properties.orientation.perspective,
                       boxShadow: `${properties.shadow.color} ${properties.shadow.size}`,
@@ -784,13 +785,14 @@ const Editor: NextPage<EditorProps> = ({ project, setLoading }) => {
                       ref={imageRef}
                       className={clsx(
                         properties.frame.show && "",
-                        "relative flex-1 "
+                        "relative flex-1 h-full "
                       )}
                     >
                       <Image
                         onLoadingComplete={() => setLoading(false)}
                         alt="editor image"
                         unoptimized
+                        className="flex-1 h-full"
                         layout="fill"
                         src={imgDataUrl}
                       />
